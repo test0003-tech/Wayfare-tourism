@@ -78,17 +78,17 @@ export default function Contact() {
   ];
 
   return (
-    <section className="py-16 sm:py-20 bg-gray-50" id="contact">
+    <section className="py-16 sm:py-20 bg-gray-950" id="contact">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <Badge variant="secondary" className="mb-3 bg-teal-50 text-teal-700 border-teal-200">
+          <Badge variant="secondary" className="mb-3 glass text-teal-300 border-teal-500/30">
             <MessageSquare className="mr-1 h-3 w-3" />
             Get In Touch
           </Badge>
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Plan Your Dream Trip
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <span className="gradient-text">Plan Your Dream Trip</span>
           </h2>
-          <p className="mt-3 text-gray-500 max-w-2xl mx-auto text-lg">
+          <p className="mt-3 text-gray-400 max-w-2xl mx-auto text-lg">
             Our travel experts are ready to help you create the perfect itinerary
           </p>
         </div>
@@ -100,42 +100,42 @@ export default function Contact() {
               <a
                 key={i}
                 href={info.action}
-                className="flex items-start gap-4 rounded-xl bg-white p-4 shadow-sm transition-all hover:shadow-md"
+                className="flex items-start gap-4 rounded-xl glass p-4 transition-all duration-300 hover:glow-teal hover:bg-white/5"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-50">
-                  <info.icon className="h-5 w-5 text-teal-600" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-500/10">
+                  <info.icon className="h-5 w-5 text-teal-400" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-900">{info.title}</h4>
+                  <h4 className="text-sm font-semibold text-white">{info.title}</h4>
                   {info.details.map((detail, j) => (
-                    <p key={j} className="text-sm text-gray-500">{detail}</p>
+                    <p key={j} className="text-sm text-gray-400">{detail}</p>
                   ))}
                 </div>
               </a>
             ))}
 
             {/* Trust Badges */}
-            <div className="rounded-xl bg-gradient-to-br from-teal-600 to-emerald-600 p-5 text-white">
+            <div className="rounded-xl bg-gradient-to-br from-teal-600/20 to-emerald-600/20 border border-teal-500/20 p-5 text-white">
               <h4 className="font-bold text-lg">Why Choose Wayfare?</h4>
-              <ul className="mt-3 space-y-2 text-sm text-teal-100">
+              <ul className="mt-3 space-y-2 text-sm text-gray-300">
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-amber-300 shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-amber-400 shrink-0" />
                   Best price guarantee on all packages
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-amber-300 shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-amber-400 shrink-0" />
                   24/7 customer support during your trip
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-amber-300 shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-amber-400 shrink-0" />
                   Verified hotels & trusted partners
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-amber-300 shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-amber-400 shrink-0" />
                   Flexible cancellation & rescheduling
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-amber-300 shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-amber-400 shrink-0" />
                   10,000+ happy travelers and counting
                 </li>
               </ul>
@@ -143,15 +143,15 @@ export default function Contact() {
           </div>
 
           {/* Contact Form */}
-          <Card className="lg:col-span-3 border-0 shadow-lg">
+          <Card className="lg:col-span-3 border-0 glass shadow-none">
             <CardContent className="p-6 sm:p-8">
               {submitted ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                    <CheckCircle className="h-8 w-8 text-green-600" />
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-teal-500/10 glow-teal">
+                    <CheckCircle className="h-8 w-8 text-teal-400" />
                   </div>
-                  <h3 className="mt-4 text-xl font-bold text-gray-900">Thank You!</h3>
-                  <p className="mt-2 text-gray-500">
+                  <h3 className="mt-4 text-xl font-bold text-white">Thank You!</h3>
+                  <p className="mt-2 text-gray-400">
                     We&apos;ve received your inquiry. Our travel expert will contact you within 2 hours!
                   </p>
                 </div>
@@ -159,7 +159,7 @@ export default function Contact() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                      <label className="mb-1.5 block text-sm font-medium text-gray-300">
                         Full Name *
                       </label>
                       <Input
@@ -167,11 +167,11 @@ export default function Contact() {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
-                        className="rounded-lg"
+                        className="rounded-lg bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-teal-500/50 focus:ring-teal-500/20"
                       />
                     </div>
                     <div>
-                      <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                      <label className="mb-1.5 block text-sm font-medium text-gray-300">
                         Email *
                       </label>
                       <Input
@@ -180,14 +180,14 @@ export default function Contact() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
-                        className="rounded-lg"
+                        className="rounded-lg bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-teal-500/50 focus:ring-teal-500/20"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                      <label className="mb-1.5 block text-sm font-medium text-gray-300">
                         Phone Number
                       </label>
                       <Input
@@ -195,28 +195,28 @@ export default function Contact() {
                         placeholder="+91 98765 43210"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="rounded-lg"
+                        className="rounded-lg bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-teal-500/50 focus:ring-teal-500/20"
                       />
                     </div>
                     <div>
-                      <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                      <label className="mb-1.5 block text-sm font-medium text-gray-300">
                         Inquiry Type
                       </label>
                       <select
                         value={formData.type}
                         onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                        className="flex h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        className="flex h-9 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-1 text-sm text-white shadow-sm transition-colors placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-teal-500/50 focus-visible:border-teal-500/50"
                       >
-                        <option value="package">Tour Package</option>
-                        <option value="hotel">Hotel Booking</option>
-                        <option value="flight">Flight Booking</option>
-                        <option value="custom">Custom Trip</option>
+                        <option value="package" className="bg-gray-900">Tour Package</option>
+                        <option value="hotel" className="bg-gray-900">Hotel Booking</option>
+                        <option value="flight" className="bg-gray-900">Flight Booking</option>
+                        <option value="custom" className="bg-gray-900">Custom Trip</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    <label className="mb-1.5 block text-sm font-medium text-gray-300">
                       Your Message *
                     </label>
                     <Textarea
@@ -225,14 +225,14 @@ export default function Contact() {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       required
-                      className="rounded-lg"
+                      className="rounded-lg bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-teal-500/50 focus:ring-teal-500/20"
                     />
                   </div>
 
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-lg h-11"
+                    className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-gray-950 rounded-lg h-11 font-bold glow-amber"
                   >
                     {loading ? (
                       'Sending...'

@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Wayfare — Discover Your Perfect Travel Experience",
+  title: "Wayfare — Premium Travel Experiences",
   description:
     "Book domestic and international tour packages, hotels, and flights with Wayfare. Kerala, Kashmir, Goa, Dubai, Maldives, Thailand & more. Honeymoon, adventure, family packages starting from ₹11,999.",
   keywords: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     icon: "/images/logo-wayfare.png",
   },
   openGraph: {
-    title: "Wayfare — Discover Your Perfect Travel Experience",
+    title: "Wayfare — Premium Travel Experiences",
     description:
       "Book domestic and international tour packages, hotels, and flights. Honeymoon, adventure, family packages starting from ₹11,999.",
     type: "website",
@@ -47,9 +47,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <body
-        className={`${inter.variable} antialiased bg-background text-foreground`}
+        className={`${inter.variable} antialiased bg-gray-950 text-gray-100`}
       >
         {children}
         <Toaster />

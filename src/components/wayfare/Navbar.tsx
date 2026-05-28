@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -22,15 +24,15 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gray-950/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 glow-teal">
             <Compass className="h-5 w-5 text-white" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-gray-900">
-            Way<span className="text-teal-600">fare</span>
+          <span className="text-xl font-bold tracking-tight gradient-text">
+            Wayfare
           </span>
         </Link>
 
@@ -40,7 +42,7 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-teal-50 hover:text-teal-700"
+              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-gray-300 transition-all hover:bg-white/5 hover:text-teal-400 hover:glow-teal"
             >
               <link.icon className="h-4 w-4" />
               {link.label}
@@ -50,18 +52,18 @@ export default function Navbar() {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <a href="tel:+919876543210" className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-teal-700">
+          <a href="tel:+919876543210" className="flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-teal-400 transition-colors">
             <Phone className="h-4 w-4" />
             +91 98765 43210
           </a>
-          <Button className="bg-teal-600 hover:bg-teal-700 text-white" asChild>
+          <Button className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-gray-950 font-bold glow-amber rounded-lg" asChild>
             <a href="#contact">Book Now</a>
           </Button>
         </div>
 
         {/* Mobile Toggle */}
         <button
-          className="md:hidden p-2 rounded-md hover:bg-gray-100"
+          className="md:hidden p-2 rounded-lg hover:bg-white/5 text-gray-300 transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
@@ -71,24 +73,24 @@ export default function Navbar() {
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <div className="md:hidden border-t bg-white px-4 py-4 space-y-2">
+        <div className="md:hidden glass border-t border-white/10 px-4 py-4 space-y-2">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-teal-50 hover:text-teal-700"
+              className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-teal-400 transition-all"
             >
               <link.icon className="h-4 w-4" />
               {link.label}
             </a>
           ))}
-          <div className="pt-2 border-t">
-            <a href="tel:+919876543210" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-600">
+          <div className="pt-2 border-t border-white/10">
+            <a href="tel:+919876543210" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-400 hover:text-teal-400 transition-colors">
               <Phone className="h-4 w-4" />
               +91 98765 43210
             </a>
-            <Button className="w-full mt-2 bg-teal-600 hover:bg-teal-700 text-white" asChild>
+            <Button className="w-full mt-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-gray-950 font-bold glow-amber rounded-lg" asChild>
               <a href="#contact" onClick={() => setMobileOpen(false)}>Book Now</a>
             </Button>
           </div>
