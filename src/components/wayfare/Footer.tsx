@@ -1,0 +1,163 @@
+'use client';
+
+import Link from 'next/link';
+import {
+  Compass,
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Instagram,
+  Twitter,
+  Youtube,
+} from 'lucide-react';
+
+const footerLinks = {
+  destinations: {
+    title: 'Domestic',
+    links: [
+      { name: 'Kerala', href: '#packages' },
+      { name: 'Kashmir', href: '#packages' },
+      { name: 'Goa', href: '#packages' },
+      { name: 'Manali', href: '#packages' },
+      { name: 'Darjeeling', href: '#packages' },
+      { name: 'Andaman', href: '#packages' },
+      { name: 'Delhi (Golden Triangle)', href: '#packages' },
+      { name: 'Sikkim', href: '#packages' },
+    ],
+  },
+  international: {
+    title: 'International',
+    links: [
+      { name: 'Dubai', href: '#packages' },
+      { name: 'Maldives', href: '#packages' },
+      { name: 'Thailand', href: '#packages' },
+      { name: 'Singapore', href: '#packages' },
+      { name: 'Bali (Indonesia)', href: '#packages' },
+      { name: 'Malaysia', href: '#packages' },
+      { name: 'Sri Lanka', href: '#packages' },
+      { name: 'Vietnam', href: '#packages' },
+    ],
+  },
+  company: {
+    title: 'Company',
+    links: [
+      { name: 'About Us', href: '#' },
+      { name: 'Careers', href: '#' },
+      { name: 'Blog', href: '#' },
+      { name: 'Press', href: '#' },
+      { name: 'Partner With Us', href: '#' },
+      { name: 'Travel Agents', href: '#' },
+    ],
+  },
+  support: {
+    title: 'Support',
+    links: [
+      { name: 'Help Center', href: '#' },
+      { name: 'Cancellation Policy', href: '#' },
+      { name: 'Terms of Service', href: '#' },
+      { name: 'Privacy Policy', href: '#' },
+      { name: 'Refund Policy', href: '#' },
+      { name: 'FAQs', href: '#' },
+    ],
+  },
+};
+
+const socialLinks = [
+  { name: 'Facebook', icon: Facebook, href: '#' },
+  { name: 'Instagram', icon: Instagram, href: '#' },
+  { name: 'Twitter', icon: Twitter, href: '#' },
+  { name: 'YouTube', icon: Youtube, href: '#' },
+];
+
+export default function Footer() {
+  return (
+    <footer className="bg-gray-900 text-gray-300">
+      {/* Main Footer */}
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-5">
+          {/* Brand Column */}
+          <div className="col-span-2 md:col-span-3 lg:col-span-1">
+            <Link href="/" className="flex items-center gap-2 mb-4">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600">
+                <Compass className="h-5 w-5 text-white" />
+              </div>
+              <span className="text-xl font-bold text-white">
+                Way<span className="text-teal-400">fare</span>
+              </span>
+            </Link>
+            <p className="text-sm text-gray-400 max-w-xs">
+              Your trusted travel partner for domestic and international tour packages.
+              Crafting unforgettable journeys since 2018.
+            </p>
+
+            <div className="mt-4 space-y-2">
+              <a href="tel:+919876543210" className="flex items-center gap-2 text-sm text-gray-400 hover:text-teal-400">
+                <Phone className="h-4 w-4" />
+                +91 98765 43210
+              </a>
+              <a href="mailto:hello@wayfare.in" className="flex items-center gap-2 text-sm text-gray-400 hover:text-teal-400">
+                <Mail className="h-4 w-4" />
+                hello@wayfare.in
+              </a>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <MapPin className="h-4 w-4" />
+                Connaught Place, New Delhi
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center gap-3">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-800 text-gray-400 transition-colors hover:bg-teal-600 hover:text-white"
+                  aria-label={social.name}
+                >
+                  <social.icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Link Columns */}
+          {Object.values(footerLinks).map((section) => (
+            <div key={section.title}>
+              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                {section.title}
+              </h4>
+              <ul className="space-y-2.5">
+                {section.links.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      className="text-sm text-gray-400 transition-colors hover:text-teal-400"
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="border-t border-gray-800">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <p className="text-sm text-gray-500">
+              © 2025 Wayfare. All rights reserved.
+            </p>
+            <div className="flex items-center gap-4 text-sm text-gray-500">
+              <span>🌐 English</span>
+              <span>💰 INR (₹)</span>
+              <span>🇮🇳 India</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
