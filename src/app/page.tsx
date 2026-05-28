@@ -13,6 +13,7 @@ import Blog from '@/components/wayfare/Blog';
 import Testimonials from '@/components/wayfare/Testimonials';
 import Contact from '@/components/wayfare/Contact';
 import Footer from '@/components/wayfare/Footer';
+import ChatBot from '@/components/wayfare/ChatBot';
 
 export default function Home() {
   return (
@@ -36,6 +37,7 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
+      <ChatBot />
     </div>
   );
 }

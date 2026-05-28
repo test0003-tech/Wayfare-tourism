@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import {
-  Compass,
   Phone,
   Mail,
   MapPin,
@@ -82,9 +82,13 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-3 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 glow-teal">
-                <Compass className="h-5 w-5 text-white" />
-              </div>
+              <Image
+                src="/images/logo-wayfare-new.png"
+                alt="Wayfare Logo"
+                width={36}
+                height={36}
+                className="rounded-lg"
+              />
               <span className="text-xl font-bold gradient-text">
                 Wayfare
               </span>

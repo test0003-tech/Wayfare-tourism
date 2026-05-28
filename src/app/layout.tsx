@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Wayfare Travel" }],
   icons: {
-    icon: "/images/logo-wayfare.png",
+    icon: "/images/logo-wayfare-new.png",
   },
   openGraph: {
     title: "Wayfare — Premium Travel Experiences",

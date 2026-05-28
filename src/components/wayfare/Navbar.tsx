@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,7 +11,6 @@ import {
   Phone,
   Menu,
   X,
-  Compass,
 } from 'lucide-react';
 
 const navLinks = [
@@ -27,10 +27,14 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gray-950/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 glow-teal">
-            <Compass className="h-5 w-5 text-white" />
-          </div>
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image
+            src="/images/logo-wayfare-new.png"
+            alt="Wayfare Logo"
+            width={40}
+            height={40}
+            className="rounded-lg glow-teal"
+          />
           <span className="text-xl font-bold tracking-tight gradient-text">
             Wayfare
           </span>
