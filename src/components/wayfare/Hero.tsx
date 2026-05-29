@@ -1,10 +1,113 @@
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Search, MapPin, Calendar, Users } from 'lucide-react';
+import { Search, MapPin, Calendar, Users, Star, ArrowRight } from 'lucide-react';
+
+const rotatingWords = [
+  'Honeymoon in Maldives',
+  'Kashmir Adventure',
+  'Kerala Backwaters',
+  'Dubai Luxury',
+  'Goa Beach Vibes',
+  'Thailand Explorer',
+  'Andaman Escape',
+  'Singapore Dreams',
+];
+
+const floatingCards = [
+  { name: 'Kerala', emoji: '🌴', price: '₹22,999', rating: 4.9, x: 'right-8', y: 'top-[20%]', delay: 0 },
+  { name: 'Maldives', emoji: '🏝️', price: '₹79,999', rating: 4.9, x: 'right-4', y: 'top-[45%]', delay: 0.5 },
+  { name: 'Dubai', emoji: '🏙️', price: '₹59,999', rating: 4.9, x: 'right-12', y: 'top-[70%]', delay: 1 },
+];
+
+function TypingText() {
+  const [wordIndex, setWordIndex] = useState(0);
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const wordRef = useRef(rotatingWords[0]);
+
+  useEffect(() => {
+    wordRef.current = rotatingWords[wordIndex];
+    const word = wordRef.current;
+    const speed = isDeleting ? 40 : 80;
+
+    if (!isDeleting && text === word) {
+      const timeout = setTimeout(() => setIsDeleting(true), 2000);
+      return () => clearTimeout(timeout);
+    }
+
+    if (isDeleting && text === '') {
+      const nextIdx = (wordIndex + 1) % rotatingWords.length;
+      queueMicrotask(() => {
+        setWordIndex(nextIdx);
+        setIsDeleting(false);
+      });
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setText(isDeleting ? word.slice(0, text.length - 1) : word.slice(0, text.length + 1));
+    }, speed);
+
+    return () => clearTimeout(timer);
+  }, [text, isDeleting, wordIndex]);
+
+  return (
+    <span className="gradient-text">
+      {text}
+      <span className="animate-pulse text-teal-400">|</span>
+    </span>
+  );
+}
+
+// Particle component
+function Particles() {
+  const particles = Array.from({ length: 30 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 3 + 1,
+    duration: Math.random() * 20 + 10,
+    delay: Math.random() * 5,
+    opacity: Math.random() * 0.4 + 0.1,
+  }));
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            width: p.size,
+            height: p.size,
+            background: p.id % 3 === 0 ? '#0d9488' : p.id % 3 === 1 ? '#f59e0b' : '#10b981',
+          }}
+          animate={{
+            y: [0, -30, 0],
+            opacity: [p.opacity, p.opacity * 1.5, p.opacity],
+          }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            delay: p.delay,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function Hero() {
+  const [searchDest, setSearchDest] = useState('');
+  const [searchDuration, setSearchDuration] = useState('');
+  const [searchTravelers, setSearchTravelers] = useState('');
+
   return (
     <section className="relative overflow-hidden bg-gray-950 min-h-screen flex items-center">
       {/* Background Image Overlay */}
@@ -18,18 +121,15 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-gray-950/50" />
       </div>
 
+      {/* Particles */}
+      <Particles />
+
       {/* Decorative gradient orbs */}
-      <div className="absolute top-20 right-10 w-72 h-72 bg-teal-500/10 rounded-full blur-[100px]" />
+      <div className="absolute top-20 right-10 w-72 h-72 bg-teal-500/10 rounded-full blur-[100px] animate-pulse" />
       <div className="absolute bottom-20 left-10 w-96 h-96 bg-amber-500/8 rounded-full blur-[120px]" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal-600/5 rounded-full blur-[150px]" />
 
-      {/* Particle-like decorative dots */}
-      <div className="absolute top-1/4 right-1/4 w-1 h-1 bg-teal-400 rounded-full animate-float" />
-      <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-amber-400 rounded-full animate-float" style={{ animationDelay: '1s' }} />
-      <div className="absolute bottom-1/3 left-1/4 w-1 h-1 bg-teal-300 rounded-full animate-float" style={{ animationDelay: '2s' }} />
-      <div className="absolute top-2/3 right-1/2 w-2 h-2 bg-amber-300/50 rounded-full animate-float" style={{ animationDelay: '3s' }} />
-
-      <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+      <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36 w-full">
         <div className="max-w-3xl">
           {/* Badge */}
           <motion.div
@@ -49,7 +149,9 @@ export default function Hero() {
             className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-7xl leading-tight"
           >
             Discover Your Perfect
-            <span className="block gradient-text mt-2">Travel Experience</span>
+            <span className="block mt-2 h-[1.2em]">
+              <TypingText />
+            </span>
           </motion.h1>
 
           <motion.p
@@ -67,29 +169,54 @@ export default function Hero() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-10 animate-float"
+            className="mt-10"
           >
             <div className="rounded-2xl glass-strong p-3 sm:p-4">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-                <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 border border-white/5">
+                <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 border border-white/5 focus-within:border-teal-500/30 transition-colors">
                   <MapPin className="h-5 w-5 text-teal-400 shrink-0" />
-                  <div className="min-w-0">
-                    <p className="text-xs font-medium text-gray-500">Destination</p>
-                    <p className="text-sm font-semibold text-white truncate">Where to?</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-medium text-gray-500 uppercase">Destination</p>
+                    <input
+                      type="text"
+                      value={searchDest}
+                      onChange={(e) => setSearchDest(e.target.value)}
+                      placeholder="Where to?"
+                      className="w-full bg-transparent text-sm font-semibold text-white placeholder:text-gray-600 outline-none"
+                    />
                   </div>
                 </div>
-                <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 border border-white/5">
+                <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 border border-white/5 focus-within:border-teal-500/30 transition-colors">
                   <Calendar className="h-5 w-5 text-teal-400 shrink-0" />
-                  <div className="min-w-0">
-                    <p className="text-xs font-medium text-gray-500">Duration</p>
-                    <p className="text-sm font-semibold text-white truncate">4N5D - 6N7D</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-medium text-gray-500 uppercase">Duration</p>
+                    <select
+                      value={searchDuration}
+                      onChange={(e) => setSearchDuration(e.target.value)}
+                      className="w-full bg-transparent text-sm font-semibold text-white outline-none appearance-none cursor-pointer"
+                    >
+                      <option value="" className="bg-gray-900">Any Duration</option>
+                      <option value="4N5D" className="bg-gray-900">4N5D</option>
+                      <option value="5N6D" className="bg-gray-900">5N6D</option>
+                      <option value="6N7D" className="bg-gray-900">6N7D</option>
+                    </select>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 border border-white/5">
+                <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 border border-white/5 focus-within:border-teal-500/30 transition-colors">
                   <Users className="h-5 w-5 text-teal-400 shrink-0" />
-                  <div className="min-w-0">
-                    <p className="text-xs font-medium text-gray-500">Travelers</p>
-                    <p className="text-sm font-semibold text-white truncate">2 Adults</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-medium text-gray-500 uppercase">Travelers</p>
+                    <select
+                      value={searchTravelers}
+                      onChange={(e) => setSearchTravelers(e.target.value)}
+                      className="w-full bg-transparent text-sm font-semibold text-white outline-none appearance-none cursor-pointer"
+                    >
+                      <option value="" className="bg-gray-900">Travelers</option>
+                      <option value="1" className="bg-gray-900">1 Adult</option>
+                      <option value="2" className="bg-gray-900">2 Adults</option>
+                      <option value="family" className="bg-gray-900">Family</option>
+                      <option value="group" className="bg-gray-900">Group</option>
+                    </select>
                   </div>
                 </div>
                 <Button
@@ -124,6 +251,45 @@ export default function Hero() {
               </div>
             ))}
           </motion.div>
+        </div>
+
+        {/* Floating Destination Cards (Desktop only) */}
+        <div className="hidden xl:block">
+          {floatingCards.map((card) => (
+            <motion.div
+              key={card.name}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 1 + card.delay }}
+              className={`absolute ${card.x} ${card.y} w-52`}
+            >
+              <motion.div
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: card.delay }}
+                className="rounded-2xl glass-strong p-4 hover:glow-teal transition-all duration-300"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{card.emoji}</span>
+                  <div>
+                    <h4 className="text-sm font-bold text-white">{card.name}</h4>
+                    <div className="flex items-center gap-1">
+                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      <span className="text-xs font-semibold text-amber-400">{card.rating}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-2 flex items-end justify-between">
+                  <div>
+                    <p className="text-[10px] text-gray-500 uppercase">Starting from</p>
+                    <p className="text-lg font-bold text-amber-400">{card.price}</p>
+                  </div>
+                  <a href="#packages" className="text-xs text-teal-400 hover:text-teal-300 flex items-center gap-1 font-semibold transition-colors">
+                    Explore <ArrowRight className="h-3 w-3" />
+                  </a>
+                </div>
+              </motion.div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

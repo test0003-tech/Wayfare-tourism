@@ -16,6 +16,7 @@ import {
   ChevronUp,
 } from 'lucide-react';
 import PackageDetailDialog from './PackageDetailDialog';
+import { useWishlist } from '@/lib/wishlist';
 
 export default function Packages({ region }: { region: 'domestic' | 'international' }) {
   const [packages, setPackages] = useState<Package[]>([]);
@@ -24,6 +25,7 @@ export default function Packages({ region }: { region: 'domestic' | 'internation
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { addItem, removeItem, isInWishlist } = useWishlist();
 
   useEffect(() => {
     fetch(`/api/packages?region=${region}`)
@@ -133,12 +135,33 @@ export default function Packages({ region }: { region: 'domestic' | 'internation
                       </Badge>
                     </div>
 
-                    {/* Heart */}
+                    {/* Heart / Wishlist */}
                     <button
-                      className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full glass hover:bg-white/20 transition-colors text-gray-300 hover:text-rose-400"
-                      onClick={(e) => e.stopPropagation()}
+                      className={`absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full glass transition-all duration-200 ${
+                        isInWishlist(pkg.id)
+                          ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                          : 'text-gray-300 hover:bg-white/20 hover:text-rose-400'
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isInWishlist(pkg.id)) {
+                          removeItem(pkg.id);
+                        } else {
+                          addItem({
+                            id: pkg.id,
+                            name: pkg.name,
+                            destination: `${pkg.destination.name}, ${pkg.destination.country}`,
+                            image: pkg.image,
+                            price: pkg.price,
+                            originalPrice: pkg.originalPrice || undefined,
+                            duration: pkg.duration,
+                            rating: pkg.rating,
+                            category: pkg.category,
+                          });
+                        }
+                      }}
                     >
-                      <Heart className="h-4 w-4" />
+                      <Heart className={`h-4 w-4 ${isInWishlist(pkg.id) ? 'fill-rose-400' : ''}`} />
                     </button>
                   </div>
 

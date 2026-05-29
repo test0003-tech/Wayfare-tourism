@@ -5,6 +5,8 @@ import Hero from '@/components/wayfare/Hero';
 import Destinations from '@/components/wayfare/Destinations';
 import PackageCategories from '@/components/wayfare/PackageCategories';
 import Packages from '@/components/wayfare/Packages';
+import TravelQuiz from '@/components/wayfare/TravelQuiz';
+import FlashDeals from '@/components/wayfare/FlashDeals';
 import Portfolio from '@/components/wayfare/Portfolio';
 import Hotels from '@/components/wayfare/Hotels';
 import Flights from '@/components/wayfare/Flights';
@@ -14,6 +16,8 @@ import Testimonials from '@/components/wayfare/Testimonials';
 import Contact from '@/components/wayfare/Contact';
 import Footer from '@/components/wayfare/Footer';
 import ChatBot from '@/components/wayfare/ChatBot';
+import WishlistDrawer from '@/components/wayfare/WishlistDrawer';
+import BackToTop from '@/components/wayfare/BackToTop';
 
 export default function Home() {
   return (
@@ -21,6 +25,7 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
+        <FlashDeals />
         <Destinations region="domestic" />
         <Destinations region="international" />
         <PackageCategories />
@@ -28,6 +33,7 @@ export default function Home() {
           <Packages region="domestic" />
           <Packages region="international" />
         </div>
+        <TravelQuiz />
         <Portfolio />
         <Hotels />
         <Flights />
@@ -38,6 +44,8 @@ export default function Home() {
       </main>
       <Footer />
       <ChatBot />
+      <WishlistDrawer />
+      <BackToTop />
     </div>
   );
 }
