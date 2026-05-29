@@ -16,49 +16,49 @@ const footerLinks = {
   destinations: {
     title: 'Domestic',
     links: [
-      { name: 'Kerala', href: '#packages' },
-      { name: 'Kashmir', href: '#packages' },
-      { name: 'Goa', href: '#packages' },
-      { name: 'Manali', href: '#packages' },
-      { name: 'Darjeeling', href: '#packages' },
-      { name: 'Andaman', href: '#packages' },
-      { name: 'Delhi (Golden Triangle)', href: '#packages' },
-      { name: 'Sikkim', href: '#packages' },
+      { name: 'Kerala', href: '/destinations/kerala' },
+      { name: 'Kashmir', href: '/destinations/kashmir' },
+      { name: 'Goa', href: '/destinations/goa' },
+      { name: 'Manali', href: '/destinations/manali' },
+      { name: 'Darjeeling', href: '/destinations/darjeeling' },
+      { name: 'Andaman', href: '/destinations/andaman' },
+      { name: 'Delhi (Golden Triangle)', href: '/destinations/delhi' },
+      { name: 'Sikkim', href: '/destinations/sikkim' },
     ],
   },
   international: {
     title: 'International',
     links: [
-      { name: 'Dubai', href: '#packages' },
-      { name: 'Maldives', href: '#packages' },
-      { name: 'Thailand', href: '#packages' },
-      { name: 'Singapore', href: '#packages' },
-      { name: 'Bali (Indonesia)', href: '#packages' },
-      { name: 'Malaysia', href: '#packages' },
-      { name: 'Sri Lanka', href: '#packages' },
-      { name: 'Vietnam', href: '#packages' },
+      { name: 'Dubai', href: '/destinations/dubai' },
+      { name: 'Maldives', href: '/destinations/maldives' },
+      { name: 'Thailand', href: '/destinations/thailand' },
+      { name: 'Singapore', href: '/destinations/singapore' },
+      { name: 'Bali (Indonesia)', href: '/destinations/bali' },
+      { name: 'Malaysia', href: '/destinations/malaysia' },
+      { name: 'Sri Lanka', href: '/destinations/srilanka' },
+      { name: 'Vietnam', href: '/destinations/vietnam' },
     ],
   },
   company: {
     title: 'Company',
     links: [
-      { name: 'About Us', href: '#' },
-      { name: 'Careers', href: '#' },
-      { name: 'Blog', href: '#blog' },
-      { name: 'Press', href: '#' },
-      { name: 'Partner With Us', href: '#' },
-      { name: 'Travel Agents', href: '#' },
+      { name: 'About Us', href: '/about' },
+      { name: 'Blog', href: '/blog' },
+      { name: 'Gallery', href: '/gallery' },
+      { name: 'Travel Quiz', href: '/quiz' },
+      { name: 'Contact Us', href: '/contact' },
+      { name: 'Partner With Us', href: '/contact' },
     ],
   },
   support: {
     title: 'Support',
     links: [
-      { name: 'Help Center', href: '#' },
-      { name: 'Cancellation Policy', href: '#' },
-      { name: 'Terms of Service', href: '#' },
+      { name: 'Help Center', href: '/contact' },
+      { name: 'Tour Packages', href: '/packages' },
+      { name: 'Hotel Booking', href: '/hotels' },
+      { name: 'Flight Deals', href: '/flights' },
       { name: 'Privacy Policy', href: '#' },
-      { name: 'Refund Policy', href: '#' },
-      { name: 'FAQs', href: '#' },
+      { name: 'Terms of Service', href: '#' },
     ],
   },
 };
@@ -136,12 +136,12 @@ export default function Footer() {
               <ul className="space-y-2.5">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <a
+                    <Link
                       href={link.href}
                       className="text-sm text-gray-500 transition-colors hover:text-teal-400"
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

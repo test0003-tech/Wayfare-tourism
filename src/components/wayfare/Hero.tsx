@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Search, MapPin, Calendar, Users, Star, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 const rotatingWords = [
   'Honeymoon in Maldives',
@@ -223,10 +224,10 @@ export default function Hero() {
                   className="h-auto bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-xl py-2.5 glow-teal font-bold animate-pulse-glow"
                   asChild
                 >
-                  <a href="#packages">
+                  <Link href="/packages">
                     <Search className="mr-2 h-4 w-4" />
                     Search
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -283,9 +284,9 @@ export default function Hero() {
                     <p className="text-[10px] text-gray-500 uppercase">Starting from</p>
                     <p className="text-lg font-bold text-amber-400">{card.price}</p>
                   </div>
-                  <a href="#packages" className="text-xs text-teal-400 hover:text-teal-300 flex items-center gap-1 font-semibold transition-colors">
+                  <Link href="/packages" className="text-xs text-teal-400 hover:text-teal-300 flex items-center gap-1 font-semibold transition-colors">
                     Explore <ArrowRight className="h-3 w-3" />
-                  </a>
+                  </Link>
                 </div>
               </motion.div>
             </motion.div>

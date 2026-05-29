@@ -13,6 +13,7 @@ import {
   ArrowRight,
   Timer,
 } from 'lucide-react';
+import Link from 'next/link';
 
 interface FlashDeal {
   id: string;
@@ -263,10 +264,10 @@ export default function FlashDeals() {
                       className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-gray-950 font-bold rounded-lg glow-amber"
                       asChild
                     >
-                      <a href="#contact">
+                      <Link href="/contact">
                         Grab Deal
                         <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                      </a>
+                      </Link>
                     </Button>
                   </div>
                 </div>

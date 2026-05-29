@@ -100,7 +100,7 @@ export default function PackageCategories() {
           {categories.map((cat, i) => (
             <motion.a
               key={cat.id}
-              href="#packages"
+              href={`/packages?category=${cat.id}`}
               initial={{ opacity: 0, y: 30 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: i * 0.1 }}

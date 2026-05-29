@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import Navbar from "@/components/wayfare/Navbar";
+import Footer from "@/components/wayfare/Footer";
+import ChatBot from "@/components/wayfare/ChatBot";
+import WishlistDrawer from "@/components/wayfare/WishlistDrawer";
+import BackToTop from "@/components/wayfare/BackToTop";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -51,7 +56,14 @@ export default function RootLayout({
       <body
         className={`${inter.variable} antialiased bg-gray-950 text-gray-100`}
       >
-        {children}
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+        <ChatBot />
+        <WishlistDrawer />
+        <BackToTop />
         <Toaster />
       </body>
     </html>
