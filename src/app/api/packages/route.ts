@@ -1,4 +1,5 @@
-import { db } from '@/lib/db';
+export const runtime = 'edge';
+import { getAllEdgePackages, enrichPackage } from '@/lib/edge-data';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -10,38 +11,26 @@ export async function GET(request: Request) {
     const featured = searchParams.get('featured');
     const duration = searchParams.get('duration');
 
-    const where: Record<string, unknown> = {};
+    let packages = getAllEdgePackages().map(enrichPackage);
 
     if (region) {
-      where.destination = { region };
+      packages = packages.filter((p) => p.destination.region === region);
     }
     if (category) {
-      where.category = category;
+      packages = packages.filter((p) => p.category === category);
     }
     if (destinationId) {
-      where.destinationId = destinationId;
+      packages = packages.filter((p) => p.destinationId === destinationId);
     }
     if (featured === 'true') {
-      where.featured = true;
+      packages = packages.filter((p) => p.featured);
     }
     if (duration) {
-      where.duration = duration;
+      packages = packages.filter((p) => p.duration === duration);
     }
 
-    const packages = await db.package.findMany({
-      where,
-      include: {
-        destination: {
-          select: {
-            name: true,
-            country: true,
-            region: true,
-            image: true,
-          },
-        },
-      },
-      orderBy: { rating: 'desc' },
-    });
+    // Sort by rating descending (matching Prisma orderBy)
+    packages.sort((a, b) => b.rating - a.rating);
 
     return NextResponse.json(packages);
   } catch (error) {

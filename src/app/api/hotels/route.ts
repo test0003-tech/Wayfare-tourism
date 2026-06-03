@@ -1,4 +1,5 @@
-import { db } from '@/lib/db';
+export const runtime = 'edge';
+import { getAllEdgeHotels, enrichHotel } from '@/lib/edge-data';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -8,31 +9,20 @@ export async function GET(request: Request) {
     const category = searchParams.get('category');
     const featured = searchParams.get('featured');
 
-    const where: Record<string, unknown> = {};
+    let hotels = getAllEdgeHotels().map(enrichHotel);
 
     if (destinationId) {
-      where.destinationId = destinationId;
+      hotels = hotels.filter((h) => h.destinationId === destinationId);
     }
     if (category) {
-      where.category = category;
+      hotels = hotels.filter((h) => h.category === category);
     }
     if (featured === 'true') {
-      where.featured = true;
+      hotels = hotels.filter((h) => h.featured);
     }
 
-    const hotels = await db.hotel.findMany({
-      where,
-      include: {
-        destination: {
-          select: {
-            name: true,
-            country: true,
-            region: true,
-          },
-        },
-      },
-      orderBy: { rating: 'desc' },
-    });
+    // Sort by rating descending (matching Prisma orderBy)
+    hotels.sort((a, b) => b.rating - a.rating);
 
     return NextResponse.json(hotels);
   } catch (error) {

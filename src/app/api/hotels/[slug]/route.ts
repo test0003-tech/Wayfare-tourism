@@ -1,4 +1,5 @@
-import { db } from '@/lib/db';
+export const runtime = 'edge';
+import { getEdgeHotel, enrichHotel, getAllEdgeDestinations } from '@/lib/edge-data';
 import { NextResponse } from 'next/server';
 
 export async function GET(
@@ -7,17 +8,24 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const hotel = await db.hotel.findUnique({
-      where: { slug },
-      include: {
-        destination: {
-          select: { name: true, country: true, region: true, image: true, slug: true },
-        },
-      },
-    });
+    const rawHotel = getEdgeHotel(slug);
 
-    if (!hotel) {
+    if (!rawHotel) {
       return NextResponse.json({ error: 'Hotel not found' }, { status: 404 });
+    }
+
+    const hotel = enrichHotel(rawHotel);
+
+    // Also include destination image and slug for the frontend
+    const dest = getAllEdgeDestinations().find(
+      (d) => d.name === rawHotel.destination.name
+    );
+    if (dest) {
+      hotel.destination = {
+        ...hotel.destination,
+        image: dest.image,
+        slug: dest.slug,
+      } as typeof hotel.destination & { image: string; slug: string };
     }
 
     return NextResponse.json(hotel);

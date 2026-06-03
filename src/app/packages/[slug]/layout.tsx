@@ -1,12 +1,10 @@
+export const runtime = 'edge';
 import type { Metadata } from 'next';
-import { db } from '@/lib/db';
+import { getEdgePackage } from '@/lib/edge-data';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const pkg = await db.package.findUnique({
-    where: { slug },
-    include: { destination: true },
-  });
+  const pkg = getEdgePackage(slug);
 
   if (!pkg) {
     return { title: 'Package Not Found | Wayfare' };

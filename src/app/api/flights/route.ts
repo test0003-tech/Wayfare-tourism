@@ -1,4 +1,5 @@
-import { db } from '@/lib/db';
+export const runtime = 'edge';
+import { getAllEdgeFlights, enrichFlight } from '@/lib/edge-data';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -6,16 +7,14 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const featured = searchParams.get('featured');
 
-    const where: Record<string, unknown> = {};
+    let flights = getAllEdgeFlights().map(enrichFlight);
 
     if (featured === 'true') {
-      where.featured = true;
+      flights = flights.filter((f) => f.featured);
     }
 
-    const flights = await db.flightDeal.findMany({
-      where,
-      orderBy: { price: 'asc' },
-    });
+    // Sort by price ascending (matching Prisma orderBy)
+    flights.sort((a, b) => a.price - b.price);
 
     return NextResponse.json(flights);
   } catch (error) {

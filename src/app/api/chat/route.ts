@@ -1,6 +1,12 @@
-import { db } from '@/lib/db';
+export const runtime = 'edge';
 import { NextResponse } from 'next/server';
 import ZAI from 'z-ai-web-dev-sdk';
+import {
+  getAllEdgePackages,
+  getAllEdgeDestinations,
+  getAllEdgeHotels,
+  getAllEdgeFlights,
+} from '@/lib/edge-data';
 
 // In-memory conversation store (use DB in production)
 const conversations = new Map<string, Array<{ role: string; content: string }>>();
@@ -10,51 +16,35 @@ const MAX_MESSAGES = 30;
 
 async function getTravelContext(): Promise<string> {
   try {
-    const [packages, destinations, hotels, flights] = await Promise.all([
-      db.package.findMany({
-        include: {
-          destination: {
-            select: { name: true, country: true, region: true },
-          },
-        },
-        orderBy: { rating: 'desc' },
-      }),
-      db.destination.findMany({ orderBy: { name: 'asc' } }),
-      db.hotel.findMany({
-        include: {
-          destination: { select: { name: true } },
-        },
-        orderBy: { rating: 'desc' },
-      }),
-      db.flightDeal.findMany({ orderBy: { price: 'asc' } }),
-    ]);
+    const packages = getAllEdgePackages();
+    const destinations = getAllEdgeDestinations();
+    const hotels = getAllEdgeHotels();
+    const flights = getAllEdgeFlights();
 
-    const domesticDests = destinations.filter(d => d.region === 'domestic').map(d => d.name);
-    const internationalDests = destinations.filter(d => d.region === 'international').map(d => d.name);
+    const domesticDests = destinations
+      .filter((d) => d.country === 'India')
+      .map((d) => d.name);
+    const internationalDests = destinations
+      .filter((d) => d.country !== 'India')
+      .map((d) => d.name);
 
-    const packageList = packages.map(p => ({
+    const packageList = packages.map((p) => ({
       name: p.name,
       destination: p.destination.name,
-      region: p.destination.region,
       category: p.category,
       duration: p.duration,
       price: `₹${p.price.toLocaleString('en-IN')}`,
-      originalPrice: p.originalPrice ? `₹${p.originalPrice.toLocaleString('en-IN')}` : null,
-      rating: p.rating,
-      highlights: p.highlights,
     }));
 
-    const hotelList = hotels.map(h => ({
+    const hotelList = hotels.map((h) => ({
       name: h.name,
       destination: h.destination.name,
       category: h.category,
       stars: h.stars,
       pricePerNight: `₹${h.pricePerNight.toLocaleString('en-IN')}`,
-      amenities: h.amenities,
-      rating: h.rating,
     }));
 
-    const flightList = flights.map(f => ({
+    const flightList = flights.map((f) => ({
       from: f.from,
       to: f.to,
       airline: f.airline,
@@ -69,13 +59,13 @@ DOMESTIC DESTINATIONS (India): ${domesticDests.join(', ')}
 INTERNATIONAL DESTINATIONS: ${internationalDests.join(', ')}
 
 PACKAGES (${packages.length} total):
-${packageList.map(p => `• ${p.name} | ${p.destination} (${p.region}) | ${p.category} | ${p.duration} | ${p.price}${p.originalPrice ? ` (was ${p.originalPrice})` : ''} | ⭐${p.rating} | Highlights: ${p.highlights}`).join('\n')}
+${packageList.map((p) => `• ${p.name} | ${p.destination} | ${p.category} | ${p.duration} | ${p.price}`).join('\n')}
 
 HOTELS (${hotels.length} total):
-${hotelList.map(h => `• ${h.name} | ${h.destination} | ${h.category} | ${'⭐'.repeat(h.stars)} | ₹${h.pricePerNight}/night | Amenities: ${h.amenities}`).join('\n')}
+${hotelList.map((h) => `• ${h.name} | ${h.destination} | ${h.category} | ${'⭐'.repeat(h.stars)} | ${h.pricePerNight}/night`).join('\n')}
 
 FLIGHT DEALS (${flights.length} total):
-${flightList.map(f => `• ${f.from} → ${f.to} | ${f.airline} | ${f.price} | ${f.type}`).join('\n')}
+${flightList.map((f) => `• ${f.from} → ${f.to} | ${f.airline} | ${f.price} | ${f.type}`).join('\n')}
 `;
   } catch (error) {
     console.error('Error fetching travel context:', error);
@@ -113,12 +103,12 @@ ${travelContext}
 7. When they're interested in booking, encourage them to fill out the contact form or call +91 98765 43210
 8. If asked about something not in the database, be honest and suggest alternatives from what's available
 9. Package durations are in format like "4N5D" (4 Nights, 5 Days), "5N6D", "6N7D"
-10. Always highlight discounts when originalPrice is available
+10. Always highlight discounts when available
 
 === QUICK RESPONSE PATTERNS ===
 - Greeting: "Welcome to Wayfare! ✈️ I'm your travel assistant. How can I help you plan your dream vacation today?"
-- Package inquiry: Provide name, destination, duration, price, rating, and highlights
-- Hotel inquiry: Provide name, destination, stars, price/night, and amenities  
+- Package inquiry: Provide name, destination, duration, price, and highlights
+- Hotel inquiry: Provide name, destination, stars, price/night, and amenities
 - Flight inquiry: Provide route, airline, price, and type
 - Booking intent: "That sounds like a wonderful choice! 🎉 To proceed with booking, you can fill out our contact form at the bottom of the page or call us at +91 98765 43210. Our travel experts will get back to you within 2 hours!"
 - Closing: "Thank you for chatting with Wayfare! 🌟 We'd love to help you create unforgettable memories. Don't hesitate to reach out anytime!"

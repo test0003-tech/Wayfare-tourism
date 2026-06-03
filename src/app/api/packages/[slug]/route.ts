@@ -1,4 +1,5 @@
-import { db } from '@/lib/db';
+export const runtime = 'edge';
+import { getEdgePackage, getAllEdgePackages, enrichPackage, getAllEdgeDestinations } from '@/lib/edge-data';
 import { NextResponse } from 'next/server';
 
 export async function GET(
@@ -7,17 +8,23 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const pkg = await db.package.findUnique({
-      where: { slug },
-      include: {
-        destination: {
-          select: { name: true, country: true, region: true, image: true, slug: true },
-        },
-      },
-    });
+    const rawPkg = getEdgePackage(slug);
 
-    if (!pkg) {
+    if (!rawPkg) {
       return NextResponse.json({ error: 'Package not found' }, { status: 404 });
+    }
+
+    const pkg = enrichPackage(rawPkg);
+
+    // Also include destination slug for the frontend
+    const dest = getAllEdgeDestinations().find(
+      (d) => d.name === rawPkg.destination.name
+    );
+    if (dest) {
+      pkg.destination = {
+        ...pkg.destination,
+        slug: dest.slug,
+      } as typeof pkg.destination & { slug: string };
     }
 
     return NextResponse.json(pkg);

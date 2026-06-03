@@ -1,11 +1,10 @@
+export const runtime = 'edge';
 import type { Metadata } from 'next';
-import { db } from '@/lib/db';
+import { getEdgeDestination } from '@/lib/edge-data';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const destination = await db.destination.findUnique({
-    where: { slug },
-  });
+  const destination = getEdgeDestination(slug);
 
   if (!destination) {
     return { title: 'Destination Not Found | Wayfare' };

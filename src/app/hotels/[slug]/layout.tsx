@@ -1,12 +1,10 @@
+export const runtime = 'edge';
 import type { Metadata } from 'next';
-import { db } from '@/lib/db';
+import { getEdgeHotel } from '@/lib/edge-data';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const hotel = await db.hotel.findUnique({
-    where: { slug },
-    include: { destination: true },
-  });
+  const hotel = getEdgeHotel(slug);
 
   if (!hotel) {
     return { title: 'Hotel Not Found | Wayfare' };
