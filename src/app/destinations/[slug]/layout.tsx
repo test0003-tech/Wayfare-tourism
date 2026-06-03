@@ -1,4 +1,3 @@
-export const runtime = 'edge';
 import type { Metadata } from 'next';
 import { getEdgeDestination } from '@/lib/edge-data';
 
