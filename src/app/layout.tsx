@@ -7,6 +7,7 @@ import Footer from "@/components/wayfare/Footer";
 import ChatBot from "@/components/wayfare/ChatBot";
 import WishlistDrawer from "@/components/wayfare/WishlistDrawer";
 import BackToTop from "@/components/wayfare/BackToTop";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/wayfare/JsonLd";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -14,6 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://wayfare.travel"),
   title: "Wayfare — Premium Travel Experiences",
   description:
     "Book domestic and international tour packages, hotels, and flights with Wayfare. Kerala, Kashmir, Goa, Dubai, Maldives, Thailand & more. Honeymoon, adventure, family packages starting from ₹11,999.",
@@ -34,6 +36,9 @@ export const metadata: Metadata = {
     "flight deals",
   ],
   authors: [{ name: "Wayfare Travel" }],
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/images/logo-wayfare-new.png",
   },
@@ -43,6 +48,23 @@ export const metadata: Metadata = {
       "Book domestic and international tour packages, hotels, and flights. Honeymoon, adventure, family packages starting from ₹11,999.",
     type: "website",
     siteName: "Wayfare",
+    url: "https://wayfare.travel",
+    images: [
+      {
+        url: "/images/logo-wayfare-new.png",
+        width: 1200,
+        height: 630,
+        alt: "Wayfare — Premium Travel Experiences",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Wayfare — Premium Travel Experiences",
+    description:
+      "Book domestic and international tour packages, hotels, and flights. Honeymoon, adventure, family packages starting from ₹11,999.",
+    images: ["/images/logo-wayfare-new.png"],
+    site: "@wayfare",
   },
 };
 
@@ -56,6 +78,8 @@ export default function RootLayout({
       <body
         className={`${inter.variable} antialiased bg-gray-950 text-gray-100`}
       >
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
         <div className="min-h-screen flex flex-col">
           <Navbar />
           <main className="flex-1">{children}</main>
