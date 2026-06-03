@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
+import { BUSINESS_PHONE, BUSINESS_EMAIL, generatePageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Contact Us | Wayfare — Plan Your Dream Trip',
-  description: 'Get in touch with Wayfare travel experts. Call +91 98765 43210 or email hello@wayfare.in. Plan your dream vacation with 24/7 support.',
-  keywords: ['contact Wayfare', 'travel inquiry', 'book package', 'travel support', 'Wayfare contact'],
-  openGraph: {
-    title: 'Contact Wayfare',
-    description: 'Plan your dream trip. Our travel experts are ready to help 24/7.',
-    type: 'website',
-    siteName: 'Wayfare',
-  },
-};
+export const metadata: Metadata = generatePageMetadata({
+  title: 'Contact Us — Plan Your Dream Trip',
+  description: `Get in touch with Wayfare travel experts. Call ${BUSINESS_PHONE} or email ${BUSINESS_EMAIL}. Plan your dream vacation with 24/7 support. Quick response guaranteed for tour packages, hotel bookings & flight deals.`,
+  keywords: [
+    'contact Wayfare Travel', 'Wayfare phone number', 'Wayfare email',
+    'travel inquiry India', 'book tour package', 'travel support',
+    'travel consultation', 'Wayfare customer care', 'travel helpline India',
+    'book holiday package', 'Wayfare contact details',
+  ],
+  path: '/contact',
+  ogImage: '/images/logo-wayfare-new.png',
+});
 
 export default function ContactLayout({ children }: { children: React.ReactNode }) {
   return children;

@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ChevronRight, Home } from 'lucide-react';
 import { BreadcrumbJsonLd } from '@/components/wayfare/JsonLd';
+import { SITE_URL } from '@/lib/seo';
 
 interface BreadcrumbItem {
   label: string;
@@ -10,14 +12,17 @@ interface BreadcrumbItem {
 }
 
 export default function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
+  const pathname = usePathname();
+
   // Build structured data items: always start with Home, then append page items
+  // The last item without href should point to the current page URL
   const structuredItems = [
-    { name: 'Home', url: 'https://wayfare.travel' },
+    { name: 'Home', url: SITE_URL },
     ...items.map((item) => ({
       name: item.label,
       url: item.href
-        ? `https://wayfare.travel${item.href}`
-        : 'https://wayfare.travel',
+        ? `${SITE_URL}${item.href}`
+        : `${SITE_URL}${pathname}`,
     })),
   ];
 
