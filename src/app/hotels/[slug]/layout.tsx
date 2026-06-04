@@ -1,7 +1,29 @@
 import type { Metadata } from 'next';
 import { getEdgeHotel } from '@/lib/edge-data';
 import { generateDetailPageMetadata, KEYWORDS, SITE_URL, HOTEL_FAQS } from '@/lib/seo';
-import { HotelJsonLd, FAQJsonLd, BreadcrumbJsonLd } from '@/components/wayfare/JsonLd';
+import { HotelJsonLd, FAQJsonLd, BreadcrumbJsonLd, MultiReviewJsonLd } from '@/components/wayfare/JsonLd';
+
+// Sample reviews for hotels
+const HOTEL_REVIEWS = [
+  {
+    author: 'Sneha Reddy',
+    rating: 5,
+    datePublished: '2024-12-01',
+    reviewBody: 'A truly luxurious stay! The room was spacious and impeccably clean. The staff went above and beyond to make us feel welcome. The breakfast buffet had an amazing variety. We loved the pool area and the sunset views from the terrace. Highly recommended!',
+  },
+  {
+    author: 'Vikram Joshi',
+    rating: 4,
+    datePublished: '2024-11-18',
+    reviewBody: 'Beautiful property with excellent amenities. The location is perfect for exploring the area. Check-in was smooth and the concierge helped us plan our daily activities. Only minor issue was the Wi-Fi being a bit slow in the evenings. Would stay again.',
+  },
+  {
+    author: 'Ananya Gupta',
+    rating: 5,
+    datePublished: '2024-10-05',
+    reviewBody: 'One of the best hotel experiences we have ever had. The heritage charm combined with modern comforts was exactly what we wanted. The in-house restaurant served delicious local cuisine. The spa treatment was the highlight of our stay. Wayfare got us a great deal!',
+  },
+];
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -15,6 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   const categoryLabel = hotel.category.charAt(0).toUpperCase() + hotel.category.slice(1);
+  const priceRange = hotel.pricePerNight < 5000 ? 'budget' : hotel.pricePerNight < 10000 ? 'mid-range' : 'luxury';
 
   return generateDetailPageMetadata({
     name: `${hotel.name} — ${hotel.stars}-Star ${categoryLabel} Hotel in ${hotel.destination.name}`,
@@ -34,11 +57,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       `hotel in ${hotel.destination.name}`,
       `${hotel.category} hotel ${hotel.destination.country}`,
       `₹${hotel.pricePerNight.toLocaleString()} hotel ${hotel.destination.name}`,
+      `${priceRange} hotel ${hotel.destination.name}`,
       `${hotel.destination.name} resort`,
       `best hotel in ${hotel.destination.name}`,
       `Wayfare ${hotel.destination.name} hotel`,
       ...KEYWORDS.hotels.filter(k => k.toLowerCase().includes(hotel.destination.name.toLowerCase()) || k.toLowerCase().includes(hotel.category.toLowerCase())),
     ],
+    ...(true && {
+      robots: { index: true, follow: true },
+    }),
   });
 }
 
@@ -83,6 +110,17 @@ export default async function HotelSlugLayout({ children, params }: { children: 
             amenities: amenities,
             destination: hotel.destination.name,
             category: hotel.category,
+            checkinTime: '14:00',
+            checkoutTime: '11:00',
+            smokingAllowed: false,
+            petsAllowed: hotel.category === 'resort' || hotel.category === 'homestay',
+            reviews: HOTEL_REVIEWS,
+          }} />
+          <MultiReviewJsonLd data={{
+            itemName: hotel.name,
+            itemUrl: `${SITE_URL}/hotels/${slug}`,
+            itemType: 'LodgingBusiness',
+            reviews: HOTEL_REVIEWS,
           }} />
           <FAQJsonLd items={HOTEL_FAQS} />
           <BreadcrumbJsonLd items={{

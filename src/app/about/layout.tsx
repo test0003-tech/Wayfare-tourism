@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { KEYWORDS, generatePageMetadata } from '@/lib/seo';
+import { KEYWORDS, generatePageMetadata, SITE_URL } from '@/lib/seo';
+import { BreadcrumbJsonLd } from '@/components/wayfare/JsonLd';
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'About Wayfare — Our Story, Mission & Team',
@@ -15,5 +16,18 @@ export const metadata: Metadata = generatePageMetadata({
 });
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <BreadcrumbJsonLd items={{
+        items: [
+          { name: 'Home', url: SITE_URL },
+          { name: 'About', url: `${SITE_URL}/about` },
+        ],
+      }} />
+      <section aria-labelledby="about-heading">
+        <h1 id="about-heading" className="sr-only">About Wayfare</h1>
+        {children}
+      </section>
+    </>
+  );
 }

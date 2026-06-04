@@ -12,12 +12,14 @@ import {
   Flame,
   ArrowRight,
   Timer,
+  Users,
 } from 'lucide-react';
 import Link from 'next/link';
 
 interface FlashDeal {
   id: string;
   name: string;
+  slug: string;
   destination: string;
   image: string;
   price: number;
@@ -33,6 +35,7 @@ const flashDeals: FlashDeal[] = [
   {
     id: 'flash-1',
     name: 'Kerala Honeymoon Special',
+    slug: 'kerala-honeymoon-special',
     destination: 'Kerala, India',
     image: '/images/destinations/kerala.png',
     price: 22999,
@@ -46,6 +49,7 @@ const flashDeals: FlashDeal[] = [
   {
     id: 'flash-2',
     name: 'Maldives Paradise Escape',
+    slug: 'maldives-paradise-escape',
     destination: 'Maldives',
     image: '/images/destinations/maldives.png',
     price: 79999,
@@ -59,6 +63,7 @@ const flashDeals: FlashDeal[] = [
   {
     id: 'flash-3',
     name: 'Dubai Luxury Experience',
+    slug: 'dubai-luxury-experience',
     destination: 'Dubai, UAE',
     image: '/images/destinations/dubai.png',
     price: 59999,
@@ -72,6 +77,7 @@ const flashDeals: FlashDeal[] = [
   {
     id: 'flash-4',
     name: 'Goa Beach Holiday',
+    slug: 'goa-beach-holiday',
     destination: 'Goa, India',
     image: '/images/destinations/goa.png',
     price: 12999,
@@ -115,14 +121,14 @@ function CountdownTimer({ endsAt }: { endsAt: number }) {
     <div className="flex items-center gap-1.5">
       {blocks.map((block, i) => (
         <div key={block.label} className="flex items-center gap-1.5">
-          <div className="flex flex-col items-center">
-            <span className="text-sm sm:text-base font-bold text-amber-400 bg-amber-500/10 rounded-md px-2 py-1 min-w-[2rem] text-center border border-amber-500/20">
+          <div className="flex flex-col items-center countdown-digit">
+            <span className="text-sm sm:text-base font-black text-amber-300 bg-gradient-to-b from-amber-500/20 to-amber-500/5 rounded-lg px-2.5 py-1.5 min-w-[2.2rem] text-center border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)]">
               {String(block.value).padStart(2, '0')}
             </span>
-            <span className="text-[10px] text-gray-500 mt-0.5">{block.label}</span>
+            <span className="text-[9px] text-gray-500 mt-0.5 uppercase tracking-wider font-medium">{block.label}</span>
           </div>
           {i < blocks.length - 1 && (
-            <span className="text-amber-500/50 font-bold text-sm -mt-3">:</span>
+            <span className="text-amber-500/70 font-black text-lg -mt-4 animate-pulse">:</span>
           )}
         </div>
       ))}
@@ -204,10 +210,14 @@ export default function FlashDeals() {
                     </Badge>
                   </div>
 
-                  {/* Spots Left */}
-                  <div className="absolute top-3 right-3">
+                  {/* Limited Spots */}
+                  <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5">
                     <div className="rounded-full glass px-3 py-1.5 text-xs font-bold text-rose-300 border border-rose-500/30 bg-rose-500/10">
                       Only {deal.spotsLeft} spots left!
+                    </div>
+                    <div className="flex items-center gap-1 rounded-full glass px-2.5 py-1 text-xs font-medium text-amber-300">
+                      <Users className="h-3 w-3" />
+                      Limited Spots
                     </div>
                   </div>
 
@@ -215,7 +225,7 @@ export default function FlashDeals() {
                   <div className="absolute bottom-3 left-3 right-3">
                     <div className="flex items-center gap-2">
                       <Timer className="h-4 w-4 text-amber-400 shrink-0" />
-                      <span className="text-xs text-gray-400 shrink-0">Ends in:</span>
+                      <span className="text-xs text-gray-400 shrink-0 font-medium">Ends in:</span>
                       <CountdownTimer endsAt={deal.endsAt} />
                     </div>
                   </div>
@@ -264,7 +274,7 @@ export default function FlashDeals() {
                       className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-gray-950 font-bold rounded-lg glow-amber"
                       asChild
                     >
-                      <Link href="/contact">
+                      <Link href={`/packages/${deal.slug}`}>
                         Grab Deal
                         <ArrowRight className="ml-1 h-3.5 w-3.5" />
                       </Link>

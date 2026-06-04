@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Search, MapPin, Calendar, Users, Star, ArrowRight } from 'lucide-react';
+import { Search, MapPin, Calendar, Users, Star, ArrowRight, ShieldCheck, Phone } from 'lucide-react';
 import Link from 'next/link';
 
 const rotatingWords = [
@@ -18,9 +18,9 @@ const rotatingWords = [
 ];
 
 const floatingCards = [
-  { name: 'Kerala', emoji: '🌴', price: '₹22,999', rating: 4.9, x: 'right-8', y: 'top-[20%]', delay: 0 },
-  { name: 'Maldives', emoji: '🏝️', price: '₹79,999', rating: 4.9, x: 'right-4', y: 'top-[45%]', delay: 0.5 },
-  { name: 'Dubai', emoji: '🏙️', price: '₹59,999', rating: 4.9, x: 'right-12', y: 'top-[70%]', delay: 1 },
+  { name: 'Kerala', emoji: '🌴', price: '₹22,999', from: '₹18,999', rating: 4.9, x: 'right-6', y: 'top-[18%]', delay: 0 },
+  { name: 'Maldives', emoji: '🏝️', price: '₹79,999', from: '₹64,999', rating: 4.9, x: 'right-2', y: 'top-[43%]', delay: 0.5 },
+  { name: 'Dubai', emoji: '🏙️', price: '₹59,999', from: '₹49,999', rating: 4.9, x: 'right-10', y: 'top-[68%]', delay: 1 },
 ];
 
 function TypingText() {
@@ -56,7 +56,7 @@ function TypingText() {
   }, [text, isDeleting, wordIndex]);
 
   return (
-    <span className="gradient-text">
+    <span className="gradient-text text-5xl sm:text-6xl lg:text-8xl font-black">
       {text}
       <span className="animate-pulse text-teal-400">|</span>
     </span>
@@ -122,6 +122,9 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-gray-950/50" />
       </div>
 
+      {/* Pulsing gradient background animation */}
+      <div className="absolute inset-0 hero-gradient-bg opacity-60" />
+
       {/* Particles */}
       <Particles />
 
@@ -150,7 +153,7 @@ export default function Hero() {
             className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-7xl leading-tight"
           >
             Discover Your Perfect
-            <span className="block mt-2 h-[1.2em]">
+            <span className="block mt-2 min-h-[1.3em]">
               <TypingText />
             </span>
           </motion.h1>
@@ -252,6 +255,23 @@ export default function Hero() {
               </div>
             ))}
           </motion.div>
+
+          {/* Trust Badges */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.0 }}
+            className="mt-6 flex flex-wrap items-center gap-4"
+          >
+            <div className="flex items-center gap-2 rounded-full glass px-4 py-2 text-sm">
+              <ShieldCheck className="h-4 w-4 text-teal-400" />
+              <span className="text-gray-300 font-medium">Verified by 10,000+ Travelers</span>
+            </div>
+            <div className="flex items-center gap-2 rounded-full glass px-4 py-2 text-sm">
+              <Phone className="h-4 w-4 text-amber-400" />
+              <span className="text-gray-300 font-medium">24/7 Support</span>
+            </div>
+          </motion.div>
         </div>
 
         {/* Floating Destination Cards (Desktop only) */}
@@ -262,27 +282,27 @@ export default function Hero() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 1 + card.delay }}
-              className={`absolute ${card.x} ${card.y} w-52`}
+              className={`absolute ${card.x} ${card.y} w-64`}
             >
               <motion.div
                 animate={{ y: [0, -12, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: card.delay }}
-                className="rounded-2xl glass-strong p-4 hover:glow-teal transition-all duration-300"
+                className="rounded-2xl glass-strong p-5 hover:glow-teal transition-all duration-300"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">{card.emoji}</span>
+                  <span className="text-3xl">{card.emoji}</span>
                   <div>
-                    <h4 className="text-sm font-bold text-white">{card.name}</h4>
+                    <h4 className="text-base font-bold text-white">{card.name}</h4>
                     <div className="flex items-center gap-1">
-                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                       <span className="text-xs font-semibold text-amber-400">{card.rating}</span>
                     </div>
                   </div>
                 </div>
-                <div className="mt-2 flex items-end justify-between">
+                <div className="mt-3 flex items-end justify-between">
                   <div>
-                    <p className="text-[10px] text-gray-500 uppercase">Starting from</p>
-                    <p className="text-lg font-bold text-amber-400">{card.price}</p>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">Starting from</p>
+                    <p className="text-xl font-bold text-amber-400">{card.from}</p>
                   </div>
                   <Link href="/packages" className="text-xs text-teal-400 hover:text-teal-300 flex items-center gap-1 font-semibold transition-colors">
                     Explore <ArrowRight className="h-3 w-3" />

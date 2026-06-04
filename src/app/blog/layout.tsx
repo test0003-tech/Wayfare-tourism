@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { KEYWORDS, generatePageMetadata } from '@/lib/seo';
+import { KEYWORDS, generatePageMetadata, SITE_URL } from '@/lib/seo';
+import { BreadcrumbJsonLd } from '@/components/wayfare/JsonLd';
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'Blog & Travel Tips — Expert Travel Insights',
@@ -17,5 +18,18 @@ export const metadata: Metadata = generatePageMetadata({
 });
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <BreadcrumbJsonLd items={{
+        items: [
+          { name: 'Home', url: SITE_URL },
+          { name: 'Blog', url: `${SITE_URL}/blog` },
+        ],
+      }} />
+      <section aria-labelledby="blog-heading">
+        <h1 id="blog-heading" className="sr-only">Blog & Travel Tips</h1>
+        {children}
+      </section>
+    </>
+  );
 }

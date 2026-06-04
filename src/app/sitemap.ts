@@ -74,6 +74,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.5,
     },
+    {
+      url: `${SITE_URL}/feed.xml`,
+      lastModified: formatDate(now),
+      changeFrequency: 'daily',
+      priority: 0.6,
+    },
   ];
 
   // Package detail pages — highest priority for booking conversions

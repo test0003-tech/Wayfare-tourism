@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -7,7 +7,7 @@ import Footer from "@/components/wayfare/Footer";
 import ChatBot from "@/components/wayfare/ChatBot";
 import WishlistDrawer from "@/components/wayfare/WishlistDrawer";
 import BackToTop from "@/components/wayfare/BackToTop";
-import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/wayfare/JsonLd";
+import { OrganizationJsonLd, WebSiteJsonLd, LocalBusinessJsonLd, HowToJsonLd } from "@/components/wayfare/JsonLd";
 import {
   SITE_URL,
   SITE_NAME,
@@ -26,6 +26,14 @@ const inter = Inter({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
+
+// Separate viewport export for proper meta tag generation
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#0d9488",
+};
 
 // Comprehensive root metadata — the foundation for ALL page SEO
 export const metadata: Metadata = {
@@ -109,7 +117,6 @@ export const metadata: Metadata = {
     "geo.placename": GEO_PLACENAME,
     "geo.position": GEO_POSITION,
     "ICBM": ICBM,
-    "theme-color": "#0d9488",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "black-translucent",
     "mobile-web-app-capable": "yes",
@@ -127,19 +134,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-IN" suppressHydrationWarning className="dark">
+    <html lang="en-IN" dir="ltr" suppressHydrationWarning className="dark">
       <head>
         {/* Preconnect to external domains for performance */}
+        <link rel="preconnect" href="https://wayfare.travel" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* DNS prefetch for images */}
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        {/* RSS Feed */}
+        <link rel="alternate" type="application/rss+xml" title="Wayfare Travel RSS Feed" href="/feed.xml" />
+        {/* Explicit theme-color for browser chrome */}
+        <meta name="theme-color" content="#0d9488" />
       </head>
       <body
         className={`${inter.variable} antialiased bg-gray-950 text-gray-100`}
       >
         <OrganizationJsonLd />
         <WebSiteJsonLd />
+        <LocalBusinessJsonLd />
+        <HowToJsonLd />
         <div className="min-h-screen flex flex-col">
           <Navbar />
           <main className="flex-1" role="main">{children}</main>

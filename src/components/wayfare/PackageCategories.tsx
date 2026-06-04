@@ -15,6 +15,8 @@ const categories = [
     iconColor: 'text-rose-400',
     borderHover: 'hover:border-rose-500/30',
     description: 'Romantic getaways for couples with private dinners, spa & more',
+    packageCount: 4,
+    image: '/images/destinations/kerala.png',
   },
   {
     id: 'adventure',
@@ -25,6 +27,8 @@ const categories = [
     iconColor: 'text-orange-400',
     borderHover: 'hover:border-orange-500/30',
     description: 'Trekking, rafting, paragliding & thrilling outdoor activities',
+    packageCount: 3,
+    image: '/images/destinations/kashmir.png',
   },
   {
     id: 'family',
@@ -35,6 +39,8 @@ const categories = [
     iconColor: 'text-teal-400',
     borderHover: 'hover:border-teal-500/30',
     description: 'Kid-friendly destinations with activities for all ages',
+    packageCount: 5,
+    image: '/images/destinations/goa.png',
   },
   {
     id: 'pilgrimage',
@@ -45,6 +51,8 @@ const categories = [
     iconColor: 'text-amber-400',
     borderHover: 'hover:border-amber-500/30',
     description: 'Spiritual journeys to sacred temples and holy sites',
+    packageCount: 2,
+    image: '/images/destinations/rajasthan.png',
   },
   {
     id: 'wildlife',
@@ -55,6 +63,8 @@ const categories = [
     iconColor: 'text-emerald-400',
     borderHover: 'hover:border-emerald-500/30',
     description: 'Safari tours, nature reserves & exotic wildlife spotting',
+    packageCount: 3,
+    image: '/images/destinations/kerala.png',
   },
   {
     id: 'beach',
@@ -65,6 +75,8 @@ const categories = [
     iconColor: 'text-cyan-400',
     borderHover: 'hover:border-cyan-500/30',
     description: 'Sun, sand & surf — tropical beach escapes & water sports',
+    packageCount: 4,
+    image: '/images/destinations/goa.png',
   },
 ];
 
@@ -104,22 +116,45 @@ export default function PackageCategories() {
               initial={{ opacity: 0, y: 30 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`group relative overflow-hidden rounded-2xl glass p-5 sm:p-6 transition-all duration-300 tilt-card ${cat.borderHover} ${cat.glowColor}`}
+              className={`group relative overflow-hidden rounded-2xl glass p-5 sm:p-6 transition-all duration-500 tilt-card ${cat.borderHover} ${cat.glowColor}`}
             >
-              <div className="flex items-start gap-4">
-                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${cat.iconBg} transition-all duration-300 group-hover:scale-110`}>
-                  <cat.icon className={`h-6 w-6 ${cat.iconColor}`} />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-bold text-white text-base sm:text-lg">{cat.name}</h3>
-                  <p className="mt-1 text-sm text-gray-400 line-clamp-2">{cat.description}</p>
-                </div>
+              {/* Subtle image background */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500">
+                <img
+                  src={cat.image}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
               </div>
-              <div className="mt-4 flex items-center text-sm font-medium text-teal-400 group-hover:text-teal-300 transition-colors">
-                Explore packages
-                <svg className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-gray-900/70 to-gray-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              {/* Hover glow overlay */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{
+                background: 'radial-gradient(circle at 50% 50%, rgba(13,148,136,0.06), transparent 70%)'
+              }} />
+
+              <div className="relative z-10">
+                <div className="flex items-start gap-4">
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${cat.iconBg} transition-all duration-300 group-hover:scale-110`}>
+                    <cat.icon className={`h-6 w-6 ${cat.iconColor}`} />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-white text-base sm:text-lg">{cat.name}</h3>
+                    <p className="mt-1 text-sm text-gray-400 line-clamp-2">{cat.description}</p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between">
+                  <div className="flex items-center text-sm font-medium text-teal-400 group-hover:text-teal-300 transition-colors">
+                    Explore packages
+                    <svg className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                  <Badge variant="secondary" className="glass text-xs text-gray-400">
+                    {cat.packageCount} packages
+                  </Badge>
+                </div>
               </div>
             </motion.a>
           ))}

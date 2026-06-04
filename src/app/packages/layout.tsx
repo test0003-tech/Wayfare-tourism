@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { SITE_URL, KEYWORDS, generatePageMetadata } from '@/lib/seo';
 import { getAllEdgePackages } from '@/lib/edge-data';
-import { ItemListJsonLd } from '@/components/wayfare/JsonLd';
+import { ItemListJsonLd, BreadcrumbJsonLd } from '@/components/wayfare/JsonLd';
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'Tour Packages — Honeymoon, Adventure & Family Packages',
@@ -34,7 +34,16 @@ export default function PackagesLayout({ children }: { children: React.ReactNode
           position: i + 1,
         })),
       }} />
-      {children}
+      <BreadcrumbJsonLd items={{
+        items: [
+          { name: 'Home', url: SITE_URL },
+          { name: 'Packages', url: `${SITE_URL}/packages` },
+        ],
+      }} />
+      <section aria-labelledby="packages-heading">
+        <h1 id="packages-heading" className="sr-only">Tour Packages</h1>
+        {children}
+      </section>
     </>
   );
 }

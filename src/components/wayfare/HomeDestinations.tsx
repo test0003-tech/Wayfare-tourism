@@ -6,7 +6,30 @@ import Link from 'next/link';
 import { Destination } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, ArrowRight } from 'lucide-react';
+import { MapPin, ArrowRight, Flame } from 'lucide-react';
+
+const destinationPrices: Record<string, string> = {
+  'Kerala': '₹18,999',
+  'Kashmir': '₹22,999',
+  'Goa': '₹11,999',
+  'Rajasthan': '₹15,999',
+  'Himachal Pradesh': '₹14,499',
+  'Andaman': '₹24,999',
+  'Maldives': '₹64,999',
+  'Dubai': '₹49,999',
+  'Thailand': '₹29,999',
+  'Singapore': '₹39,999',
+  'Bali': '₹34,999',
+  'Sri Lanka': '₹27,999',
+  'Malaysia': '₹32,999',
+  'Mauritius': '₹54,999',
+  'Vietnam': '₹26,999',
+  'Turkey': '₹59,999',
+  'Switzerland': '₹89,999',
+  'Italy': '₹79,999',
+};
+
+const popularDestinations = ['Kerala', 'Kashmir', 'Goa'];
 
 export default function HomeDestinations() {
   const [domestic, setDomestic] = useState<Destination[]>([]);
@@ -34,11 +57,14 @@ export default function HomeDestinations() {
     return () => observer.disconnect();
   }, []);
 
+  const getPrice = (name: string) => destinationPrices[name] || null;
+  const isPopular = (name: string) => popularDestinations.includes(name);
+
   return (
     <section ref={sectionRef} className="py-16 sm:py-20 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Domestic Destinations */}
-        <div className="mb-12">
+        <div className="mb-16">
           <div className="flex items-end justify-between mb-8">
             <div>
               <Badge variant="secondary" className="mb-3 glass text-teal-300 border-teal-500/30">
@@ -64,14 +90,24 @@ export default function HomeDestinations() {
               >
                 <Link
                   href={`/destinations/${dest.slug}`}
-                  className="group relative overflow-hidden rounded-2xl aspect-[4/5] tilt-card cursor-pointer block"
+                  className="group relative overflow-hidden rounded-2xl aspect-[3/4] tilt-card cursor-pointer block"
                 >
                   <img
                     src={dest.image}
                     alt={dest.name}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-115"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950/90 via-gray-950/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950/95 via-gray-950/40 to-transparent" />
+
+                  {/* Popular Badge */}
+                  {isPopular(dest.name) && (
+                    <div className="absolute top-3 left-3 z-10">
+                      <div className="flex items-center gap-1 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-2.5 py-1 text-xs font-bold text-white shadow-lg">
+                        <span className="animate-flame">🔥</span> Popular
+                      </div>
+                    </div>
+                  )}
+
                   <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
                     <h3 className="text-sm sm:text-base font-bold text-white leading-tight">
                       {dest.name}
@@ -79,9 +115,14 @@ export default function HomeDestinations() {
                     <p className="mt-0.5 text-xs text-amber-400/80 font-medium">
                       {dest.tagline}
                     </p>
+                    {getPrice(dest.name) && (
+                      <p className="mt-1.5 text-xs font-semibold text-teal-400">
+                        Starting from {getPrice(dest.name)}
+                      </p>
+                    )}
                     {dest._count && (
-                      <p className="mt-1 text-xs text-teal-400 font-medium">
-                        {dest._count.packages} packages
+                      <p className="mt-0.5 text-xs text-gray-500 font-medium">
+                        {dest._count.packages} packages available
                       </p>
                     )}
                   </div>
@@ -90,9 +131,13 @@ export default function HomeDestinations() {
             ))}
           </div>
 
-          <Link href="/destinations?region=domestic" className="sm:hidden flex items-center justify-center gap-1 text-sm font-medium text-teal-400 mt-4">
-            View All Domestic <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="mt-6 flex justify-center">
+            <Link href="/destinations?region=domestic">
+              <Button variant="outline" className="border-teal-500/30 text-teal-400 hover:bg-teal-500/10 hover:text-teal-300 hover:border-teal-500/50 rounded-xl gap-2">
+                View All Destinations <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* International Destinations */}
@@ -122,14 +167,24 @@ export default function HomeDestinations() {
               >
                 <Link
                   href={`/destinations/${dest.slug}`}
-                  className="group relative overflow-hidden rounded-2xl aspect-[4/5] tilt-card cursor-pointer block"
+                  className="group relative overflow-hidden rounded-2xl aspect-[3/4] tilt-card cursor-pointer block"
                 >
                   <img
                     src={dest.image}
                     alt={dest.name}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-115"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950/90 via-gray-950/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950/95 via-gray-950/40 to-transparent" />
+
+                  {/* Popular Badge for international top 3 */}
+                  {i < 3 && (
+                    <div className="absolute top-3 left-3 z-10">
+                      <div className="flex items-center gap-1 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-2.5 py-1 text-xs font-bold text-white shadow-lg">
+                        <span className="animate-flame">🔥</span> Popular
+                      </div>
+                    </div>
+                  )}
+
                   <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
                     <h3 className="text-sm sm:text-base font-bold text-white leading-tight">
                       {dest.name}
@@ -137,9 +192,14 @@ export default function HomeDestinations() {
                     <p className="mt-0.5 text-xs text-amber-400/80 font-medium">
                       {dest.tagline}
                     </p>
+                    {getPrice(dest.name) && (
+                      <p className="mt-1.5 text-xs font-semibold text-teal-400">
+                        Starting from {getPrice(dest.name)}
+                      </p>
+                    )}
                     {dest._count && (
-                      <p className="mt-1 text-xs text-teal-400 font-medium">
-                        {dest._count.packages} packages
+                      <p className="mt-0.5 text-xs text-gray-500 font-medium">
+                        {dest._count.packages} packages available
                       </p>
                     )}
                   </div>
@@ -148,9 +208,13 @@ export default function HomeDestinations() {
             ))}
           </div>
 
-          <Link href="/destinations?region=international" className="sm:hidden flex items-center justify-center gap-1 text-sm font-medium text-teal-400 mt-4">
-            View All International <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="mt-6 flex justify-center">
+            <Link href="/destinations?region=international">
+              <Button variant="outline" className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10 hover:text-amber-300 hover:border-amber-500/50 rounded-xl gap-2">
+                View All Destinations <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </section>

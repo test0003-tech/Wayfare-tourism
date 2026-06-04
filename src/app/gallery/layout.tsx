@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { generatePageMetadata } from '@/lib/seo';
+import { generatePageMetadata, SITE_URL } from '@/lib/seo';
+import { BreadcrumbJsonLd } from '@/components/wayfare/JsonLd';
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'Photo Gallery — Real Travel Moments',
@@ -15,5 +16,18 @@ export const metadata: Metadata = generatePageMetadata({
 });
 
 export default function GalleryLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <BreadcrumbJsonLd items={{
+        items: [
+          { name: 'Home', url: SITE_URL },
+          { name: 'Gallery', url: `${SITE_URL}/gallery` },
+        ],
+      }} />
+      <section aria-labelledby="gallery-heading">
+        <h1 id="gallery-heading" className="sr-only">Photo Gallery</h1>
+        {children}
+      </section>
+    </>
+  );
 }

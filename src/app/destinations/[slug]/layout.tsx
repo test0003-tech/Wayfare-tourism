@@ -36,9 +36,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       `${destination.name} best time to visit`,
       `${destination.name} hotels`,
       `Wayfare ${destination.name}`,
+      `${regionLabel.toLowerCase()} destination ${destination.name}`,
       ...KEYWORDS.domestic.filter(k => k.toLowerCase().includes(destination.name.toLowerCase())),
       ...KEYWORDS.international.filter(k => k.toLowerCase().includes(destination.name.toLowerCase())),
     ],
+    ...(true && {
+      robots: { index: true, follow: true },
+    }),
   });
 }
 

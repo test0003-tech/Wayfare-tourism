@@ -270,6 +270,17 @@ export function generateDetailPageMetadata({
       site: TWITTER_HANDLE,
       creator: TWITTER_HANDLE,
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   };
 }
 
@@ -340,6 +351,62 @@ export const DESTINATION_FAQS = [
   },
 ];
 
+// ─── Internal Linking: Related Pages Map ─────────────────────────────────────
+// Maps each section to related pages for internal linking and SEO
+
+export const RELATED_PAGES: Record<string, { label: string; href: string; description: string }[]> = {
+  '/': [
+    { label: 'Tour Packages', href: '/packages', description: 'Explore 50+ curated tour packages starting from ₹11,999' },
+    { label: 'Destinations', href: '/destinations', description: 'Discover 50+ stunning travel destinations' },
+    { label: 'Hotels', href: '/hotels', description: 'Book 200+ luxury hotels & resorts' },
+    { label: 'Flight Deals', href: '/flights', description: 'Find cheap flights starting from ₹4,999' },
+  ],
+  '/packages': [
+    { label: 'Destinations', href: '/destinations', description: 'Explore destinations before choosing a package' },
+    { label: 'Hotels', href: '/hotels', description: 'Find hotels for your trip' },
+    { label: 'Flight Deals', href: '/flights', description: 'Book flights to your destination' },
+    { label: 'Blog', href: '/blog', description: 'Travel tips and guides' },
+    { label: 'Contact Us', href: '/contact', description: 'Get help planning your trip' },
+  ],
+  '/destinations': [
+    { label: 'Tour Packages', href: '/packages', description: 'Browse packages for each destination' },
+    { label: 'Hotels', href: '/hotels', description: 'Find hotels at each destination' },
+    { label: 'Flight Deals', href: '/flights', description: 'Book flights to your destination' },
+    { label: 'Gallery', href: '/gallery', description: 'See photos from each destination' },
+  ],
+  '/hotels': [
+    { label: 'Tour Packages', href: '/packages', description: 'Packages with included hotel stays' },
+    { label: 'Destinations', href: '/destinations', description: 'Explore destinations with great hotels' },
+    { label: 'Flight Deals', href: '/flights', description: 'Book flights along with your hotel' },
+    { label: 'Contact Us', href: '/contact', description: 'Get help with hotel booking' },
+  ],
+  '/flights': [
+    { label: 'Tour Packages', href: '/packages', description: 'Packages that include flights' },
+    { label: 'Destinations', href: '/destinations', description: 'Explore flight destinations' },
+    { label: 'Hotels', href: '/hotels', description: 'Book hotels at your destination' },
+  ],
+  '/about': [
+    { label: 'Tour Packages', href: '/packages', description: 'See what we offer' },
+    { label: 'Contact Us', href: '/contact', description: 'Get in touch with our team' },
+    { label: 'Blog', href: '/blog', description: 'Read our travel insights' },
+  ],
+  '/contact': [
+    { label: 'Tour Packages', href: '/packages', description: 'Browse packages before contacting us' },
+    { label: 'About Us', href: '/about', description: 'Learn about Wayfare' },
+    { label: 'Hotels', href: '/hotels', description: 'Browse hotels' },
+  ],
+  '/blog': [
+    { label: 'Destinations', href: '/destinations', description: 'Explore destinations from our guides' },
+    { label: 'Tour Packages', href: '/packages', description: 'Book packages inspired by our articles' },
+    { label: 'Gallery', href: '/gallery', description: 'See real travel photos' },
+  ],
+  '/gallery': [
+    { label: 'Destinations', href: '/destinations', description: 'Visit the destinations in our photos' },
+    { label: 'Tour Packages', href: '/packages', description: 'Book a trip to these places' },
+    { label: 'Blog', href: '/blog', description: 'Read about these destinations' },
+  ],
+};
+
 // ─── Helper: Build Breadcrumb Structured Data ────────────────────────────────
 
 export function buildBreadcrumbItems(items: { label: string; href?: string }[]) {
@@ -350,4 +417,10 @@ export function buildBreadcrumbItems(items: { label: string; href?: string }[]) 
       url: item.href ? `${SITE_URL}${item.href}` : SITE_URL,
     })),
   ];
+}
+
+// ─── Helper: Get related pages for internal linking ─────────────────────────
+
+export function getRelatedPages(path: string): { label: string; href: string; description: string }[] {
+  return RELATED_PAGES[path] || [];
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { KEYWORDS, generatePageMetadata, SITE_URL } from '@/lib/seo';
 import { getAllEdgeHotels } from '@/lib/edge-data';
-import { ItemListJsonLd } from '@/components/wayfare/JsonLd';
+import { ItemListJsonLd, BreadcrumbJsonLd } from '@/components/wayfare/JsonLd';
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'Hotels & Resorts — Luxury, Boutique & Heritage Stays',
@@ -33,7 +33,16 @@ export default function HotelsLayout({ children }: { children: React.ReactNode }
           position: i + 1,
         })),
       }} />
-      {children}
+      <BreadcrumbJsonLd items={{
+        items: [
+          { name: 'Home', url: SITE_URL },
+          { name: 'Hotels', url: `${SITE_URL}/hotels` },
+        ],
+      }} />
+      <section aria-labelledby="hotels-heading">
+        <h1 id="hotels-heading" className="sr-only">Hotels & Resorts</h1>
+        {children}
+      </section>
     </>
   );
 }

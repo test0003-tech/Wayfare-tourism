@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { KEYWORDS, generatePageMetadata, SITE_URL } from '@/lib/seo';
 import { getAllEdgeDestinations } from '@/lib/edge-data';
-import { ItemListJsonLd } from '@/components/wayfare/JsonLd';
+import { ItemListJsonLd, BreadcrumbJsonLd } from '@/components/wayfare/JsonLd';
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'Travel Destinations — Domestic & International',
@@ -35,7 +35,16 @@ export default function DestinationsLayout({ children }: { children: React.React
           position: i + 1,
         })),
       }} />
-      {children}
+      <BreadcrumbJsonLd items={{
+        items: [
+          { name: 'Home', url: SITE_URL },
+          { name: 'Destinations', url: `${SITE_URL}/destinations` },
+        ],
+      }} />
+      <section aria-labelledby="destinations-heading">
+        <h1 id="destinations-heading" className="sr-only">Travel Destinations</h1>
+        {children}
+      </section>
     </>
   );
 }

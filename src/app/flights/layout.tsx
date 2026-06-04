@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { KEYWORDS, generatePageMetadata } from '@/lib/seo';
+import { KEYWORDS, generatePageMetadata, SITE_URL } from '@/lib/seo';
+import { BreadcrumbJsonLd } from '@/components/wayfare/JsonLd';
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'Flight Deals — Affordable Flights from India',
@@ -18,5 +19,18 @@ export const metadata: Metadata = generatePageMetadata({
 });
 
 export default function FlightsLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <BreadcrumbJsonLd items={{
+        items: [
+          { name: 'Home', url: SITE_URL },
+          { name: 'Flights', url: `${SITE_URL}/flights` },
+        ],
+      }} />
+      <section aria-labelledby="flights-heading">
+        <h1 id="flights-heading" className="sr-only">Flight Deals</h1>
+        {children}
+      </section>
+    </>
+  );
 }
