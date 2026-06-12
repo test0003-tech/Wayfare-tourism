@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- DOMESTIC PACKAGES -->
+
+  <!-- Kerala Backwaters & Beaches - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/kerala-backwaters-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/kerala.png</image:loc>
+      <image:title>Kerala Backwaters &amp; Beaches Tour - ₹18,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Kerala Honeymoon Special - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/kerala-honeymoon-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/packages/honeymoon.png</image:loc>
+      <image:title>Kerala Honeymoon Special - ₹22,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Kashmir Valley Explorer - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/kashmir-valley-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/kashmir.png</image:loc>
+      <image:title>Kashmir Valley Explorer - ₹17,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Kashmir Honeymoon Delight - 6N7D -->
+  <url>
+    <loc>https://wayfare.travel/packages/kashmir-honeymoon-6n7d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/packages/honeymoon.png</image:loc>
+      <image:title>Kashmir Honeymoon Delight - ₹28,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Goa Beach Getaway - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/goa-beach-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/goa.png</image:loc>
+      <image:title>Goa Beach Getaway - ₹12,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Darjeeling & Sikkim Combo - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/darjeeling-sikkim-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/darjeeling.png</image:loc>
+      <image:title>Darjeeling &amp; Sikkim Combo - ₹15,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Andaman Island Escape - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/andaman-island-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/andaman.png</image:loc>
+      <image:title>Andaman Island Escape - ₹24,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Manali Adventure Package - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/manali-adventure-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/packages/adventure.png</image:loc>
+      <image:title>Manali Adventure Package - ₹11,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Manali Honeymoon Retreat - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/manali-honeymoon-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/packages/honeymoon.png</image:loc>
+      <image:title>Manali Honeymoon Retreat - ₹19,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Golden Triangle Tour - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/golden-triangle-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/delhi.png</image:loc>
+      <image:title>Golden Triangle Tour - Delhi Agra Jaipur - ₹15,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Sikkim Serenity Tour - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/sikkim-serenity-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/sikkim.png</image:loc>
+      <image:title>Sikkim Serenity Tour - ₹16,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Himachal Himalayan Journey - 6N7D -->
+  <url>
+    <loc>https://wayfare.travel/packages/himachal-himalayan-6n7d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/himachal.png</image:loc>
+      <image:title>Himachal Himalayan Journey - ₹21,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Dharamshala & McLeod Ganj - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/dharamshala-mcleod-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/dharamshala.png</image:loc>
+      <image:title>Dharamshala &amp; McLeod Ganj - ₹12,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- INTERNATIONAL PACKAGES -->
+
+  <!-- Dubai Luxury Experience - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/dubai-luxury-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/dubai.png</image:loc>
+      <image:title>Dubai Luxury Experience - ₹44,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Dubai Honeymoon Special - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/dubai-honeymoon-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/packages/honeymoon.png</image:loc>
+      <image:title>Dubai Honeymoon Special - ₹59,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Maldives Paradise Escape - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/maldives-paradise-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/maldives.png</image:loc>
+      <image:title>Maldives Paradise Escape - ₹79,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Thailand Explorer - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/thailand-explorer-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/thailand.png</image:loc>
+      <image:title>Thailand Explorer - ₹32,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Singapore Delight - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/singapore-delight-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/singapore.png</image:loc>
+      <image:title>Singapore Delight - ₹38,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Malaysia & Singapore Combo - 6N7D -->
+  <url>
+    <loc>https://wayfare.travel/packages/malaysia-singapore-6n7d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/malaysia.png</image:loc>
+      <image:title>Malaysia &amp; Singapore Combo - ₹42,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Bali Romantic Getaway - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/bali-romantic-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/bali.png</image:loc>
+      <image:title>Bali Romantic Getaway - ₹45,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Sri Lanka Cultural Tour - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/srilanka-cultural-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/srilanka.png</image:loc>
+      <image:title>Sri Lanka Cultural Tour - ₹29,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Vietnam Discovery - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/vietnam-discovery-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/vietnam.png</image:loc>
+      <image:title>Vietnam Discovery - ₹27,999</image:title>
+    </image:image>
+  </url>
+
+  <!-- Nepal Himalayan Adventure - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/nepal-himalayan-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/nepal.png</image:loc>
+      <image:title>Nepal Himalayan Adventure - ₹21,999</image:title>
+    </image:image>
+  </url>
+
+</urlset>

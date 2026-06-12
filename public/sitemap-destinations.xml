@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- DOMESTIC DESTINATIONS -->
+
+  <url>
+    <loc>https://wayfare.travel/destinations/kerala</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/kerala.png</image:loc>
+      <image:title>Kerala - God's Own Country | Backwaters, Beaches &amp; Hill Stations</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/kashmir</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/kashmir.png</image:loc>
+      <image:title>Kashmir - Paradise on Earth | Dal Lake, Gulmarg &amp; Valleys</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/goa</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/goa.png</image:loc>
+      <image:title>Goa - Sun, Sand &amp; Surf | Beaches, Nightlife &amp; Heritage</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/darjeeling</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/darjeeling.png</image:loc>
+      <image:title>Darjeeling - Queen of the Hills | Toy Train &amp; Tea Gardens</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/andaman</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/andaman.png</image:loc>
+      <image:title>Andaman &amp; Nicobar - Emerald Islands | Coral Reefs &amp; Beaches</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/manali</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/manali.png</image:loc>
+      <image:title>Manali - Valley of the Gods | Adventure &amp; Mountains</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/dharamshala</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/dharamshala.png</image:loc>
+      <image:title>Dharamshala - Little Lhasa | Tibetan Culture &amp; Monasteries</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/delhi-golden-triangle</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/delhi.png</image:loc>
+      <image:title>Golden Triangle - Delhi Agra Jaipur | Heritage &amp; Culture</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/sikkim</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/sikkim.png</image:loc>
+      <image:title>Sikkim - Land of Monasteries | Lakes &amp; Mountains</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/himachal</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/himachal.png</image:loc>
+      <image:title>Himachal Pradesh - Land of Gods | Shimla, Manali &amp; More</image:title>
+    </image:image>
+  </url>
+
+  <!-- INTERNATIONAL DESTINATIONS -->
+
+  <url>
+    <loc>https://wayfare.travel/destinations/dubai</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/dubai.png</image:loc>
+      <image:title>Dubai - City of Gold | Burj Khalifa, Desert Safari &amp; Shopping</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/maldives</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/maldives.png</image:loc>
+      <image:title>Maldives - Sun, Sand &amp; Serenity | Overwater Villas &amp; Reefs</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/thailand</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/thailand.png</image:loc>
+      <image:title>Thailand - Land of Smiles | Temples, Beaches &amp; Street Food</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/singapore</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/singapore.png</image:loc>
+      <image:title>Singapore - The Lion City | Marina Bay &amp; Universal Studios</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/malaysia</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/malaysia.png</image:loc>
+      <image:title>Malaysia - Truly Asia | Petronas Towers &amp; Rainforests</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/bali</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/bali.png</image:loc>
+      <image:title>Bali - Island of the Gods | Rice Terraces, Temples &amp; Beaches</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/srilanka</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/srilanka.png</image:loc>
+      <image:title>Sri Lanka - Pearl of the Indian Ocean | Ruins &amp; Wildlife</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/vietnam</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/vietnam.png</image:loc>
+      <image:title>Vietnam - Hidden Charm | Ha Long Bay &amp; Hoi An</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://wayfare.travel/destinations/nepal</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/nepal.png</image:loc>
+      <image:title>Nepal - Roof of the World | Himalayas &amp; Temples</image:title>
+    </image:image>
+  </url>
+
+</urlset>

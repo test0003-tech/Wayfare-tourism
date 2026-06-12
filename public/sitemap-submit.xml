@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Wayfare Travel - Complete Sitemap for Search Engine Submission
+  Generated: 2025-03-04
+  Total URLs: 69
+  
+  HOW TO SUBMIT:
+  1. Google Search Console → https://search.google.com/search-console → Sitemaps → Submit
+  2. Bing Webmaster Tools → https://www.bing.com/webmasters → Sitemaps → Submit
+  3. Yandex Webmaster → https://webmaster.yandex.com → Sitemaps → Add
+  
+  IMPORTANT: Replace "https://wayfare.travel" with your actual deployed URL before submitting!
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- STATIC PAGES - High Priority -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://wayfare.travel/</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/logo-wayfare-new.png</image:loc>
+      <image:title>Wayfare Travel - Book Tour Packages, Hotels &amp; Flights</image:title>
+      <image:caption>Wayfare Travel India - Domestic &amp; International Tour Packages</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Tour Packages Listing -->
+  <url>
+    <loc>https://wayfare.travel/packages</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Destinations Listing -->
+  <url>
+    <loc>https://wayfare.travel/destinations</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Hotels Listing -->
+  <url>
+    <loc>https://wayfare.travel/hotels</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Flights Listing -->
+  <url>
+    <loc>https://wayfare.travel/flights</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- About Us -->
+  <url>
+    <loc>https://wayfare.travel/about</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Contact Us -->
+  <url>
+    <loc>https://wayfare.travel/contact</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Gallery -->
+  <url>
+    <loc>https://wayfare.travel/gallery</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Blog -->
+  <url>
+    <loc>https://wayfare.travel/blog</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Travel Quiz -->
+  <url>
+    <loc>https://wayfare.travel/quiz</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- TOUR PACKAGE PAGES - Highest Conversion Priority -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Kerala Backwaters & Beaches - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/kerala-backwaters-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/kerala.png</image:loc>
+      <image:title>Kerala Backwaters &amp; Beaches Tour Package - 5 Nights 6 Days</image:title>
+      <image:caption>Experience Kerala houseboat stays, backwaters, and pristine beaches starting from ₹18,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Kerala Honeymoon Special - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/kerala-honeymoon-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/packages/honeymoon.png</image:loc>
+      <image:title>Kerala Honeymoon Special Package - 4 Nights 5 Days</image:title>
+      <image:caption>Romantic Kerala honeymoon with private houseboat, candlelight dinner &amp; couples spa from ₹22,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Kashmir Valley Explorer - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/kashmir-valley-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/kashmir.png</image:loc>
+      <image:title>Kashmir Valley Explorer Tour Package - 5 Nights 6 Days</image:title>
+      <image:caption>Discover Kashmir with Srinagar, Gulmarg &amp; Pahalgam. Shikara rides, gondola &amp; Mughal Gardens from ₹17,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Kashmir Honeymoon Delight - 6N7D -->
+  <url>
+    <loc>https://wayfare.travel/packages/kashmir-honeymoon-6n7d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/packages/honeymoon.png</image:loc>
+      <image:title>Kashmir Honeymoon Delight Package - 6 Nights 7 Days</image:title>
+      <image:caption>Dreamy Kashmir honeymoon with luxury houseboat, shikara rides &amp; candlelight dinners from ₹28,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Goa Beach Getaway - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/goa-beach-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/goa.png</image:loc>
+      <image:title>Goa Beach Getaway Package - 4 Nights 5 Days</image:title>
+      <image:caption>Goa beach holiday with water sports, nightlife &amp; Portuguese heritage from ₹12,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Darjeeling & Sikkim Combo - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/darjeeling-sikkim-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/darjeeling.png</image:loc>
+      <image:title>Darjeeling &amp; Sikkim Combo Tour - 5 Nights 6 Days</image:title>
+      <image:caption>Explore Darjeeling toy train, Tiger Hill sunrise &amp; Sikkim monasteries from ₹15,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Andaman Island Escape - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/andaman-island-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/andaman.png</image:loc>
+      <image:title>Andaman Island Escape Package - 5 Nights 6 Days</image:title>
+      <image:caption>Pristine Andaman beaches, coral reefs, snorkeling &amp; scuba diving from ₹24,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Manali Adventure Package - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/manali-adventure-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/packages/adventure.png</image:loc>
+      <image:title>Manali Adventure Package - 4 Nights 5 Days</image:title>
+      <image:caption>Manali adventure with paragliding, river rafting, trekking &amp; skiing from ₹11,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Manali Honeymoon Retreat - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/manali-honeymoon-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/packages/honeymoon.png</image:loc>
+      <image:title>Manali Honeymoon Retreat - 5 Nights 6 Days</image:title>
+      <image:caption>Romantic Manali honeymoon with cozy resort, candlelight dinners &amp; mountain sunsets from ₹19,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Golden Triangle Tour - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/golden-triangle-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/delhi.png</image:loc>
+      <image:title>Golden Triangle Tour - Delhi Agra Jaipur - 5 Nights 6 Days</image:title>
+      <image:caption>Explore India's iconic circuit - Taj Mahal, majestic forts &amp; vibrant Rajasthan culture from ₹15,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Sikkim Serenity Tour - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/sikkim-serenity-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/sikkim.png</image:loc>
+      <image:title>Sikkim Serenity Tour - 5 Nights 6 Days</image:title>
+      <image:caption>Discover Sikkim monasteries, pristine lakes &amp; panoramic mountain views from ₹16,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Himachal Himalayan Journey - 6N7D -->
+  <url>
+    <loc>https://wayfare.travel/packages/himachal-himalayan-6n7d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/himachal.png</image:loc>
+      <image:title>Himachal Himalayan Journey - Shimla Manali Dharamshala - 6N7D</image:title>
+      <image:caption>Complete Himachal experience - Shimla, Manali &amp; Dharamshala from ₹21,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Dharamshala & McLeod Ganj - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/dharamshala-mcleod-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/dharamshala.png</image:loc>
+      <image:title>Dharamshala &amp; McLeod Ganj Tour - 4 Nights 5 Days</image:title>
+      <image:caption>Serene Dharamshala with Tibetan culture, monasteries &amp; mountain views from ₹12,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Dubai Luxury Experience - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/dubai-luxury-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/dubai.png</image:loc>
+      <image:title>Dubai Luxury Experience Package - 4 Nights 5 Days</image:title>
+      <image:caption>Dubai with Burj Khalifa, desert safari, dhow cruise &amp; shopping from ₹44,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Dubai Honeymoon Special - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/dubai-honeymoon-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/packages/honeymoon.png</image:loc>
+      <image:title>Dubai Honeymoon Special Package - 5 Nights 6 Days</image:title>
+      <image:caption>Romantic Dubai honeymoon with luxury stays, private desert dinner &amp; couples spa from ₹59,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Maldives Paradise Escape - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/maldives-paradise-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/maldives.png</image:loc>
+      <image:title>Maldives Paradise Escape Package - 4 Nights 5 Days</image:title>
+      <image:caption>Ultimate Maldives luxury with overwater villa, crystal lagoon &amp; dolphin cruise from ₹79,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Thailand Explorer - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/thailand-explorer-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/thailand.png</image:loc>
+      <image:title>Thailand Explorer Package - Bangkok Phuket - 5 Nights 6 Days</image:title>
+      <image:caption>Thailand from Bangkok to Phuket - temples, street food, island hopping &amp; nightlife from ₹32,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Singapore Delight - 4N5D -->
+  <url>
+    <loc>https://wayfare.travel/packages/singapore-delight-4n5d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/singapore.png</image:loc>
+      <image:title>Singapore Delight Package - 4 Nights 5 Days</image:title>
+      <image:caption>Singapore with Gardens by the Bay, Universal Studios &amp; Marina Bay Sands from ₹38,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Malaysia & Singapore Combo - 6N7D -->
+  <url>
+    <loc>https://wayfare.travel/packages/malaysia-singapore-6n7d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/malaysia.png</image:loc>
+      <image:title>Malaysia &amp; Singapore Combo Tour - 6 Nights 7 Days</image:title>
+      <image:caption>Best of Malaysia &amp; Singapore - Petronas Towers, Genting &amp; more from ₹42,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Bali Romantic Getaway - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/bali-romantic-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/bali.png</image:loc>
+      <image:title>Bali Romantic Getaway Package - 5 Nights 6 Days</image:title>
+      <image:caption>Romantic Bali with private pool villa, sunset temples &amp; couples spa from ₹45,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Sri Lanka Cultural Tour - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/srilanka-cultural-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/srilanka.png</image:loc>
+      <image:title>Sri Lanka Cultural Tour - 5 Nights 6 Days</image:title>
+      <image:caption>Sri Lanka ancient ruins, tea plantations, wildlife safaris &amp; beaches from ₹29,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Vietnam Discovery - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/vietnam-discovery-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/vietnam.png</image:loc>
+      <image:title>Vietnam Discovery Tour - 5 Nights 6 Days</image:title>
+      <image:caption>Vietnam from Ha Long Bay to Hoi An - beauty, history &amp; cuisine from ₹27,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Nepal Himalayan Adventure - 5N6D -->
+  <url>
+    <loc>https://wayfare.travel/packages/nepal-himalayan-5n6d</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/nepal.png</image:loc>
+      <image:title>Nepal Himalayan Adventure - 5 Nights 6 Days</image:title>
+      <image:caption>Nepal Himalayas with Kathmandu temples, Pokhara lakes &amp; mountain views from ₹21,999</image:caption>
+    </image:image>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- DESTINATION PAGES -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Kerala - God's Own Country -->
+  <url>
+    <loc>https://wayfare.travel/destinations/kerala</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/kerala.png</image:loc>
+      <image:title>Kerala - God's Own Country | Wayfare Travel</image:title>
+      <image:caption>Kerala backwaters, houseboats, Munnar tea gardens &amp; beaches</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Kashmir - Paradise on Earth -->
+  <url>
+    <loc>https://wayfare.travel/destinations/kashmir</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/kashmir.png</image:loc>
+      <image:title>Kashmir - Paradise on Earth | Wayfare Travel</image:title>
+      <image:caption>Kashmir valleys, Dal Lake shikara, Gulmarg &amp; Mughal Gardens</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Goa - Sun, Sand & Surf -->
+  <url>
+    <loc>https://wayfare.travel/destinations/goa</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/goa.png</image:loc>
+      <image:title>Goa - Sun, Sand &amp; Surf | Wayfare Travel</image:title>
+      <image:caption>Goa beaches, nightlife, Portuguese heritage &amp; water sports</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Darjeeling - Queen of the Hills -->
+  <url>
+    <loc>https://wayfare.travel/destinations/darjeeling</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/darjeeling.png</image:loc>
+      <image:title>Darjeeling - Queen of the Hills | Wayfare Travel</image:title>
+      <image:caption>Darjeeling toy train, Tiger Hill sunrise &amp; tea gardens</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Andaman & Nicobar - Emerald Islands -->
+  <url>
+    <loc>https://wayfare.travel/destinations/andaman</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/andaman.png</image:loc>
+      <image:title>Andaman &amp; Nicobar Islands - Emerald Islands | Wayfare Travel</image:title>
+      <image:caption>Andaman pristine beaches, coral reefs, snorkeling &amp; scuba diving</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Manali - Valley of the Gods -->
+  <url>
+    <loc>https://wayfare.travel/destinations/manali</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/manali.png</image:loc>
+      <image:title>Manali - Valley of the Gods | Wayfare Travel</image:title>
+      <image:caption>Manali adventure sports, paragliding, skiing &amp; mountain views</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Dharamshala - Little Lhasa of India -->
+  <url>
+    <loc>https://wayfare.travel/destinations/dharamshala</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/dharamshala.png</image:loc>
+      <image:title>Dharamshala - Little Lhasa of India | Wayfare Travel</image:title>
+      <image:caption>Dharamshala Tibetan culture, McLeod Ganj &amp; mountain monasteries</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Delhi - Golden Triangle -->
+  <url>
+    <loc>https://wayfare.travel/destinations/delhi-golden-triangle</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/delhi.png</image:loc>
+      <image:title>Golden Triangle - Delhi Agra Jaipur | Wayfare Travel</image:title>
+      <image:caption>Golden Triangle circuit - Taj Mahal, Amber Fort &amp; Indian heritage</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Sikkim - Land of Monasteries -->
+  <url>
+    <loc>https://wayfare.travel/destinations/sikkim</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/sikkim.png</image:loc>
+      <image:title>Sikkim - Land of Monasteries | Wayfare Travel</image:title>
+      <image:caption>Sikkim Buddhist monasteries, pristine lakes &amp; Kanchenjunga views</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Himachal Pradesh -->
+  <url>
+    <loc>https://wayfare.travel/destinations/himachal</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/himachal.png</image:loc>
+      <image:title>Himachal Pradesh - Land of Gods &amp; Beauty | Wayfare Travel</image:title>
+      <image:caption>Himachal Pradesh - Shimla, Manali, Dharamshala &amp; apple orchards</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Dubai - City of Gold -->
+  <url>
+    <loc>https://wayfare.travel/destinations/dubai</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/dubai.png</image:loc>
+      <image:title>Dubai - City of Gold | Wayfare Travel</image:title>
+      <image:caption>Dubai Burj Khalifa, desert safari, shopping &amp; luxury experiences</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Maldives - Sun, Sand & Serenity -->
+  <url>
+    <loc>https://wayfare.travel/destinations/maldives</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/maldives.png</image:loc>
+      <image:title>Maldives - Sun, Sand &amp; Serenity | Wayfare Travel</image:title>
+      <image:caption>Maldives overwater villas, crystal lagoons &amp; coral reefs</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Thailand - Land of Smiles -->
+  <url>
+    <loc>https://wayfare.travel/destinations/thailand</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/thailand.png</image:loc>
+      <image:title>Thailand - Land of Smiles | Wayfare Travel</image:title>
+      <image:caption>Thailand temples, beaches, street food &amp; island hopping</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Singapore - The Lion City -->
+  <url>
+    <loc>https://wayfare.travel/destinations/singapore</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/singapore.png</image:loc>
+      <image:title>Singapore - The Lion City | Wayfare Travel</image:title>
+      <image:caption>Singapore Marina Bay Sands, Gardens by the Bay &amp; Universal Studios</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Malaysia - Truly Asia -->
+  <url>
+    <loc>https://wayfare.travel/destinations/malaysia</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/malaysia.png</image:loc>
+      <image:title>Malaysia - Truly Asia | Wayfare Travel</image:title>
+      <image:caption>Malaysia Petronas Towers, rainforests, diverse cuisine &amp; islands</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Bali - Island of the Gods -->
+  <url>
+    <loc>https://wayfare.travel/destinations/bali</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/bali.png</image:loc>
+      <image:title>Bali - Island of the Gods | Wayfare Travel</image:title>
+      <image:caption>Bali rice terraces, ancient temples, beaches &amp; wellness retreats</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Sri Lanka - Pearl of the Indian Ocean -->
+  <url>
+    <loc>https://wayfare.travel/destinations/srilanka</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/srilanka.png</image:loc>
+      <image:title>Sri Lanka - Pearl of the Indian Ocean | Wayfare Travel</image:title>
+      <image:caption>Sri Lanka ancient ruins, tea plantations, wildlife &amp; golden beaches</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Vietnam - Hidden Charm -->
+  <url>
+    <loc>https://wayfare.travel/destinations/vietnam</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/vietnam.png</image:loc>
+      <image:title>Vietnam - Hidden Charm | Wayfare Travel</image:title>
+      <image:caption>Vietnam Ha Long Bay, Hoi An lanterns &amp; incredible cuisine</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Nepal - Roof of the World -->
+  <url>
+    <loc>https://wayfare.travel/destinations/nepal</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/destinations/nepal.png</image:loc>
+      <image:title>Nepal - Roof of the World | Wayfare Travel</image:title>
+      <image:caption>Nepal Himalayas, Kathmandu temples &amp; Pokhara lakes</image:caption>
+    </image:image>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+  <!-- HOTEL PAGES -->
+  <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Taj Malabar Resort & Spa, Kerala -->
+  <url>
+    <loc>https://wayfare.travel/hotels/taj-malabar-kerala</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/luxury-resort.png</image:loc>
+      <image:title>Taj Malabar Resort &amp; Spa, Kerala | Wayfare</image:title>
+      <image:caption>Luxury waterfront resort in Kochi with Ayurvedic spa &amp; harbor views from ₹12,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Coconut Lagoon Resort, Kerala -->
+  <url>
+    <loc>https://wayfare.travel/hotels/coconut-lagoon-kerala</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/luxury-resort.png</image:loc>
+      <image:title>Coconut Lagoon Resort, Kerala | Wayfare</image:title>
+      <image:caption>Heritage resort on Vembanad Lake with houseboat stays from ₹8,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- The Lalit Grand Palace, Kashmir -->
+  <url>
+    <loc>https://wayfare.travel/hotels/lalit-grand-kashmir</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/luxury-resort.png</image:loc>
+      <image:title>The Lalit Grand Palace, Kashmir | Wayfare</image:title>
+      <image:caption>Grand palace hotel overlooking Dal Lake from ₹15,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Houseboat Heavenly Kashmir -->
+  <url>
+    <loc>https://wayfare.travel/hotels/houseboat-kashmir</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/beach-hotel.png</image:loc>
+      <image:title>Luxury Houseboat on Dal Lake, Kashmir | Wayfare</image:title>
+      <image:caption>Authentic Kashmiri houseboat on Dal Lake with walnut interiors from ₹6,500/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Taj Holiday Village Goa -->
+  <url>
+    <loc>https://wayfare.travel/hotels/taj-holiday-goa</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/beach-hotel.png</image:loc>
+      <image:title>Taj Holiday Village Goa | Wayfare</image:title>
+      <image:caption>Portuguese-style beach resort in Goa with direct beach access from ₹10,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Windamere Hotel Darjeeling -->
+  <url>
+    <loc>https://wayfare.travel/hotels/windamere-darjeeling</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/mountain-resort.png</image:loc>
+      <image:title>Windamere Hotel Darjeeling | Wayfare</image:title>
+      <image:caption>Colonial heritage hotel with panoramic Himalayan views from ₹7,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Wildflower Hall Shimla -->
+  <url>
+    <loc>https://wayfare.travel/hotels/wildflower-shimla</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/mountain-resort.png</image:loc>
+      <image:title>Wildflower Hall Shimla - Oberoi Resort | Wayfare</image:title>
+      <image:caption>Luxury Oberoi resort at 8,250 ft with Himalayan views from ₹18,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Welcomhotel By ITC Bay Island, Andaman -->
+  <url>
+    <loc>https://wayfare.travel/hotels/welcomhotel-andaman</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/beach-hotel.png</image:loc>
+      <image:title>Welcomhotel By ITC Bay Island, Andaman | Wayfare</image:title>
+      <image:caption>Beachfront resort in Port Blair with ocean views from ₹9,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- The Taj Palace Delhi -->
+  <url>
+    <loc>https://wayfare.travel/hotels/taj-palace-delhi</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/luxury-resort.png</image:loc>
+      <image:title>The Taj Palace New Delhi | Wayfare</image:title>
+      <image:caption>Iconic luxury hotel in New Delhi from ₹14,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- The Leela Palace Manali -->
+  <url>
+    <loc>https://wayfare.travel/hotels/leela-manali</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/mountain-resort.png</image:loc>
+      <image:title>The Leela Palace Manali | Wayfare</image:title>
+      <image:caption>Riverside luxury resort in Manali with mountain views from ₹13,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Burj Al Arab Dubai -->
+  <url>
+    <loc>https://wayfare.travel/hotels/burj-al-arab-dubai</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/luxury-resort.png</image:loc>
+      <image:title>Burj Al Arab Dubai | Wayfare</image:title>
+      <image:caption>World's most luxurious hotel on its own island from ₹65,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Atlantis The Palm Dubai -->
+  <url>
+    <loc>https://wayfare.travel/hotels/atlantis-dubai</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/beach-hotel.png</image:loc>
+      <image:title>Atlantis The Palm Dubai | Wayfare</image:title>
+      <image:caption>Iconic Palm Jumeirah resort with Aquaventure Waterpark from ₹25,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Soneva Fushi Maldives -->
+  <url>
+    <loc>https://wayfare.travel/hotels/soneva-fushi-maldives</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/beach-hotel.png</image:loc>
+      <image:title>Soneva Fushi Maldives | Wayfare</image:title>
+      <image:caption>Barefoot luxury resort with private villa &amp; personal butler from ₹85,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Marina Bay Sands Singapore -->
+  <url>
+    <loc>https://wayfare.travel/hotels/marina-bay-sands</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/luxury-resort.png</image:loc>
+      <image:title>Marina Bay Sands Singapore | Wayfare</image:title>
+      <image:caption>Iconic infinity pool hotel with Singapore skyline views from ₹35,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Mandarin Oriental Bangkok -->
+  <url>
+    <loc>https://wayfare.travel/hotels/mandarin-oriental-bangkok</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/luxury-resort.png</image:loc>
+      <image:title>Mandarin Oriental Bangkok | Wayfare</image:title>
+      <image:caption>Legendary riverside hotel with world-class dining from ₹20,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- COMO Uma Canggu Bali -->
+  <url>
+    <loc>https://wayfare.travel/hotels/como-uma-bali</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/beach-hotel.png</image:loc>
+      <image:title>COMO Uma Canggu Bali | Wayfare</image:title>
+      <image:caption>Chic beachfront resort with surf school &amp; wellness from ₹18,000/night</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Shangri-La Kuala Lumpur -->
+  <url>
+    <loc>https://wayfare.travel/hotels/shangri-la-kl</loc>
+    <lastmod>2025-03-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://wayfare.travel/images/hotels/luxury-resort.png</image:loc>
+      <image:title>Shangri-La Kuala Lumpur | Wayfare</image:title>
+      <image:caption>Premier luxury hotel with Petronas Towers views from ₹12,000/night</image:caption>
+    </image:image>
+  </url>
+
+</urlset>
