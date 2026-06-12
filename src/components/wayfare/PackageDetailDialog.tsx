@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Package } from '@/lib/types';
 import {
   Dialog,
@@ -19,6 +20,7 @@ import {
   Users,
   Phone,
 } from 'lucide-react';
+import BookingForm from './BookingForm';
 
 interface PackageDetailDialogProps {
   pkg: Package | null;
@@ -31,6 +33,8 @@ export default function PackageDetailDialog({
   open,
   onOpenChange,
 }: PackageDetailDialogProps) {
+  const [bookingOpen, setBookingOpen] = useState(false);
+
   if (!pkg) return null;
 
   const highlights = pkg.highlights.split(',').map((h) => h.trim());
@@ -208,12 +212,13 @@ export default function PackageDetailDialog({
           {/* CTA */}
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <Button
+              onClick={() => {
+                onOpenChange(false);
+                setTimeout(() => setBookingOpen(true), 300);
+              }}
               className="w-full sm:w-auto bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-lg h-12 text-base font-bold glow-teal"
-              asChild
             >
-              <a href="#contact" onClick={() => onOpenChange(false)}>
-                Book This Package
-              </a>
+              Book This Package
             </Button>
             <Button
               variant="outline"
@@ -228,6 +233,8 @@ export default function PackageDetailDialog({
           </div>
         </div>
       </DialogContent>
+
+      <BookingForm open={bookingOpen} onOpenChange={setBookingOpen} pkg={pkg} />
     </Dialog>
   );
 }

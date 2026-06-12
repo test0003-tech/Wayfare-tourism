@@ -7,7 +7,9 @@ import Footer from "@/components/wayfare/Footer";
 import ChatBot from "@/components/wayfare/ChatBot";
 import WishlistDrawer from "@/components/wayfare/WishlistDrawer";
 import BackToTop from "@/components/wayfare/BackToTop";
+import InstallPWA from "@/components/wayfare/InstallPWA";
 import { OrganizationJsonLd, WebSiteJsonLd, LocalBusinessJsonLd, HowToJsonLd } from "@/components/wayfare/JsonLd";
+import { ThemeProvider } from "next-themes";
 import {
   SITE_URL,
   SITE_NAME,
@@ -32,7 +34,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#0d9488",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#030712" },
+  ],
 };
 
 // Comprehensive root metadata — the foundation for ALL page SEO
@@ -134,7 +139,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-IN" dir="ltr" suppressHydrationWarning className="dark">
+    <html lang="en-IN" dir="ltr" suppressHydrationWarning>
       <head>
         {/* Preconnect to external domains for performance */}
         <link rel="preconnect" href="https://wayfare.travel" />
@@ -144,25 +149,31 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         {/* RSS Feed */}
         <link rel="alternate" type="application/rss+xml" title="Wayfare Travel RSS Feed" href="/feed.xml" />
-        {/* Explicit theme-color for browser chrome */}
-        <meta name="theme-color" content="#0d9488" />
       </head>
       <body
-        className={`${inter.variable} antialiased bg-gray-950 text-gray-100`}
+        className={`${inter.variable} antialiased bg-background text-foreground`}
       >
-        <OrganizationJsonLd />
-        <WebSiteJsonLd />
-        <LocalBusinessJsonLd />
-        <HowToJsonLd />
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-1" role="main">{children}</main>
-          <Footer />
-        </div>
-        <ChatBot />
-        <WishlistDrawer />
-        <BackToTop />
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <OrganizationJsonLd />
+          <WebSiteJsonLd />
+          <LocalBusinessJsonLd />
+          <HowToJsonLd />
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-1" role="main">{children}</main>
+            <Footer />
+          </div>
+          <ChatBot />
+          <WishlistDrawer />
+          <BackToTop />
+          <InstallPWA />
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

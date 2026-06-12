@@ -83,3 +83,68 @@ export interface InquiryData {
   type: string;
   message: string;
 }
+
+export interface Booking {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  age?: number;
+  packageId?: string;
+  travelers: number;
+  adults: number;
+  children: number;
+  departureDate: string;
+  returnDate: string;
+  roomType: string;
+  specialRequests?: string;
+  addOns?: string;
+  totalPrice: number;
+  status: 'pending' | 'confirmed' | 'cancelled';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BookingFormData {
+  name: string;
+  email: string;
+  phone: string;
+  age?: number;
+  packageId?: string;
+  adults: number;
+  children: number;
+  departureDate: string;
+  returnDate: string;
+  roomType: string;
+  specialRequests?: string;
+  addOns: string[];
+  totalPrice: number;
+}
+
+export interface TravelPlannerRequest {
+  destination: string;
+  budget: string;
+  duration: string;
+  travelers: number;
+  category: string;
+  preferences?: string;
+}
+
+export interface TravelPlan {
+  title: string;
+  destination: string;
+  summary: string;
+  packages: Array<{
+    name: string;
+    duration: string;
+    price: string;
+    highlights: string[];
+  }>;
+  hotels: Array<{
+    name: string;
+    type: string;
+    pricePerNight: string;
+  }>;
+  tips: string[];
+  estimatedBudget: string;
+}

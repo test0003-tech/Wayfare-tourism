@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "destinations": "Destinations",
+    "packages": "Packages",
+    "hotels": "Hotels",
+    "flights": "Flights",
+    "gallery": "Gallery",
+    "blog": "Blog",
+    "quiz": "Travel Quiz",
+    "about": "About",
+    "contact": "Contact",
+    "more": "More"
+  },
+  "hero": {
+    "title": "Discover Your Next Adventure",
+    "subtitle": "Explore breathtaking destinations, handcrafted packages, and unforgettable experiences across India and the world",
+    "cta": "Explore Packages",
+    "secondary": "Watch Stories"
+  },
+  "common": {
+    "bookNow": "Book Now",
+    "viewDetails": "View Details",
+    "search": "Search",
+    "readMore": "Read More",
+    "loadMore": "Load More",
+    "subscribe": "Subscribe",
+    "backToBlog": "Back to Blog",
+    "share": "Share",
+    "relatedArticles": "Related Articles",
+    "writtenBy": "Written by",
+    "categories": "Categories",
+    "recentPosts": "Recent Posts",
+    "popularTags": "Popular Tags",
+    "newsletter": "Newsletter",
+    "neverMissStory": "Never Miss a Travel Story",
+    "newsletterDesc": "Subscribe to our newsletter and get the latest travel tips, destination guides, and exclusive deals delivered to your inbox.",
+    "enterEmail": "Enter your email",
+    "clearFilters": "Clear Filters",
+    "noResults": "No articles found",
+    "noResultsDesc": "Try adjusting your search or filter criteria",
+    "all": "All"
+  },
+  "footer": {
+    "domestic": "Domestic",
+    "international": "International",
+    "company": "Company",
+    "support": "Support",
+    "aboutUs": "About Us",
+    "partnerWithUs": "Partner With Us",
+    "helpCenter": "Help Center",
+    "tourPackages": "Tour Packages",
+    "hotelBooking": "Hotel Booking",
+    "flightDeals": "Flight Deals",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "allRightsReserved": "All rights reserved",
+    "trustedPartner": "Your trusted travel partner for domestic and international tour packages. Crafting unforgettable journeys since 2018."
+  },
+  "blog": {
+    "title": "Blog & Travel Tips",
+    "badge": "Travel Stories",
+    "subtitle": "Expert insights, destination guides, and travel inspiration to fuel your wanderlust",
+    "featuredStories": "Featured Stories",
+    "tableOfContents": "Table of Contents",
+    "enjoyedArticle": "Enjoyed this article?",
+    "shareWithFriends": "Share it with your friends and fellow travelers!"
+  },
+  "categories": {
+    "destinations": "Destinations",
+    "tips": "Tips",
+    "guides": "Guides",
+    "news": "News",
+    "reviews": "Reviews"
+  }
+}

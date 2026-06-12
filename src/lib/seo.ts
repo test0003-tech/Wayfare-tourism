@@ -34,7 +34,7 @@ export const BUSINESS_ADDRESS = {
 export const KEYWORDS = {
   // Core brand keywords
   brand: ['Wayfare', 'Wayfare Travel', 'Wayfare tours', 'Wayfare packages'],
-  
+
   // Service keywords
   services: [
     'travel packages', 'tour packages', 'holiday packages',
@@ -42,7 +42,7 @@ export const KEYWORDS = {
     'travel agency India', 'travel company India',
     'online travel booking', 'tour operator India',
   ],
-  
+
   // Category keywords
   categories: [
     'honeymoon packages', 'adventure tours', 'family packages',
@@ -51,7 +51,7 @@ export const KEYWORDS = {
     'luxury travel packages', 'budget tour packages',
     'group tour packages', 'solo travel packages',
   ],
-  
+
   // Domestic destination keywords
   domestic: [
     'Kerala tours', 'Kashmir packages', 'Goa holidays',
@@ -63,16 +63,28 @@ export const KEYWORDS = {
     'Munnar holiday packages', 'Ooty hill station',
     'domestic tours India', 'India tour packages',
     'India travel packages', 'incredible India tours',
+    'best honeymoon packages in Kerala under 30000',
+    'Kashmir tour packages from Delhi with flights',
+    'Goa beach holiday packages for couples',
+    'family trip to Rajasthan package price',
   ],
-  
+
   // International destination keywords
   international: [
     'Dubai tours', 'Maldives packages', 'Thailand travel',
     'Singapore packages', 'Bali honeymoon', 'Sri Lanka tours',
     'Malaysia packages', 'Vietnam travel', 'Europe tour packages',
     'international tour packages', 'overseas travel India',
+    'Dubai tour package from Mumbai all inclusive',
+    'Maldives honeymoon package from India with flights',
+    'Thailand travel package from Chennai',
+    'Singapore Malaysia tour package from India',
+    'Bali honeymoon package from Bangalore',
+    'Europe tour packages from India 2025',
+    'cheap international tour packages from India',
+    'best travel agency in Delhi for international tours',
   ],
-  
+
   // Price & booking keywords
   priceBooking: [
     'cheap tour packages', 'affordable travel deals',
@@ -81,7 +93,39 @@ export const KEYWORDS = {
     'tour packages with flights', 'all inclusive holiday packages',
     'book tour packages online', 'last minute travel deals India',
   ],
-  
+
+  // Audience-specific keywords
+  audience: [
+    'tour packages for senior citizens India',
+    'women\'s travel groups India packages',
+    'student tour packages India',
+    'corporate tour packages India',
+    'weekend getaway packages from Delhi',
+    'weekend getaway packages from Mumbai',
+    'weekend getaway packages from Bangalore',
+  ],
+
+  // Season-based keywords
+  seasonal: [
+    'summer vacation packages India',
+    'winter holiday packages',
+    'monsoon tour packages',
+    'Christmas vacation packages India',
+    'New Year tour packages',
+    'Diwali holiday packages',
+    'long weekend trip packages India',
+  ],
+
+  // Near me keywords
+  nearMe: [
+    'tour packages near me',
+    'travel agency near me',
+    'best tour operator near me',
+    'holiday packages near me',
+    'travel agent near me',
+    'tour planner near me',
+  ],
+
   // Hotel keywords
   hotels: [
     'luxury hotels India', 'boutique hotels', 'heritage hotels India',
@@ -90,14 +134,14 @@ export const KEYWORDS = {
     '5 star hotels booking', 'beach resorts India',
     'hill station resorts', 'homestay India',
   ],
-  
+
   // Flight keywords
   flights: [
     'cheap flights India', 'flight deals', 'domestic flights India',
     'international flights from India', 'round trip flights',
     'one way flights', 'flight offers', 'airline deals India',
   ],
-  
+
   // Blog & info keywords
   blog: [
     'travel tips India', 'destination guide', 'travel blog India',
@@ -220,7 +264,7 @@ export function generateDetailPageMetadata({
   const url = `${SITE_URL}${path}`;
   const titleSuffix = category ? `${category} | Wayfare` : 'Wayfare';
   const title = `${name} | ${titleSuffix}`;
-  
+
   // Build rich description with price and location
   let richDescription = description;
   if (richDescription.length > 155) {
@@ -424,3 +468,120 @@ export function buildBreadcrumbItems(items: { label: string; href?: string }[]) 
 export function getRelatedPages(path: string): { label: string; href: string; description: string }[] {
   return RELATED_PAGES[path] || [];
 }
+
+// ─── Structured Data Helpers ─────────────────────────────────────────────────
+
+export interface AggregateRatingData {
+  ratingValue: number;
+  reviewCount: number;
+  bestRating?: number;
+  worstRating?: number;
+}
+
+export function buildAggregateRating(data: AggregateRatingData) {
+  return {
+    '@type': 'AggregateRating',
+    ratingValue: data.ratingValue,
+    reviewCount: data.reviewCount,
+    bestRating: data.bestRating ?? 5,
+    worstRating: data.worstRating ?? 1,
+  };
+}
+
+export interface ReviewData {
+  author: string;
+  rating: number;
+  datePublished: string;
+  reviewBody: string;
+}
+
+export function buildReview(data: ReviewData) {
+  return {
+    '@type': 'Review',
+    author: {
+      '@type': 'Person',
+      name: data.author,
+    },
+    datePublished: data.datePublished,
+    reviewBody: data.reviewBody,
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: data.rating,
+      bestRating: 5,
+    },
+  };
+}
+
+export interface OfferData {
+  price: number;
+  priceCurrency?: string;
+  availability?: string;
+  url?: string;
+  priceValidUntil?: string;
+  sellerName?: string;
+  originalPrice?: number;
+}
+
+export function buildOffer(data: OfferData) {
+  return {
+    '@type': 'Offer',
+    price: data.price,
+    priceCurrency: data.priceCurrency ?? 'INR',
+    availability: data.availability ?? 'https://schema.org/InStock',
+    ...(data.url && { url: data.url }),
+    ...(data.priceValidUntil && { priceValidUntil: data.priceValidUntil }),
+    seller: {
+      '@type': 'TravelAgency',
+      name: data.sellerName ?? SITE_NAME,
+    },
+    ...(data.originalPrice && {
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        price: data.originalPrice,
+        priceCurrency: data.priceCurrency ?? 'INR',
+      },
+    }),
+  };
+}
+
+export interface AggregateOfferData {
+  lowPrice: number;
+  highPrice: number;
+  priceCurrency?: string;
+  offerCount?: number;
+  offers?: ReturnType<typeof buildOffer>[];
+}
+
+export function buildAggregateOffer(data: AggregateOfferData) {
+  return {
+    '@type': 'AggregateOffer',
+    lowPrice: data.lowPrice,
+    highPrice: data.highPrice,
+    priceCurrency: data.priceCurrency ?? 'INR',
+    offerCount: data.offerCount ?? 1,
+    ...(data.offers && { offers: data.offers }),
+  };
+}
+
+// ─── Sample Review Data for Structured Data ──────────────────────────────────
+
+export const SAMPLE_REVIEWS: ReviewData[] = [
+  {
+    author: 'Priya Sharma',
+    rating: 5,
+    datePublished: '2025-01-15',
+    reviewBody: 'Amazing experience! The itinerary was perfectly planned and every detail was taken care of. Highly recommend Wayfare for anyone looking for a hassle-free vacation.',
+  },
+  {
+    author: 'Rahul Mehta',
+    rating: 5,
+    datePublished: '2025-01-10',
+    reviewBody: 'Best travel agency I have used. The hotel was fantastic and the local guides were very knowledgeable. Will definitely book again.',
+  },
+  {
+    author: 'Ananya Patel',
+    rating: 4,
+    datePublished: '2024-12-28',
+    reviewBody: 'Great value for money. The package included everything as promised. Only suggestion would be to add more free time in the itinerary.',
+  },
+];

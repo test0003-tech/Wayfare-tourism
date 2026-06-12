@@ -18,6 +18,8 @@ import {
   MessageSquare,
   Sparkles,
 } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const navLinks = [
   { href: '/destinations', label: 'Destinations', icon: Map },
@@ -114,6 +116,8 @@ export default function Navbar() {
 
         {/* Desktop CTA */}
         <div className="hidden lg:flex items-center gap-3">
+          <LanguageSwitcher />
+          <ThemeToggle />
           <a href="tel:+919876543210" className="flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-teal-400 transition-colors">
             <Phone className="h-4 w-4" />
             +91 98765 43210
@@ -172,6 +176,10 @@ export default function Navbar() {
           </div>
 
           <div className="pt-3 border-t border-white/10 space-y-2">
+            <div className="flex items-center justify-between px-3 py-2">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
             <a href="tel:+919876543210" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-400 hover:text-teal-400 transition-colors">
               <Phone className="h-4 w-4" />
               +91 98765 43210

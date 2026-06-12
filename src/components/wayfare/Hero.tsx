@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Search, MapPin, Calendar, Users, Star, ArrowRight, ShieldCheck, Phone } from 'lucide-react';
+import { Search, MapPin, Calendar, Users, Star, ArrowRight, ShieldCheck, Phone, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 const rotatingWords = [
@@ -142,7 +142,7 @@ export default function Hero() {
             transition={{ duration: 0.6 }}
             className="mb-6 inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-sm font-medium text-gray-300"
           >
-            <MapPin className="h-4 w-4 text-teal-400" />
+            <Sparkles className="h-4 w-4 text-amber-400" />
             Explore India & Beyond
           </motion.div>
 
@@ -224,7 +224,7 @@ export default function Hero() {
                   </div>
                 </div>
                 <Button
-                  className="h-auto bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-xl py-2.5 glow-teal font-bold animate-pulse-glow"
+                  className="h-auto bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-xl py-2.5 glow-teal font-bold animate-pulse-glow shadow-lg shadow-teal-500/20"
                   asChild
                 >
                   <Link href="/packages">
@@ -287,7 +287,7 @@ export default function Hero() {
               <motion.div
                 animate={{ y: [0, -12, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: card.delay }}
-                className="rounded-2xl glass-strong p-5 hover:glow-teal transition-all duration-300"
+                className="rounded-2xl glass-strong p-5 hover:glow-teal transition-all duration-300 border border-white/5 hover:border-teal-500/20"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{card.emoji}</span>

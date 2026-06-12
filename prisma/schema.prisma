@@ -91,3 +91,24 @@ model Inquiry {
   message   String
   createdAt DateTime @default(now())
 }
+
+model Booking {
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  phone           String
+  age             Int?
+  packageId       String?
+  travelers       Int      @default(1)
+  adults          Int      @default(1)
+  children        Int      @default(0)
+  departureDate   String
+  returnDate      String
+  roomType        String   @default("standard")
+  specialRequests String?
+  addOns          String?  // JSON string: airport transfer, insurance, meal plan, guided tour
+  totalPrice      Int
+  status          String   @default("pending") // "pending", "confirmed", "cancelled"
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

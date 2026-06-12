@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 // RSS Feed Generator for Wayfare Travel
 // Generates a basic RSS 2.0 feed with all packages
 
