@@ -4,32 +4,32 @@
   This is the main file to submit to Google Search Console.
   It organizes all URLs into categorized sub-sitemaps for better crawling.
   
-  SUBMIT THIS FILE: https://wayfare.travel/sitemap-index.xml
+  SUBMIT THIS FILE: https://travelwithwayfare.pages.dev/sitemap-index.xml
   (Replace wayfare.travel with your actual deployed domain)
 -->
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <!-- Static Pages Sitemap -->
   <sitemap>
-    <loc>https://wayfare.travel/sitemap-static.xml</loc>
+    <loc>https://travelwithwayfare.pages.dev/sitemap-static.xml</loc>
     <lastmod>2025-03-04</lastmod>
   </sitemap>
 
   <!-- Tour Packages Sitemap -->
   <sitemap>
-    <loc>https://wayfare.travel/sitemap-packages.xml</loc>
+    <loc>https://travelwithwayfare.pages.dev/sitemap-packages.xml</loc>
     <lastmod>2025-03-04</lastmod>
   </sitemap>
 
   <!-- Destinations Sitemap -->
   <sitemap>
-    <loc>https://wayfare.travel/sitemap-destinations.xml</loc>
+    <loc>https://travelwithwayfare.pages.dev/sitemap-destinations.xml</loc>
     <lastmod>2025-03-04</lastmod>
   </sitemap>
 
   <!-- Hotels Sitemap -->
   <sitemap>
-    <loc>https://wayfare.travel/sitemap-hotels.xml</loc>
+    <loc>https://travelwithwayfare.pages.dev/sitemap-hotels.xml</loc>
     <lastmod>2025-03-04</lastmod>
   </sitemap>
 

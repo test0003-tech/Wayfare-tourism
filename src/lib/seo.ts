@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-export const SITE_URL = 'https://wayfare.travel';
+export const SITE_URL = 'https://travelwithwayfare.pages.dev';
 export const SITE_NAME = 'Wayfare';
 export const SITE_DESCRIPTION = 'Book domestic and international tour packages, hotels, and flights with Wayfare. Kerala, Kashmir, Goa, Dubai, Maldives, Thailand & more. Honeymoon, adventure, family packages starting from ₹11,999.';
 export const DEFAULT_OG_IMAGE = '/images/logo-wayfare-new.png';

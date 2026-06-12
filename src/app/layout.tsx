@@ -117,6 +117,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    google: "google25d1cc1f32304e7b",
+  },
   other: {
     "geo.region": GEO_REGION,
     "geo.placename": GEO_PLACENAME,

@@ -1,7 +1,7 @@
 Wayfare Travel - Complete URL List for Search Engine Submission
 ===============================================================
 Generated: 2025-03-04 | Total URLs: 69
-IMPORTANT: Replace "https://wayfare.travel" with your ACTUAL deployed domain before submitting!
+IMPORTANT: Replace "https://travelwithwayfare.pages.dev" with your ACTUAL deployed domain before submitting!
 
 ===============================================================
 SUBMISSION GUIDE:
@@ -26,82 +26,82 @@ SUBMISSION GUIDE:
    → Add site → Submit sitemap
 
 4. DIRECT URL PING (Fast Indexing)
-   → Google: https://www.google.com/ping?sitemap=https://wayfare.travel/sitemap-index.xml
-   → Bing: https://www.bing.com/ping?sitemap=https://wayfare.travel/sitemap-index.xml
+   → Google: https://www.google.com/ping?sitemap=https://travelwithwayfare.pages.dev/sitemap-index.xml
+   → Bing: https://www.bing.com/ping?sitemap=https://travelwithwayfare.pages.dev/sitemap-index.xml
 
 ===============================================================
 ALL 69 URLs (Copy & Paste for bulk submission):
 ===============================================================
 
-https://wayfare.travel/
-https://wayfare.travel/packages
-https://wayfare.travel/destinations
-https://wayfare.travel/hotels
-https://wayfare.travel/flights
-https://wayfare.travel/about
-https://wayfare.travel/contact
-https://wayfare.travel/gallery
-https://wayfare.travel/blog
-https://wayfare.travel/quiz
-https://wayfare.travel/packages/kerala-backwaters-5n6d
-https://wayfare.travel/packages/kerala-honeymoon-4n5d
-https://wayfare.travel/packages/kashmir-valley-5n6d
-https://wayfare.travel/packages/kashmir-honeymoon-6n7d
-https://wayfare.travel/packages/goa-beach-4n5d
-https://wayfare.travel/packages/darjeeling-sikkim-5n6d
-https://wayfare.travel/packages/andaman-island-5n6d
-https://wayfare.travel/packages/manali-adventure-4n5d
-https://wayfare.travel/packages/manali-honeymoon-5n6d
-https://wayfare.travel/packages/golden-triangle-5n6d
-https://wayfare.travel/packages/sikkim-serenity-5n6d
-https://wayfare.travel/packages/himachal-himalayan-6n7d
-https://wayfare.travel/packages/dharamshala-mcleod-4n5d
-https://wayfare.travel/packages/dubai-luxury-4n5d
-https://wayfare.travel/packages/dubai-honeymoon-5n6d
-https://wayfare.travel/packages/maldives-paradise-4n5d
-https://wayfare.travel/packages/thailand-explorer-5n6d
-https://wayfare.travel/packages/singapore-delight-4n5d
-https://wayfare.travel/packages/malaysia-singapore-6n7d
-https://wayfare.travel/packages/bali-romantic-5n6d
-https://wayfare.travel/packages/srilanka-cultural-5n6d
-https://wayfare.travel/packages/vietnam-discovery-5n6d
-https://wayfare.travel/packages/nepal-himalayan-5n6d
-https://wayfare.travel/destinations/kerala
-https://wayfare.travel/destinations/kashmir
-https://wayfare.travel/destinations/goa
-https://wayfare.travel/destinations/darjeeling
-https://wayfare.travel/destinations/andaman
-https://wayfare.travel/destinations/manali
-https://wayfare.travel/destinations/dharamshala
-https://wayfare.travel/destinations/delhi-golden-triangle
-https://wayfare.travel/destinations/sikkim
-https://wayfare.travel/destinations/himachal
-https://wayfare.travel/destinations/dubai
-https://wayfare.travel/destinations/maldives
-https://wayfare.travel/destinations/thailand
-https://wayfare.travel/destinations/singapore
-https://wayfare.travel/destinations/malaysia
-https://wayfare.travel/destinations/bali
-https://wayfare.travel/destinations/srilanka
-https://wayfare.travel/destinations/vietnam
-https://wayfare.travel/destinations/nepal
-https://wayfare.travel/hotels/taj-malabar-kerala
-https://wayfare.travel/hotels/coconut-lagoon-kerala
-https://wayfare.travel/hotels/lalit-grand-kashmir
-https://wayfare.travel/hotels/houseboat-kashmir
-https://wayfare.travel/hotels/taj-holiday-goa
-https://wayfare.travel/hotels/windamere-darjeeling
-https://wayfare.travel/hotels/wildflower-shimla
-https://wayfare.travel/hotels/welcomhotel-andaman
-https://wayfare.travel/hotels/taj-palace-delhi
-https://wayfare.travel/hotels/leela-manali
-https://wayfare.travel/hotels/burj-al-arab-dubai
-https://wayfare.travel/hotels/atlantis-dubai
-https://wayfare.travel/hotels/soneva-fushi-maldives
-https://wayfare.travel/hotels/marina-bay-sands
-https://wayfare.travel/hotels/mandarin-oriental-bangkok
-https://wayfare.travel/hotels/como-uma-bali
-https://wayfare.travel/hotels/shangri-la-kl
+https://travelwithwayfare.pages.dev/
+https://travelwithwayfare.pages.dev/packages
+https://travelwithwayfare.pages.dev/destinations
+https://travelwithwayfare.pages.dev/hotels
+https://travelwithwayfare.pages.dev/flights
+https://travelwithwayfare.pages.dev/about
+https://travelwithwayfare.pages.dev/contact
+https://travelwithwayfare.pages.dev/gallery
+https://travelwithwayfare.pages.dev/blog
+https://travelwithwayfare.pages.dev/quiz
+https://travelwithwayfare.pages.dev/packages/kerala-backwaters-5n6d
+https://travelwithwayfare.pages.dev/packages/kerala-honeymoon-4n5d
+https://travelwithwayfare.pages.dev/packages/kashmir-valley-5n6d
+https://travelwithwayfare.pages.dev/packages/kashmir-honeymoon-6n7d
+https://travelwithwayfare.pages.dev/packages/goa-beach-4n5d
+https://travelwithwayfare.pages.dev/packages/darjeeling-sikkim-5n6d
+https://travelwithwayfare.pages.dev/packages/andaman-island-5n6d
+https://travelwithwayfare.pages.dev/packages/manali-adventure-4n5d
+https://travelwithwayfare.pages.dev/packages/manali-honeymoon-5n6d
+https://travelwithwayfare.pages.dev/packages/golden-triangle-5n6d
+https://travelwithwayfare.pages.dev/packages/sikkim-serenity-5n6d
+https://travelwithwayfare.pages.dev/packages/himachal-himalayan-6n7d
+https://travelwithwayfare.pages.dev/packages/dharamshala-mcleod-4n5d
+https://travelwithwayfare.pages.dev/packages/dubai-luxury-4n5d
+https://travelwithwayfare.pages.dev/packages/dubai-honeymoon-5n6d
+https://travelwithwayfare.pages.dev/packages/maldives-paradise-4n5d
+https://travelwithwayfare.pages.dev/packages/thailand-explorer-5n6d
+https://travelwithwayfare.pages.dev/packages/singapore-delight-4n5d
+https://travelwithwayfare.pages.dev/packages/malaysia-singapore-6n7d
+https://travelwithwayfare.pages.dev/packages/bali-romantic-5n6d
+https://travelwithwayfare.pages.dev/packages/srilanka-cultural-5n6d
+https://travelwithwayfare.pages.dev/packages/vietnam-discovery-5n6d
+https://travelwithwayfare.pages.dev/packages/nepal-himalayan-5n6d
+https://travelwithwayfare.pages.dev/destinations/kerala
+https://travelwithwayfare.pages.dev/destinations/kashmir
+https://travelwithwayfare.pages.dev/destinations/goa
+https://travelwithwayfare.pages.dev/destinations/darjeeling
+https://travelwithwayfare.pages.dev/destinations/andaman
+https://travelwithwayfare.pages.dev/destinations/manali
+https://travelwithwayfare.pages.dev/destinations/dharamshala
+https://travelwithwayfare.pages.dev/destinations/delhi-golden-triangle
+https://travelwithwayfare.pages.dev/destinations/sikkim
+https://travelwithwayfare.pages.dev/destinations/himachal
+https://travelwithwayfare.pages.dev/destinations/dubai
+https://travelwithwayfare.pages.dev/destinations/maldives
+https://travelwithwayfare.pages.dev/destinations/thailand
+https://travelwithwayfare.pages.dev/destinations/singapore
+https://travelwithwayfare.pages.dev/destinations/malaysia
+https://travelwithwayfare.pages.dev/destinations/bali
+https://travelwithwayfare.pages.dev/destinations/srilanka
+https://travelwithwayfare.pages.dev/destinations/vietnam
+https://travelwithwayfare.pages.dev/destinations/nepal
+https://travelwithwayfare.pages.dev/hotels/taj-malabar-kerala
+https://travelwithwayfare.pages.dev/hotels/coconut-lagoon-kerala
+https://travelwithwayfare.pages.dev/hotels/lalit-grand-kashmir
+https://travelwithwayfare.pages.dev/hotels/houseboat-kashmir
+https://travelwithwayfare.pages.dev/hotels/taj-holiday-goa
+https://travelwithwayfare.pages.dev/hotels/windamere-darjeeling
+https://travelwithwayfare.pages.dev/hotels/wildflower-shimla
+https://travelwithwayfare.pages.dev/hotels/welcomhotel-andaman
+https://travelwithwayfare.pages.dev/hotels/taj-palace-delhi
+https://travelwithwayfare.pages.dev/hotels/leela-manali
+https://travelwithwayfare.pages.dev/hotels/burj-al-arab-dubai
+https://travelwithwayfare.pages.dev/hotels/atlantis-dubai
+https://travelwithwayfare.pages.dev/hotels/soneva-fushi-maldives
+https://travelwithwayfare.pages.dev/hotels/marina-bay-sands
+https://travelwithwayfare.pages.dev/hotels/mandarin-oriental-bangkok
+https://travelwithwayfare.pages.dev/hotels/como-uma-bali
+https://travelwithwayfare.pages.dev/hotels/shangri-la-kl
 
 ===============================================================
 SITEMAP FILES AVAILABLE ON YOUR SITE:
