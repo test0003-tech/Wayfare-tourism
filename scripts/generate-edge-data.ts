@@ -258,8 +258,16 @@ function enrichHotel(hotel) {
   };
 }
 
+function enrichFlight(flight) {
+  return {
+    ...flight,
+    originalPrice: flight.originalPrice || Math.round(flight.price * 1.4),
+    region: getRegion(flight.to),
+  };
+}
+
 // Export for use in Cloudflare Functions
-export { data, enrichPackage, enrichDestination, enrichHotel, getRegion, parseDuration, getDestinationSlugByName, getDestinationImageByName, categoryHighlights, categoryInclusions };
+export { data, enrichPackage, enrichDestination, enrichHotel, enrichFlight, getRegion, parseDuration, getDestinationSlugByName, getDestinationImageByName, categoryHighlights, categoryInclusions };
 `;
   writeFileSync(dataJsPath, dataJsContent);
   console.log(`✅ Written: ${dataJsPath}`);
