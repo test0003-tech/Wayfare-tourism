@@ -1,0 +1,745 @@
+     1→     1→// Blog data store for Wayfare Travel
+     2→     2→// Static blog articles with rich content
+     3→     3→
+     4→     4→export interface BlogPost {
+     5→     5→  slug: string;
+     6→     6→  title: string;
+     7→     7→  excerpt: string;
+     8→     8→  content: string;
+     9→     9→  author: {
+    10→    10→    name: string;
+    11→    11→    avatar: string;
+    12→    12→    bio: string;
+    13→    13→  };
+    14→    14→  date: string;
+    15→    15→  category: string;
+    16→    16→  image: string;
+    17→    17→  readingTime: string;
+    18→    18→  tags: string[];
+    19→    19→  featured: boolean;
+    20→    20→}
+    21→    21→
+    22→    22→export const blogCategories = [
+    23→    23→  'Destinations',
+    24→    24→  'Tips',
+    25→    25→  'Guides',
+    26→    26→  'News',
+    27→    27→  'Reviews',
+    28→    28→] as const;
+    29→    29→
+    30→    30→export type BlogCategory = (typeof blogCategories)[number];
+    31→    31→
+    32→    32→export const categoryColors: Record<string, string> = {
+    33→    33→  Destinations: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+    34→    34→  Tips: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    35→    35→  Guides: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    36→    36→  News: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+    37→    37→  Reviews: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+    38→    38→};
+    39→    39→
+    40→    40→export const blogPosts: BlogPost[] = [
+    41→    41→  {
+    42→    42→    slug: 'best-honeymoon-destinations-india-2025',
+    43→    43→    title: '10 Best Honeymoon Destinations in India for 2025',
+    44→    44→    excerpt:
+    45→    45→      'From the backwaters of Kerala to the snowy valleys of Kashmir, discover the most romantic destinations in India for your perfect honeymoon getaway.',
+    46→    46→    content: `
+    47→    47→      <h2 id="introduction">Why India is Perfect for Honeymoons</h2>
+    48→    48→      <p>India offers an incredible diversity of honeymoon experiences — from serene backwaters and misty hill stations to golden beaches and royal palaces. Whether you want adventure, relaxation, or cultural immersion, there's a perfect destination waiting for you.</p>
+    49→    49→
+    50→    50→      <h2 id="kerala">1. Kerala — The God's Own Country</h2>
+    51→    51→      <p>Kerala remains the undisputed king of honeymoon destinations in India. Imagine cruising through tranquil backwaters on a traditional houseboat, watching palm-fringed shores glide by as you sip tender coconut water. Munnar's rolling tea plantations, Alleppey's backwater cruises, and Kovalam's pristine beaches create the perfect romantic trifecta.</p>
+    52→    52→      <p><strong>Best Time:</strong> September to March | <strong>Budget:</strong> ₹15,000–₹30,000 per person for 5 nights</p>
+    53→    53→
+    54→    54→      <h2 id="kashmir">2. Kashmir — Paradise on Earth</h2>
+    55→    55→      <p>If your idea of romance involves snow-capped mountains, pristine lakes, and Mughal gardens, Kashmir is your dream destination. A shikara ride on Dal Lake at sunset, a stay in a luxurious houseboat, and a drive through the breathtaking Srinagar-Leh highway — every moment is picture-perfect.</p>
+    56→    56→      <p><strong>Best Time:</strong> April to October | <strong>Budget:</strong> ₹18,000–₹35,000 per person for 5 nights</p>
+    57→    57→
+    58→    58→      <h2 id="goa">3. Goa — Beach Romance</h2>
+    59→    59→      <p>Goa needs no introduction. Sun-kissed beaches, vibrant nightlife, Portuguese architecture, and some of the best seafood in the country. Whether you prefer the lively North Goa beaches or the serene South Goa stretches, a Goan honeymoon is always unforgettable.</p>
+    60→    60→      <p><strong>Best Time:</strong> November to February | <strong>Budget:</strong> ₹12,000–₹25,000 per person for 4 nights</p>
+    61→    61→
+    62→    62→      <h2 id="rajasthan">4. Rajasthan — Royal Romance</h2>
+    63→    63→      <p>For couples who want a regal experience, Rajasthan offers palace hotels, desert safaris, and timeless forts. Udaipur, the "City of Lakes," is often called India's most romantic city. A candlelight dinner at the Taj Lake Palace is a memory that lasts forever.</p>
+    64→    64→      <p><strong>Best Time:</strong> October to March | <strong>Budget:</strong> ₹20,000–₹40,000 per person for 5 nights</p>
+    65→    65→
+    66→    66→      <h2 id="andaman">5. Andaman & Nicobar Islands</h2>
+    67→    67→      <p>Crystal-clear waters, white sand beaches, and vibrant coral reefs — the Andamans are India's answer to the Maldives. Havelock Island (now Swaraj Dweep) offers world-class scuba diving and the famous Radhanagar Beach, rated among Asia's best.</p>
+    68→    68→      <p><strong>Best Time:</strong> November to April | <strong>Budget:</strong> ₹20,000–₹35,000 per person for 5 nights</p>
+    69→    69→
+    70→    70→      <h2 id="manali">6. Manali — Mountain Magic</h2>
+    71→    71→      <p>Nestled in the Beas River valley, Manali offers the perfect blend of adventure and romance. Snow-covered peaks, apple orchards, hot springs, and the famous Rohtang Pass make it a beloved honeymoon spot. Don't miss the Solang Valley for paragliding!</p>
+    72→    72→      <p><strong>Best Time:</strong> October to June | <strong>Budget:</strong> ₹10,000–₹20,000 per person for 4 nights</p>
+    73→    73→
+    74→    74→      <h2 id="darjeeling">7. Darjeeling — Tea & Tranquility</h2>
+    75→    75→      <p>The "Queen of Hills" offers breathtaking views of Kanchenjunga, charming tea gardens, and the iconic toy train ride. A sunrise at Tiger Hill, a visit to a tea estate, and a cozy stay in a colonial-era hotel — Darjeeling is old-world romance at its best.</p>
+    76→    76→      <p><strong>Best Time:</strong> April to June, September to November | <strong>Budget:</strong> ₹8,000–₹18,000 per person for 4 nights</p>
+    77→    77→
+    78→    78→      <h2 id="sikkim">8. Sikkim — The Hidden Gem</h3>
+    79→    79→      <p>Sikkim is one of India's best-kept honeymoon secrets. The stunning Tsomgo Lake, the dramatic Nathula Pass, and the charming capital Gangtok offer a unique mountain experience. The Ravangla Buddha Park and Pelling's views of Kanchenjunga are breathtaking.</p>
+    80→    80→      <p><strong>Best Time:</strong> March to June, October to December | <strong>Budget:</strong> ₹12,000–₹22,000 per person for 5 nights</p>
+    81→    81→
+    82→    82→      <h2 id="udaipur">9. Udaipur — The Venice of the East</h2>
+    83→    83→      <p>Udaipur deserves a special mention beyond Rajasthan itself. The city's magnificent lakes, ornate palaces, and narrow winding streets create an incredibly romantic atmosphere. Stay at the Oberoi Udaivilas or Taj Lake Palace for the ultimate luxury honeymoon.</p>
+    84→    84→      <p><strong>Best Time:</strong> September to March | <strong>Budget:</strong> ₹15,000–₹45,000 per person for 4 nights</p>
+    85→    85→
+    86→    86→      <h2 id="coorg">10. Coorg — Scotland of India</h2>
+    87→    87→      <p>Coorg (Kodagu) in Karnataka is a lush, green paradise of coffee plantations, misty hills, and cascading waterfalls. It's perfect for couples who want a quiet, nature-focused honeymoon. Abbey Falls, Raja's Seat, and a homestay amidst coffee estates are must-dos.</p>
+    88→    88→      <p><strong>Best Time:</strong> October to March | <strong>Budget:</strong> ₹8,000–₹15,000 per person for 3 nights</p>
+    89→    89→
+    90→    90→      <h2 id="tips">Tips for Planning Your Honeymoon</h2>
+    91→    91→      <ul>
+    92→    92→        <li>Book at least 2-3 months in advance for the best hotel deals</li>
+    93→    93→        <li>Consider off-season travel for lower prices and fewer crowds</li>
+    94→    94→        <li>Always check weather conditions before finalizing dates</li>
+    95→    95→        <li>Look for honeymoon packages that include special experiences</li>
+    96→    96→        <li>Don't forget travel insurance for international destinations</li>
+    97→    97→      </ul>
+    98→    98→    `,
+    99→    99→    author: {
+   100→   100→      name: 'Priya Sharma',
+   101→   101→      avatar: '/images/logo-wayfare-new.png',
+   102→   102→      bio: 'Travel writer and honeymoon specialist with 8+ years of experience exploring romantic destinations across India and Southeast Asia.',
+   103→   103→    },
+   104→   104→    date: '2025-01-15',
+   105→   105→    category: 'Destinations',
+   106→   106→    image: '/images/blog/honeymoon-guide.png',
+   107→   107→    readingTime: '8 min read',
+   108→   108→    tags: ['honeymoon', 'romantic getaways', 'India travel', 'Kerala', 'Kashmir', 'Goa'],
+   109→   109→    featured: true,
+   110→   110→  },
+   111→   111→  {
+   112→   112→    slug: 'complete-kerala-travel-guide',
+   113→   113→    title: 'Complete Kerala Travel Guide: Backwaters, Hills & Beaches',
+   114→   114→    excerpt:
+   115→   115→      'Your ultimate guide to exploring God\'s Own Country — from Alleppey houseboats to Munnar tea estates, discover the best of Kerala.',
+   116→   116→    content: `
+   117→   117→      <h2 id="introduction">Welcome to Kerala</h2>
+   118→   118→      <p>Kerala, known as "God's Own Country," is a narrow strip of land along India's southwestern coast that packs an extraordinary diversity of landscapes into a small area. From the misty Western Ghats to the tranquil Arabian Sea coast, Kerala offers backwaters, hill stations, beaches, wildlife sanctuaries, and a rich cultural heritage.</p>
+   119→   119→
+   120→   120→      <h2 id="best-time">Best Time to Visit Kerala</h2>
+   121→   121→      <p>The ideal time to visit Kerala is from <strong>September to March</strong> when the weather is pleasant and dry. The monsoon season (June-August) has its own charm with lush greenery and Ayurvedic wellness season, but outdoor activities may be limited.</p>
+   122→   122→
+   123→   123→      <h2 id="top-destinations">Top Destinations in Kerala</h2>
+   124→   124→
+   125→   125→      <h3>Alleppey (Alappuzha) — The Venice of the East</h3>
+   126→   126→      <p>No Kerala trip is complete without a houseboat cruise through Alleppey's backwaters. These traditional kettuvallams have been converted into floating luxury hotels with bedrooms, bathrooms, and even a kitchen where your personal chef prepares Kerala cuisine fresh.</p>
+   127→   127→      <p><strong>Must-do:</strong> Overnight houseboat stay, village walk, coir-making demonstration</p>
+   128→   128→
+   129→   129→      <h3>Munnar — Tea Garden Paradise</h3>
+   130→   130→      <p>Munnar's rolling hills covered in tea plantations are among the most photographed landscapes in India. Visit the Tea Museum, hike to Echo Point, and drive through the winding roads for breathtaking views.</p>
+   131→   131→      <p><strong>Must-do:</strong> Tea plantation tour, Eravikulam National Park, Mattupetty Dam</p>
+   132→   132→
+   133→   133→      <h3>Kovalam & Varkala — Beach Bliss</h3>
+   134→   134→      <p>Kovalam's crescent-shaped beach with its iconic lighthouse and Varkala's dramatic cliffside setting offer two distinct beach experiences. Both are perfect for swimming, surfing, and watching spectacular sunsets.</p>
+   135→   135→      <p><strong>Must-do:</strong> Lighthouse Beach (Kovalam), cliff walk (Varkala), Ayurvedic massage</p>
+   136→   136→
+   137→   137→      <h3>Thekkady (Periyar) — Wildlife & Spice</h3>
+   138→   138→      <p>Home to the Periyar Tiger Reserve, Thekkady offers boat safaris where you might spot elephants, bison, and even tigers. The spice plantations here produce cardamom, pepper, cinnamon, and vanilla.</p>
+   139→   139→      <p><strong>Must-do:</strong> Periyar boat safari, spice plantation tour, bamboo rafting</p>
+   140→   140→
+   141→   141→      <h3>Kochi (Cochin) — Cultural Capital</h3>
+   142→   142→      <p>Kochi blends colonial history with contemporary culture. The Chinese fishing nets, Jewish synagogue, Dutch Palace, and vibrant Fort Kochi art scene make it a fascinating urban experience.</p>
+   143→   143→      <p><strong>Must-do:</strong> Fort Kochi walk, Kathakali performance, Jew Town shopping</p>
+   144→   144→
+   145→   145→      <h2 id="itinerary">Suggested 7-Day Kerala Itinerary</h2>
+   146→   146→      <ol>
+   147→   147→        <li><strong>Day 1-2:</strong> Arrive in Kochi, explore Fort Kochi, watch a Kathakali show</li>
+   148→   148→        <li><strong>Day 3-4:</strong> Drive to Munnar, visit tea gardens and Eravikulam National Park</li>
+   149→   149→        <li><strong>Day 5:</strong> Drive to Thekkady, spice plantation tour and Periyar boat safari</li>
+   150→   150→        <li><strong>Day 6:</strong> Drive to Alleppey, board houseboat for overnight backwater cruise</li>
+   151→   151→        <li><strong>Day 7:</strong> Disembark, drive to Kovalam or Kochi airport for departure</li>
+   152→   152→      </ol>
+   153→   153→
+   154→   154→      <h2 id="food">Kerala Cuisine You Must Try</h2>
+   155→   155→      <ul>
+   156→   156→        <li><strong>Sadya:</strong> Traditional vegetarian feast served on banana leaf</li>
+   157→   157→        <li><strong>Karimeen Pollichathu:</strong> Pearl spot fish wrapped in banana leaf</li>
+   158→   158→        <li><strong>Appam & Stew:</strong> Rice pancakes with coconut milk stew</li>
+   159→   159→        <li><strong>Puttu & Kadala Curry:</strong> Steamed rice cylinders with black chickpea curry</li>
+   160→   160→        <li><strong>Malabar Biryani:</strong> Fragrant rice dish from Northern Kerala</li>
+   161→   161→      </ul>
+   162→   162→
+   163→   163→      <h2 id="budget">Budget Guide</h2>
+   164→   164→      <p>A 7-day Kerala trip can range from ₹12,000 per person (budget) to ₹40,000 per person (luxury). This includes accommodation, meals, transport, and activities. Houseboat stays range from ₹7,000 to ₹25,000 per night depending on luxury level.</p>
+   165→   165→    `,
+   166→   166→    author: {
+   167→   167→      name: 'Arjun Menon',
+   168→   168→      avatar: '/images/logo-wayfare-new.png',
+   169→   169→      bio: 'Kerala native and travel photographer who has documented every corner of God\'s Own Country over the past decade.',
+   170→   170→    },
+   171→   171→    date: '2025-01-10',
+   172→   172→    category: 'Guides',
+   173→   173→    image: '/images/destinations/kerala.png',
+   174→   174→    readingTime: '10 min read',
+   175→   175→    tags: ['Kerala', 'backwaters', 'Munnar', 'travel guide', 'India', 'houseboat'],
+   176→   176→    featured: true,
+   177→   177→  },
+   178→   178→  {
+   179→   179→    slug: 'dubai-on-budget-indian-travelers',
+   180→   180→    title: 'Dubai on a Budget: Tips for Indian Travelers',
+   181→   181→    excerpt:
+   182→   182→      'Think Dubai is only for the rich? Think again! Our insider guide shows you how to experience the best of Dubai without burning a hole in your pocket.',
+   183→   183→    content: `
+   184→   184→      <h2 id="introduction">Dubai Doesn't Have to Break the Bank</h2>
+   185→   185→      <p>Dubai has a reputation for luxury, but it's surprisingly accessible for budget-conscious Indian travelers. With smart planning, you can experience the best of this glittering city — from the Burj Khalifa to the Gold Souk — for under ₹50,000 for a 4-night trip (including flights!).</p>
+   186→   186→
+   187→   187→      <h2 id="flights">Getting Cheap Flights to Dubai</h2>
+   188→   188→      <p>The key to a budget Dubai trip starts with affordable flights. Book 6-8 weeks in advance and consider these options:</p>
+   189→   189→      <ul>
+   190→   190→        <li><strong>Budget Airlines:</strong> Flydubai, Air India Express, SpiceJet, and IndiGo offer direct flights from Mumbai, Delhi, Kochi, and other Indian cities starting at ₹8,000-₹12,000 round trip</li>
+   191→   191→        <li><strong>Off-Peak Travel:</strong> Avoid December-January and summer school holidays. February-May and September-November offer the best deals</li>
+   192→   192→        <li><strong>Mid-Week Flights:</strong> Tuesday and Wednesday departures are typically 20-30% cheaper</li>
+   193→   193→      </ul>
+   194→   194→
+   195→   195→      <h2 id="accommodation">Budget Accommodation Options</h2>
+   196→   196→      <p>Dubai has excellent budget accommodations that don't compromise on comfort:</p>
+   197→   197→      <ul>
+   198→   198→        <li><strong>Deira & Bur Dubai:</strong> The old city area has clean, comfortable hotels starting at ₹2,500-₹4,000 per night. You'll be close to the Creek, Gold Souk, and Spice Souk</li>
+   199→   199→        <li><strong>Al Barsha:</strong> Near Mall of the Emirates, budget hotels start at ₹3,000 per night</li>
+   200→   200→        <li><strong>Hostels:</strong> Dubai now has several modern hostels with pod beds starting at ₹1,200 per night</li>
+   201→   201→        <li><strong>Apartment Hotels:</strong> Great for families — kitchen access saves on meals. Starting at ₹4,000 per night for a studio</li>
+   202→   202→      </ul>
+   203→   203→
+   204→   204→      <h2 id="free-activities">Free Things to Do in Dubai</h2>
+   205→   205→      <ul>
+   206→   206→        <li><strong>Dubai Fountain Show:</strong> The world's largest choreographed fountain — absolutely free, every 30 minutes after 6 PM</li>
+   207→   207→        <li><strong>Dubai Marina Walk:</strong> Stunning waterfront promenade with skyscraper views</li>
+   208→   208→        <li><strong>Kite Beach:</strong> Beautiful public beach with Burj Al Arab views</li>
+   209→   209→        <li><strong>Al Fahidi Historical District:</strong> Free art galleries and cultural sites in old Dubai</li>
+   210→   210→        <li><strong>Dubai Creek Abra Ride:</strong> Traditional boat ride for just AED 1 (₹22)</li>
+   211→   211→        <li><strong>Gold Souk & Spice Souk:</strong> Window shopping is free, and the atmosphere is priceless</li>
+   212→   212→      </ul>
+   213→   213→
+   214→   214→      <h2 id="budget-activities">Affordable Paid Experiences</h2>
+   215→   215→      <ul>
+   216→   216→        <li><strong>Burj Khalifa At The Top:</strong> Book online 3-4 weeks ahead for ₹3,000-₹4,000 (vs. walk-in ₹6,000+)</li>
+   217→   217→        <li><strong>Desert Safari:</strong> Group tours start at ₹2,000 per person including BBQ dinner</li>
+   218→   218→        <li><strong>Dubai Frame:</strong> AED 50 (₹1,100) for panoramic city views</li>
+   219→   219→        <li><strong>Miracle Garden:</strong> AED 95 (₹2,100) for the world's largest flower garden</li>
+   220→   220→      </ul>
+   221→   221→
+   222→   222→      <h2 id="food">Eating on a Budget</h2>
+   223→   223→      <p>Dubai has an incredible cheap eats scene, especially in areas like Al Karama, Deira, and Satwa:</p>
+   224→   224→      <ul>
+   225→   225→        <li><strong>Shawarma:</strong> AED 5-10 (₹110-₹220) at street stalls</li>
+   226→   226→        <li><strong>Indian Restaurants:</strong> Thali meals for AED 15-25 (₹330-₹550)</li>
+   227→   227→        <li><strong>Ravi Restaurant:</strong> Legendary Pakistani eatery, full meal for AED 30 (₹660)</li>
+   228→   228→        <li><strong>Supermarket Meals:</strong> Carrefour and Lulu have affordable ready-to-eat sections</li>
+   229→   229→      </ul>
+   230→   230→
+   231→   231→      <h2 id="transport">Getting Around Cheaply</h2>
+   232→   232→      <p>Dubai Metro is clean, efficient, and affordable. A day pass costs AED 20 (₹440). Taxis start at AED 12 (₹265) and are much cheaper than Indian metro taxis. For short distances, use the Metro and walk — Dubai is surprisingly walkable in the cooler months.</p>
+   233→   233→
+   234→   234→      <h2 id="budget-breakdown">Sample 4-Night Budget Breakdown</h2>
+   235→   235→      <ul>
+   236→   236→        <li>Flights (round trip): ₹10,000-₹15,000</li>
+   237→   237→        <li>Accommodation (4 nights): ₹10,000-₹16,000</li>
+   238→   238→        <li>Food (4 days): ₹6,000-₹8,000</li>
+   239→   239→        <li>Activities & entry fees: ₹8,000-₹12,000</li>
+   240→   240→        <li>Transport: ₹3,000-₹4,000</li>
+   241→   241→        <li>Visa: ₹5,500-₹6,500</li>
+   242→   242→        <li><strong>Total: ₹42,500-₹61,500 per person</strong></li>
+   243→   243→      </ul>
+   244→   244→    `,
+   245→   245→    author: {
+   246→   246→      name: 'Rahul Verma',
+   247→   247→      avatar: '/images/logo-wayfare-new.png',
+   248→   248→      bio: 'Travel hacker and budget travel expert who has visited 25+ countries on a shoestring budget. Dubai is his second home.',
+   249→   249→    },
+   250→   250→    date: '2025-01-05',
+   251→   251→    category: 'Tips',
+   252→   252→    image: '/images/destinations/dubai.png',
+   253→   253→    readingTime: '9 min read',
+   254→   254→    tags: ['Dubai', 'budget travel', 'tips', 'international travel', 'UAE'],
+   255→   255→    featured: false,
+   256→   256→  },
+   257→   257→  {
+   258→   258→    slug: 'family-friendly-destinations-rajasthan',
+   259→   259→    title: 'Top 5 Family-Friendly Destinations in Rajasthan',
+   260→   260→    excerpt:
+   261→   261→      'Planning a family trip to the Land of Kings? Here are the 5 best destinations in Rajasthan that kids and adults will both love.',
+   262→   262→    content: `
+   263→   263→      <h2 id="introduction">Rajasthan: A Family Adventure</h2>
+   264→   264→      <p>Rajasthan is one of India's most family-friendly states, offering a magical mix of history, culture, wildlife, and adventure that captivates travelers of all ages. From majestic forts to desert safaris, here are our top 5 picks for a memorable family vacation.</p>
+   265→   265→
+   266→   266→      <h2 id="jaipur">1. Jaipur — The Pink City</h2>
+   267→   267→      <p>Jaipur is the perfect starting point for any Rajasthan family trip. The city offers a wonderful blend of history, culture, and modern amenities.</p>
+   268→   268→      <ul>
+   269→   269→        <li><strong>Amber Fort:</strong> The elephant ride up to the fort is a highlight for kids. The light and sound show in the evening is spectacular</li>
+   270→   270→        <li><strong>City Palace:</strong> Explore the royal quarters and the fascinating museum</li>
+   271→   271→        <li><strong>Jantar Mantar:</strong> The world's largest stone sundial — a fun science lesson for kids</li>
+   272→   272→        <li><strong>Hawa Mahal:</strong> The iconic "Palace of Winds" with its 953 small windows</li>
+   273→   273→        <li><strong>Chokhi Dhani:</strong> A mock Rajasthani village with food, folk performances, camel rides, and activities</li>
+   274→   274→      </ul>
+   275→   275→      <p><strong>Family Tip:</strong> Stay at a heritage hotel for the full royal experience without breaking the bank.</p>
+   276→   276→
+   277→   277→      <h2 id="udaipur">2. Udaipur — The City of Lakes</h2>
+   278→   278→      <p>Udaipur's serene lakes and palaces create a fairy-tale setting that kids absolutely love.</p>
+   279→   279→      <ul>
+   280→   280→        <li><strong>City Palace:</strong> Take the boat ride across Lake Pichola to reach the palace</li>
+   281→   281→        <li><strong>Saheliyon Ki Bari:</strong> Beautiful garden with fountains — perfect for kids to explore</li>
+   282→   282→        <li><strong>Bagore Ki Haveli:</strong> Evening puppet show and cultural performance</li>
+   283→   283→        <li><strong>Lake Pichola Boat Ride:</strong> Sunset cruise with views of Jag Mandir and the Lake Palace</li>
+   284→   284→      </ul>
+   285→   285→      <p><strong>Family Tip:</strong> The ropeway to Karni Mata Temple offers panoramic city views that kids love.</p>
+   286→   286→
+   287→   287→      <h2 id="jaisalmer">3. Jaisalmer — The Golden City</h2>
+   288→   288→      <p>Jaisalmer is like stepping into an Arabian Nights story — a living fort rising from the Thar Desert.</p>
+   289→   289→      <ul>
+   290→   290→        <li><strong>Jaisalmer Fort:</strong> One of the world's few "living forts" with shops, hotels, and residences inside</li>
+   291→   291→        <li><strong>Desert Safari:</strong> Overnight camel safari with camping under the stars — the highlight of any Rajasthan trip</li>
+   292→   292→        <li><strong>Sam Sand Dunes:</strong> Sunset over the dunes is magical, with folk performances at the camps</li>
+   293→   293→        <li><strong>Patwon Ki Haveli:</strong> Intricate carvings that will amaze both kids and adults</li>
+   294→   294→      </ul>
+   295→   295→      <p><strong>Family Tip:</strong> Book a luxury desert camp for comfort with adventure — kids love the cultural evening programs.</p>
+   296→   296→
+   297→   297→      <h2 id="jodhpur">4. Jodhpur — The Blue City</h2>
+   298→   298→      <p>Jodhpur's striking blue-washed houses and mighty Mehrangarh Fort make it one of Rajasthan's most photogenic cities.</p>
+   299→   299→      <ul>
+   300→   300→        <li><strong>Mehrangarh Fort:</strong> One of India's largest forts with a fantastic museum and zip line (for adventurous families!)</li>
+   301→   301→        <li><strong>Clock Tower & Sardar Market:</strong> Vibrant bazaar perfect for souvenir shopping</li>
+   302→   302→        <li><strong>Jaswant Thada:</strong> Beautiful marble cenotaph with peaceful gardens</li>
+   303→   303→        <li><strong>Umaid Bhawan Palace:</strong> Part royal residence, part hotel, part museum — truly grand</li>
+   304→   304→      </ul>
+   305→   305→      <p><strong>Family Tip:</strong> The Flying Fox zip line at Mehrangarh is safe for kids 10+ and offers incredible views.</p>
+   306→   306→
+   307→   307→      <h2 id="ranthambore">5. Ranthambore — Wildlife Safari</h2>
+   308→   308→      <p>For families who love wildlife, Ranthambore National Park is an unmissable destination. It's one of the best places in India to spot wild tigers.</p>
+   309→   309→      <ul>
+   310→   310→        <li><strong>Tiger Safari:</strong> Morning and afternoon jeep/canter safaris through the national park</li>
+   311→   311→        <li><strong>Ranthambore Fort:</strong> A UNESCO World Heritage Site within the park</li>
+   312→   312→        <li><strong>Surwal Lake:</strong> Bird watching paradise with migratory species</li>
+   313→   313→        <li><strong>Dastkar Ranthambore:</strong> Craft center where kids can try traditional art forms</li>
+   314→   314→      </ul>
+   315→   315→      <p><strong>Family Tip:</strong> Book safaris well in advance (2-3 months) for the best zone allocations.</p>
+   316→   316→
+   317→   317→      <h2 id="tips">General Tips for Rajasthan Family Travel</h2>
+   318→   318→      <ul>
+   319→   319→        <li>Best time: October to March (avoid scorching summer)</li>
+   320→   320→        <li>Carry sunscreen, hats, and water bottles — Rajasthan can be very sunny</li>
+   321→   321→        <li>Book heritage hotels for a unique experience kids will remember</li>
+   322→   322→        <li>Plan 2-3 nights per city to avoid travel fatigue</li>
+   323→   323→        <li>Hire a private car with driver for intercity travel — it's affordable and comfortable</li>
+   324→   324→      </ul>
+   325→   325→    `,
+   326→   326→    author: {
+   327→   327→      name: 'Priya Sharma',
+   328→   328→      avatar: '/images/logo-wayfare-new.png',
+   329→   329→      bio: 'Travel writer and honeymoon specialist with 8+ years of experience exploring romantic destinations across India and Southeast Asia.',
+   330→   330→    },
+   331→   331→    date: '2024-12-28',
+   332→   332→    category: 'Destinations',
+   333→   333→    image: '/images/blog/adventure-tips.png',
+   334→   334→    readingTime: '7 min read',
+   335→   335→    tags: ['Rajasthan', 'family travel', 'Jaipur', 'Udaipur', 'Jaisalmer', 'wildlife'],
+   336→   336→    featured: false,
+   337→   337→  },
+   338→   338→  {
+   339→   339→    slug: 'maldives-vs-bali-honeymoon-comparison',
+   340→   340→    title: 'Maldives vs Bali: Which is Better for Your Honeymoon?',
+   341→   341→    excerpt:
+   342→   342→      'Torn between the overwater villas of Maldives and the cultural charm of Bali? Our detailed comparison helps you decide the perfect honeymoon destination.',
+   343→   343→    content: `
+   344→   344→      <h2 id="introduction">The Great Honeymoon Debate</h2>
+   345→   345→      <p>Maldives and Bali are two of the most popular honeymoon destinations for Indian couples. Both offer stunning natural beauty and romantic experiences, but they're completely different in character. Let's break down everything you need to know to make the right choice.</p>
+   346→   346→
+   347→   347→      <h2 id="vibe">Overall Vibe</h2>
+   348→   348→      <p><strong>Maldives:</strong> Pure, undisturbed luxury. Think overwater villas, crystal-clear lagoons, private beach dinners, and world-class snorkeling. It's about doing nothing — beautifully.</p>
+   349→   349→      <p><strong>Bali:</strong> Cultural immersion meets natural beauty. Think ancient temples, rice terraces, yoga retreats, vibrant nightlife, and diverse landscapes from mountains to beaches. It's about experiencing everything.</p>
+   350→   350→
+   351→   351→      <h2 id="budget">Budget Comparison</h2>
+   352→   352→      <p><strong>Maldives (5 nights):</strong></p>
+   353→   353→      <ul>
+   354→   354→        <li>Budget: ₹80,000-₹1,20,000 per couple</li>
+   355→   355→        <li>Mid-range: ₹1,50,000-₹2,50,000 per couple</li>
+   356→   356→        <li>Luxury: ₹3,00,000+ per couple</li>
+   357→   357→      </ul>
+   358→   358→      <p><strong>Bali (5 nights):</strong></p>
+   359→   359→      <ul>
+   360→   360→        <li>Budget: ₹50,000-₹80,000 per couple</li>
+   361→   361→        <li>Mid-range: ₹1,00,000-₹1,80,000 per couple</li>
+   362→   362→        <li>Luxury: ₹2,00,000+ per couple</li>
+   363→   363→      </ul>
+   364→   364→      <p><strong>Winner:</strong> Bali is significantly more affordable at every price point.</p>
+   365→   365→
+   366→   366→      <h2 id="flights">Flight Connectivity from India</h2>
+   367→   367→      <p><strong>Maldives:</strong> Direct flights from Delhi, Mumbai, Bangalore, Kochi (3-5 hours). Prices range from ₹15,000-₹30,000 round trip.</p>
+   368→   368→      <p><strong>Bali:</strong> No direct flights from India. Connecting flights via Singapore, Kuala Lumpur, or Bangkok (8-12 hours total). Prices range from ₹25,000-₹45,000 round trip.</p>
+   369→   369→      <p><strong>Winner:</strong> Maldives wins on convenience and flight cost.</p>
+   370→   370→
+   371→   371→      <h2 id="accommodation">Accommodation Experience</h2>
+   372→   372→      <p><strong>Maldives:</strong> Overwater villas are the star attraction. Waking up above turquoise water with a glass floor panel, stepping directly into the ocean from your deck — it's unmatched luxury. Most resorts are on private islands with all-inclusive options.</p>
+   373→   373→      <p><strong>Bali:</strong> Incredible variety — from clifftop villas in Uluwatu to jungle retreats in Ubud. Private pool villas are surprisingly affordable. Boutique resorts offer personalized service at a fraction of Maldives prices.</p>
+   374→   374→      <p><strong>Winner:</strong> Maldives for pure luxury, Bali for variety and value.</p>
+   375→   375→
+   376→   376→      <h2 id="activities">Activities & Experiences</h2>
+   377→   377→      <p><strong>Maldives:</strong></p>
+   378→   378→      <ul>
+   379→   379→        <li>Snorkeling with manta rays and whale sharks</li>
+   380→   380→        <li>Private sandbank dining</li>
+   381→   381→        <li>Underwater restaurant experiences</li>
+   382→   382→        <li>Sunset dolphin cruises</li>
+   383→   383→        <li>Couples spa treatments over water</li>
+   384→   384→      </ul>
+   385→   385→      <p><strong>Bali:</strong></p>
+   386→   386→      <ul>
+   387→   387→        <li>Tegallalang Rice Terrace sunrise walk</li>
+   388→   388→        <li>Uluwatu Temple sunset Kecak dance</li>
+   389→   389→        <li>Mount Batur sunrise trek</li>
+   390→   390→        <li>Seminyak beach clubs and nightlife</li>
+   391→   391→        <li>Traditional Balinese cooking class</li>
+   392→   392→        <li>White water rafting in Ayung River</li>
+   393→   393→      </ul>
+   394→   394→      <p><strong>Winner:</strong> Bali wins on variety of activities. Maldives is more limited but excels at what it offers.</p>
+   395→   395→
+   396→   396→      <h2 id="food">Food & Dining</h2>
+   397→   397→      <p><strong>Maldives:</strong> Resort dining is excellent but expensive. All-inclusive packages are worth it. Limited local food options outside resorts.</p>
+   398→   398→      <p><strong>Bali:</strong> Incredible food scene from ₹300 street food to ₹10,000 fine dining. Warungs (local eateries) serve amazing Nasi Goreng, Babi Guling, and fresh seafood at Jimbaran Bay.</p>
+   399→   399→      <p><strong>Winner:</strong> Bali by a mile for food lovers.</p>
+   400→   400→
+   401→   401→      <h2 id="verdict">The Verdict</h2>
+   402→   402→      <p><strong>Choose Maldives if:</strong> You want pure relaxation, luxury, and privacy. Best for couples who want to just "be" together without planning activities.</p>
+   403→   403→      <p><strong>Choose Bali if:</strong> You want a mix of adventure, culture, and relaxation. Best for active couples who get bored just lounging.</p>
+   404→   404→      <p><strong>Can't decide?</strong> Do both! Many couples combine 3 nights in Maldives (relaxation) with 4 nights in Bali (exploration) for the ultimate honeymoon.</p>
+   405→   405→    `,
+   406→   406→    author: {
+   407→   407→      name: 'Neha Kapoor',
+   408→   408→      avatar: '/images/logo-wayfare-new.png',
+   409→   409→      bio: 'Luxury travel consultant specializing in honeymoon planning. Has planned 500+ honeymoons across Asia and the Indian Ocean.',
+   410→   410→    },
+   411→   411→    date: '2024-12-20',
+   412→   412→    category: 'Reviews',
+   413→   413→    image: '/images/destinations/maldives.png',
+   414→   414→    readingTime: '8 min read',
+   415→   415→    tags: ['Maldives', 'Bali', 'honeymoon', 'comparison', 'luxury travel', 'Indonesia'],
+   416→   416→    featured: true,
+   417→   417→  },
+   418→   418→  {
+   419→   419→    slug: 'ladakh-bike-trip-complete-guide',
+   420→   420→    title: 'Ladakh Bike Trip: Everything You Need to Know',
+   421→   421→    excerpt:
+   422→   422→      'The ultimate guide to planning your dream Ladakh bike trip — routes, permits, packing list, budget, and insider tips from experienced riders.',
+   423→   423→    content: `
+   424→   424→      <h2 id="introduction">The Call of the Mountains</h2>
+   425→   425→      <p>A Ladakh bike trip is a bucket-list adventure for every rider in India. The journey through the world's highest motorable passes, across vast barren landscapes and beside pristine lakes, is an experience like no other. But it requires careful planning. Here's everything you need to know.</p>
+   426→   426→
+   427→   427→      <h2 id="when-to-go">When to Go</h2>
+   428→   428→      <p>The riding season in Ladakh is short:</p>
+   429→   429→      <ul>
+   430→   430→        <li><strong>Mid-June to Mid-September:</strong> The only reliable window. All passes (Khardung La, Chang La, Tanglang La) are typically open</li>
+   431→   431→        <li><strong>Best Month:</strong> July offers the best weather and road conditions</li>
+   432→   432→        <li><strong>Avoid:</strong> October onwards — unpredictable weather, road closures, and sub-zero temperatures</li>
+   433→   433→      </ul>
+   434→   434→
+   435→   435→      <h2 id="routes">Popular Routes</h2>
+   436→   436→
+   437→   437→      <h3>Route 1: Srinagar-Leh Highway (425 km)</h3>
+   438→   438→      <p>The gentler approach. This route gradually gains altitude, helping with acclimatization.</p>
+   439→   439→      <p><strong>Day 1:</strong> Srinagar → Sonamarg (80 km) | <strong>Day 2:</strong> Sonamarg → Drass → Kargil (130 km) | <strong>Day 3:</strong> Kargil → Mulbekh → Lamayuru → Leh (215 km)</p>
+   440→   440→
+   441→   441→      <h3>Route 2: Manali-Leh Highway (473 km)</h3>
+   442→   442→      <p>The more dramatic and challenging route. Higher passes, stunning landscapes.</p>
+   443→   443→      <p><strong>Day 1:</strong> Manali → Keylong/Jispa (160 km) | <strong>Day 2:</strong> Keylong → Sarchu (110 km) | <strong>Day 3:</strong> Sarchu → Leh (205 km)</p>
+   444→   444→
+   445→   445→      <h3>Route 3: The Complete Circuit (12-15 days)</h3>
+   446→   446→      <p>Manali → Leh → Nubra Valley → Pangong Tso → Leh → Srinagar. The most comprehensive Ladakh experience.</p>
+   447→   447→
+   448→   448→      <h2 id="permits">Permits & Documents</h2>
+   449→   449→      <ul>
+   450→   450→        <li><strong>Inner Line Permit (ILP):</strong> Required for Nubra Valley, Pangong Tso, Tso Moriri. Apply online at ladakh.nic.in or at the DC office in Leh</li>
+   451→   451→        <li><strong>Protected Area Permit (PAP):</strong> Needed for foreign nationals</li>
+   452→   452→        <li>Carry original + multiple photocopies of: Driving license, RC book, vehicle insurance, pollution certificate, Aadhar/Passport</li>
+   453→   453→        <li>Get your bike serviced and carry the service receipt</li>
+   454→   454→      </ul>
+   455→   455→
+   456→   456→      <h2 id="bike">Choosing Your Bike</h2>
+   457→   457→      <ul>
+   458→   458→        <li><strong>Royal Enfield Himalayan (411cc):</strong> The most popular choice. Comfortable, reliable, great for long distances. Rent: ₹1,500-₹2,000/day</li>
+   459→   459→        <li><strong>Royal Enfield Classic 500:</strong> The classic Ladakh bike. Raw power and character. Rent: ₹1,200-₹1,600/day</li>
+   460→   460→        <li><strong>Bajaj Dominar 400:</strong> Modern, powerful, and comfortable. Great fuel injection system. Rent: ₹1,400-₹1,800/day</li>
+   461→   461→        <li><strong>KTM Duke 200/390:</strong> For experienced riders who want agility. Rent: ₹1,200-₹1,600/day</li>
+   462→   462→      </ul>
+   463→   463→
+   464→   464→      <h2 id="packing">Essential Packing List</h2>
+   465→   465→      <ul>
+   466→   466→        <li>Riding jacket with thermal liner, riding pants, gloves (2 pairs), riding boots</li>
+   467→   467→        <li>Thermal innerwear, fleece jacket, windcheater, rain suit</li>
+   468→   468→        <li>Helmet with clear visor + sunglasses</li>
+   469→   469→        <li>Bungee cords, tank bag, saddle bags</li>
+   470→   470→        <li>First aid kit, Diamox (for altitude sickness), sunscreen (SPF 50+)</li>
+   471→   471→        <li>Tool kit, puncture kit, clutch/accelerator cables, extra tube</li>
+   472→   472→        <li>Water bottles (2L minimum), energy bars, ORS packets</li>
+   473→   473→        <li>Power bank, phone mount, bungee cords</li>
+   474→   474→      </ul>
+   475→   475→
+   476→   476→      <h2 id="budget">Budget Breakdown (Per Person)</h2>
+   477→   477→      <ul>
+   478→   478→        <li>Bike rental (12 days): ₹18,000-₹24,000</li>
+   479→   479→        <li>Fuel (2,500 km approx): ₹8,000-₹10,000</li>
+   480→   480→        <li>Accommodation (12 nights): ₹9,000-₹18,000</li>
+   481→   481→        <li>Food (12 days): ₹8,000-₹12,000</li>
+   482→   482→        <li>Permits & entry fees: ₹1,500-₹2,000</li>
+   483→   483→        <li>Miscellaneous (spares, repairs): ₹3,000-₹5,000</li>
+   484→   484→        <li><strong>Total: ₹47,500-₹71,000 per person</strong></li>
+   485→   485→      </ul>
+   486→   486→
+   487→   487→      <h2 id="tips">Pro Tips</h2>
+   488→   488→      <ul>
+   489→   489→        <li>Acclimatize for 2 days in Leh before riding to high passes</li>
+   490→   490→        <li>Start early — weather changes rapidly in the afternoon</li>
+   491→   491→        <li>Ride in a group of 4-6 bikes for safety</li>
+   492→   492→        <li>Never ride after dark — roads have no lights and livestock roams freely</li>
+   493→   493→        <li>Stay hydrated — the dry mountain air dehydrates you faster than you realize</li>
+   494→   494→        <li>Respect the mountains — don't litter, don't honk unnecessarily</li>
+   495→   495→      </ul>
+   496→   496→    `,
+   497→   497→    author: {
+   498→   498→      name: 'Vikram Singh',
+   499→   499→      avatar: '/images/logo-wayfare-new.png',
+   500→   500→      bio: 'Adventure motorcyclist who has completed 6 Ladakh expeditions. Founder of the Delhi Riders motorcycle club.',
+   501→   501→    },
+   502→   502→    date: '2024-12-15',
+   503→   503→    category: 'Guides',
+   504→   504→    image: '/images/blog/adventure-tips.png',
+   505→   505→    readingTime: '12 min read',
+   506→   506→    tags: ['Ladakh', 'bike trip', 'adventure', 'road trip', 'motorcycle', 'Himalayas'],
+   507→   507→    featured: true,
+   508→   508→  },
+   509→   509→  {
+   510→   510→    slug: 'goa-beyond-beaches-hidden-gems',
+   511→   511→    title: 'Goa Beyond Beaches: Hidden Gems and Local Experiences',
+   512→   512→    excerpt:
+   513→   513→      'Most tourists never see the real Goa. Discover hidden waterfalls, secret beaches, spice farms, and authentic local experiences that go far beyond the usual tourist trail.',
+   514→   514→    content: `
+   515→   515→      <h2 id="introduction">The Real Goa Awaits</h2>
+   516→   516→      <p>Goa is India's most visited beach destination, but most visitors only experience a fraction of what this incredible state has to offer. Beyond the beach shacks and nightclubs lies a world of hidden waterfalls, centuries-old churches, lush spice plantations, and charming villages where time seems to stand still.</p>
+   517→   517→
+   518→   518→      <h2 id="hidden-beaches">Secret Beaches</h2>
+   519→   519→
+   520→   520→      <h3>Kakolem Beach (Tiger Beach)</h3>
+   521→   521→      <p>Accessible only via a steep, hidden path, this pristine cove near Cabo de Rama is one of Goa's best-kept secrets. You'll likely have the entire beach to yourself.</p>
+   522→   522→
+   523→   523→      <h3>Hollant Beach</h3>
+   524→   524→      <p>Near Vasco da Gama, this is one of the few beaches in Goa where you can watch the sunrise over the Arabian Sea. Calm waters make it perfect for swimming.</p>
+   525→   525→
+   526→   526→      <h3>Betul Beach</h3>
+   527→   527→      <p>A quiet fishing village beach in South Goa where you can watch traditional fishing boats bring in the daily catch and buy the freshest fish you'll ever taste.</p>
+   528→   528→
+   529→   529→      <h3>Galgibag Beach</h3>
+   530→   530→      <p>Known as "Turtle Beach," this isolated stretch near the Karnataka border is where Olive Ridley turtles come to nest. No shacks, no crowds — just pristine sand and surf.</p>
+   531→   531→
+   532→   532→      <h2 id="waterfalls">Hidden Waterfalls</h2>
+   533→   533→
+   534→   534→      <h3>Dudhsagar Falls (Off the Beaten Path)</h3>
+   535→   535→      <p>Everyone knows Dudhsagar, but most visit via the tourist jeep safari. Instead, take the 12km trek through the Bhagwan Mahavir Wildlife Sanctuary — the journey through the forest is as magical as the falls themselves.</p>
+   536→   536→
+   537→   537→      <h3>Kuskem Waterfall</h3>
+   538→   538→      <p>Located near Kuskem village in the Canacona taluka, this lesser-known waterfall is surrounded by dense forest and offers a refreshing swim in its natural pool.</p>
+   539→   539→
+   540→   540→      <h3>Hivre Waterfall</h3>
+   541→   541→      <p>A beautiful waterfall near Valpoi that requires a short trek through a cashew plantation. The locals are friendly and often guide visitors to the spot.</p>
+   542→   542→
+   543→   543→      <h2 id="spice-farms">Spice Plantation Tours</h2>
+   544→   544→      <p>Goa's spice farms are a feast for the senses. Unlike the touristy ones, try these authentic options:</p>
+   545→   545→      <ul>
+   546→   546→        <li><strong>Savoi Plantation:</strong> A 200-year-old organic spice farm in Ponda. The guided walk explains how vanilla, pepper, cardamom, and nutmeg grow. Ends with a traditional Goan Hindu lunch on banana leaves</li>
+   547→   547→        <li><strong>Pascol Spice Village:</strong> A smaller, more intimate farm where you can actually participate in spice harvesting</li>
+   548→   548→      </ul>
+   549→   549→
+   550→   550→      <h2 id="heritage">Heritage & Culture Beyond Churches</h2>
+   551→   551→      <ul>
+   552→   552→        <li><strong>Fountainhas (Panjim):</strong> Goa's Latin Quarter with colorful Portuguese-era homes, art galleries, and the best bakeries</li>
+   553→   553→        <li><strong>Chandor Village:</strong> Home to the 500-year-old Menezes Braganza House, one of India's largest colonial mansions</li>
+   554→   554→        <li><strong>Divar Island:</strong> Take a ferry from Old Goa to this peaceful island village with ancient temples and Portuguese ruins</li>
+   555→   555→        <li><strong>Carmona Village:</strong> A charming village with beautiful Indo-Portuguese architecture and zero tourist crowds</li>
+   556→   556→      </ul>
+   557→   557→
+   558→   558→      <h2 id="food">Authentic Goan Food Experiences</h2>
+   559→   559→      <ul>
+   560→   560→        <li><strong>Vinayak Family Restaurant (Margao):</strong> The best Goan fish curry rice in South Goa — always packed with locals</li>
+   561→   561→        <li><strong>Café Alorna (Mapusa):</strong> Famous for sorpotel, sannas, and bebinca since 1935</li>
+   562→   562→        <li><strong>Martin's Corner (Betalbatim):</strong> Seafood so fresh it was swimming that morning</li>
+   563→   563→        <li><strong>Ritz Classic (Panjim):</strong> The go-to spot for Goan prawn curry and fish fry — no tourists, only locals</li>
+   564→   564→      </ul>
+   565→   565→
+   566→   566→      <h2 id="tips">Tips for Exploring Hidden Goa</h2>
+   567→   567→      <ul>
+   568→   568→        <li>Rent a scooter or car — hidden gems aren't accessible by public transport</li>
+   569→   569→        <li>Visit during the monsoon (June-September) for lush greenery and waterfalls at their peak</li>
+   570→   570→        <li>Talk to locals — they'll point you to spots that aren't on any map</li>
+   571→   571→        <li>Stay in a homestay rather than a resort for an authentic experience</li>
+   572→   572→        <li>Explore the hinterlands — the real Goa is in its villages, not its beaches</li>
+   573→   573→      </ul>
+   574→   574→    `,
+   575→   575→    author: {
+   576→   576→      name: 'Arjun Menon',
+   577→   577→      avatar: '/images/logo-wayfare-new.png',
+   578→   578→      bio: 'Kerala native and travel photographer who has documented every corner of God\'s Own Country over the past decade.',
+   579→   579→    },
+   580→   580→    date: '2024-12-10',
+   581→   581→    category: 'Destinations',
+   582→   582→    image: '/images/destinations/goa.png',
+   583→   583→    readingTime: '9 min read',
+   584→   584→    tags: ['Goa', 'hidden gems', 'beaches', 'waterfalls', 'local experiences', 'offbeat'],
+   585→   585→    featured: false,
+   586→   586→  },
+   587→   587→  {
+   588→   588→    slug: 'plan-international-trip-from-india-guide',
+   589→   589→    title: 'How to Plan an International Trip from India: Step-by-Step Guide',
+   590→   590→    excerpt:
+   591→   591→      'First time traveling abroad? From passport application to forex, visa to travel insurance — our comprehensive guide covers everything you need to know.',
+   592→   592→    content: `
+   593→   593→      <h2 id="introduction">Your First International Trip: No More Confusion</h2>
+   594→   594→      <p>Planning your first international trip from India can feel overwhelming — passports, visas, forex, insurance, packing, itineraries... where do you even start? Don't worry. This step-by-step guide breaks it all down so you can plan with confidence.</p>
+   595→   595→
+   596→   596→      <h2 id="step1">Step 1: Get Your Passport (4-6 weeks before)</h2>
+   597→   597→      <ul>
+   598→   598→        <li>Apply online at passportindia.gov.in</li>
+   599→   599→        <li>Book an appointment at your nearest Passport Seva Kendra</li>
+   600→   600→        <li>Carry: Aadhar card, PAN card, birth certificate, address proof</li>
+   601→   601→        <li>Normal processing: 30-45 days | Tatkal: 1-3 weeks (additional fee)</li>
+   602→   602→        <li><strong>Tip:</strong> Ensure your passport is valid for at least 6 months beyond your travel date</li>
+   603→   603→      </ul>
+   604→   604→
+   605→   605→      <h2 id="step2">Step 2: Choose Your Destination</h2>
+   606→   606→      <p>For first-time international travelers from India, consider these beginner-friendly options:</p>
+   607→   607→      <ul>
+   608→   608→        <li><strong>Visa-on-Arrival / e-Visa:</strong> Thailand, Maldives, Sri Lanka, Indonesia (Bali), Vietnam, Cambodia</li>
+   609→   609→        <li><strong>Easy Tourist Visa:</strong> Singapore, Malaysia, UAE (Dubai), Nepal, Bhutan</li>
+   610→   610→        <li><strong>Requires More Planning:</strong> Europe (Schengen), USA, UK, Japan, Australia</li>
+   611→   611→      </ul>
+   612→   612→      <p><strong>Recommendation:</strong> Start with Southeast Asia — affordable, visa-friendly, incredible food, and stunning landscapes.</p>
+   613→   613→
+   614→   614→      <h2 id="step3">Step 3: Apply for Visa (3-8 weeks before)</h2>
+   615→   615→      <ul>
+   616→   616→        <li><strong>e-Visa:</strong> Apply online, receive via email. Available for 160+ countries</li>
+   617→   617→        <li><strong>Visa-on-Arrival:</strong> Get your visa at the destination airport. Carry passport photos and visa fee in cash (USD)</li>
+   618→   618→        <li><strong>Embassy Visa:</strong> Requires appointment, documentation, and interview (for US, UK, Schengen, etc.)</li>
+   619→   619→        <li><strong>Documents typically needed:</strong> Passport (6+ months validity), return tickets, hotel bookings, bank statements (3-6 months), salary slips, IT returns, passport-size photos</li>
+   620→   620→      </ul>
+   621→   621→
+   622→   622→      <h2 id="step4">Step 4: Book Flights (8-12 weeks before)</h2>
+   623→   623→      <ul>
+   624→   624→        <li>Use Google Flights, Skyscanner, or MakeMyTrip to compare prices</li>
+   625→   625→        <li>Book 8-12 weeks in advance for the best fares</li>
+   626→   626→        <li>Tuesday/Wednesday departures are usually cheapest</li>
+   627→   627→        <li>Consider budget airlines: AirAsia, Scoot, VietJet for Southeast Asia</li>
+   628→   628→        <li><strong>Tip:</strong> Set price alerts and be flexible with dates</li>
+   629→   629→      </ul>
+   630→   630→
+   631→   631→      <h2 id="step5">Step 5: Book Accommodation (4-8 weeks before)</h2>
+   632→   632→      <ul>
+   633→   633→        <li><strong>Budget:</strong> Hostels (Hostelworld, Booking.com) — ₹500-₹1,500/night</li>
+   634→   634→        <li><strong>Mid-range:</strong> 3-star hotels, Airbnb — ₹2,000-₹5,000/night</li>
+   635→   635→        <li><strong>Luxury:</strong> 4-5 star hotels, villas — ₹8,000+/night</li>
+   636→   636→        <li><strong>Tip:</strong> Book with free cancellation — plans change!</li>
+   637→   637→      </ul>
+   638→   638→
+   639→   639→      <h2 id="step6">Step 6: Get Travel Insurance (1-2 weeks before)</h2>
+   640→   640→      <p><strong>Never skip travel insurance.</strong> It covers medical emergencies, trip cancellations, lost baggage, and more. Plans start at just ₹500-₹1,500 for a week-long trip.</p>
+   641→   641→      <ul>
+   642→   642→        <li>Popular providers: ICICI Lombard, HDFC Ergo, Bajaj Allianz, World Nomads</li>
+   643→   643→        <li>Compare on: Policybazaar, Coverfox</li>
+   644→   644→        <li>Ensure coverage for: Medical emergencies (₹10L+), trip cancellation, baggage loss, flight delays</li>
+   645→   645→      </ul>
+   646→   646→
+   647→   647→      <h2 id="step7">Step 7: Manage Forex (1-2 weeks before)</h2>
+   648→   648→      <ul>
+   649→   649→        <li><strong>Multi-currency Forex Card:</strong> Load multiple currencies at locked-in rates. Much cheaper than using Indian debit/credit cards abroad. Get from BookMyForex, Thomas Cook, or your bank</li>
+   650→   650→        <li><strong>Cash:</strong> Carry USD 100-200 for emergencies. Exchange at authorized counters, not airports (terrible rates)</li>
+   651→   651→        <li><strong>International Debit/Credit Cards:</strong> As backup. Check foreign markup fees (usually 3.5%)</li>
+   652→   652→        <li><strong>UPI:</strong> Now works in UAE, Singapore, Sri Lanka, Mauritius, and Nepal!</li>
+   653→   653→      </ul>
+   654→   654→
+   655→   655→      <h2 id="step8">Step 8: Pack Smart</h2>
+   656→   656→      <ul>
+   657→   657→        <li>Check baggage allowance before packing (usually 20-30 kg for check-in, 7 kg cabin)</li>
+   658→   658→        <li>Essential documents folder: Passport, visa, tickets, insurance, hotel bookings, forex card — hard copies + digital copies in email</li>
+   659→   659→        <li>Universal travel adapter (different countries have different sockets)</li>
+   660→   660→        <li>Medications with prescriptions</li>
+   661→   661→        <li>Power bank (under 100Wh for cabin baggage)</li>
+   662→   662→        <li><strong>Pro tip:</strong> Roll clothes instead of folding — saves space and reduces wrinkles</li>
+   663→   663→      </ul>
+   664→   664→
+   665→   665→      <h2 id="step9">Step 9: At the Airport & Immigration</h2>
+   666→   666→      <ul>
+   667→   667→        <li>Arrive 3 hours before international departure</li>
+   668→   668→        <li>Fill departure card (if required) at the Indian immigration counter</li>
+   669→   669→        <li>Keep all documents accessible, not buried in checked luggage</li>
+   670→   670→        <li>At destination immigration: Be confident, have hotel address and return ticket ready</li>
+   671→   671→        <li>Fill arrival card if required</li>
+   672→   672→      </ul>
+   673→   673→
+   674→   674→      <h2 id="budget">Sample Budget: 5-Day Thailand Trip</h2>
+   675→   675→      <ul>
+   676→   676→        <li>Flights (round trip): ₹15,000-₹25,000</li>
+   677→   677→        <li>Visa fee: ₹2,500 (visa-on-arrival)</li>
+   678→   678→        <li>Accommodation (5 nights): ₹10,000-₹20,000</li>
+   679→   679→        <li>Food (5 days): ₹8,000-₹12,000</li>
+   680→   680→        <li>Activities: ₹5,000-₹10,000</li>
+   681→   681→        <li>Local transport: ₹3,000-₹5,000</li>
+   682→   682→        <li>Travel insurance: ₹800</li>
+   683→   683→        <li>Forex/misc: ₹5,000</li>
+   684→   684→        <li><strong>Total: ₹49,300-₹80,300 per person</strong></li>
+   685→   685→      </ul>
+   686→   686→    `,
+   687→   687→    author: {
+   688→   688→      name: 'Rahul Verma',
+   689→   689→      avatar: '/images/logo-wayfare-new.png',
+   690→   690→      bio: 'Travel hacker and budget travel expert who has visited 25+ countries on a shoestring budget. Dubai is his second home.',
+   691→   691→    },
+   692→   692→    date: '2024-12-05',
+   693→   693→    category: 'Guides',
+   694→   694→    image: '/images/blog/travel-tips.png',
+   695→   695→    readingTime: '11 min read',
+   696→   696→    tags: ['international travel', 'beginner guide', 'visa', 'passport', 'forex', 'travel tips'],
+   697→   697→    featured: false,
+   698→   698→  },
+   699→   699→];
+   700→   700→
+   701→   701→// Helper functions
+   702→   702→export function getAllBlogPosts(): BlogPost[] {
+   703→   703→  return blogPosts;
+   704→   704→}
+   705→   705→
+   706→   706→export function getBlogPostBySlug(slug: string): BlogPost | undefined {
+   707→   707→  return blogPosts.find((post) => post.slug === slug);
+   708→   708→}
+   709→   709→
+   710→   710→export function getFeaturedPosts(): BlogPost[] {
+   711→   711→  return blogPosts.filter((post) => post.featured);
+   712→   712→}
+   713→   713→
+   714→   714→export function getPostsByCategory(category: string): BlogPost[] {
+   715→   715→  return blogPosts.filter((post) => post.category === category);
+   716→   716→}
+   717→   717→
+   718→   718→export function getRelatedPosts(slug: string, limit = 3): BlogPost[] {
+   719→   719→  const post = getBlogPostBySlug(slug);
+   720→   720→  if (!post) return [];
+   721→   721→  return blogPosts
+   722→   722→    .filter(
+   723→   723→      (p) =>
+   724→   724→        p.slug !== slug &&
+   725→   725→        (p.category === post.category || p.tags.some((t) => post.tags.includes(t)))
+   726→   726→    )
+   727→   727→    .slice(0, limit);
+   728→   728→}
+   729→   729→
+   730→   730→export function getRecentPosts(limit = 5): BlogPost[] {
+   731→   731→  return [...blogPosts]
+   732→   732→    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+   733→   733→    .slice(0, limit);
+   734→   734→}
+   735→   735→
+   736→   736→export function searchPosts(query: string): BlogPost[] {
+   737→   737→  const q = query.toLowerCase();
+   738→   738→  return blogPosts.filter(
+   739→   739→    (post) =>
+   740→   740→      post.title.toLowerCase().includes(q) ||
+   741→   741→      post.excerpt.toLowerCase().includes(q) ||
+   742→   742→      post.tags.some((tag) => tag.toLowerCase().includes(q))
+   743→   743→  );
+   744→   744→}
+   745→   745→

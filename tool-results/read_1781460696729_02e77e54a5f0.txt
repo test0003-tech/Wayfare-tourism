@@ -1,0 +1,879 @@
+     1→'use client';
+     2→
+     3→import { useEffect, useState, useRef, useCallback, Suspense } from 'react';
+     4→import { useSearchParams, useRouter } from 'next/navigation';
+     5→import { motion, AnimatePresence } from 'framer-motion';
+     6→import Link from 'next/link';
+     7→import { Package } from '@/lib/types';
+     8→import { Badge } from '@/components/ui/badge';
+     9→import { Button } from '@/components/ui/button';
+    10→import { Card, CardContent } from '@/components/ui/card';
+    11→import { Input } from '@/components/ui/input';
+    12→import {
+    13→  Select,
+    14→  SelectContent,
+    15→  SelectItem,
+    16→  SelectTrigger,
+    17→  SelectValue,
+    18→} from '@/components/ui/select';
+    19→import {
+    20→  Star,
+    21→  Clock,
+    22→  MapPin,
+    23→  Heart,
+    24→  ArrowRight,
+    25→  Compass,
+    26→  Search,
+    27→  SlidersHorizontal,
+    28→  X,
+    29→  Flame,
+    30→  Trophy,
+    31→  Users,
+    32→  ChevronRight,
+    33→  Sparkles,
+    34→  TrendingUp,
+    35→} from 'lucide-react';
+    36→import PageHero from '@/components/wayfare/PageHero';
+    37→import Breadcrumbs from '@/components/wayfare/Breadcrumbs';
+    38→import PageTransition from '@/components/wayfare/PageTransition';
+    39→import { useWishlist } from '@/lib/wishlist';
+    40→
+    41→const regionOptions = [
+    42→  { value: '', label: 'All Regions' },
+    43→  { value: 'domestic', label: '🇮🇳 Domestic' },
+    44→  { value: 'international', label: '🌏 International' },
+    45→];
+    46→
+    47→const categoryOptions = [
+    48→  { value: '', label: 'All Categories' },
+    49→  { value: 'honeymoon', label: 'Honeymoon' },
+    50→  { value: 'adventure', label: 'Adventure' },
+    51→  { value: 'family', label: 'Family' },
+    52→  { value: 'pilgrimage', label: 'Pilgrimage' },
+    53→  { value: 'wildlife', label: 'Wildlife' },
+    54→  { value: 'beach', label: 'Beach' },
+    55→  { value: 'hill-station', label: 'Hill Station' },
+    56→  { value: 'tourism', label: 'Tourism' },
+    57→];
+    58→
+    59→const quickFilterCategories = [
+    60→  { value: 'honeymoon', label: 'Honeymoon', emoji: '💑' },
+    61→  { value: 'adventure', label: 'Adventure', emoji: '🏔️' },
+    62→  { value: 'family', label: 'Family', emoji: '👨‍👩‍👧‍👦' },
+    63→  { value: 'pilgrimage', label: 'Pilgrimage', emoji: '🙏' },
+    64→  { value: 'wildlife', label: 'Wildlife', emoji: '🦁' },
+    65→  { value: 'beach', label: 'Beach', emoji: '🏖️' },
+    66→  { value: 'hill-station', label: 'Hill Station', emoji: '⛰️' },
+    67→  { value: 'tourism', label: 'Tourism', emoji: '🗺️' },
+    68→];
+    69→
+    70→const durationOptions = [
+    71→  { value: '', label: 'Any Duration' },
+    72→  { value: '3N4D', label: '3N/4D' },
+    73→  { value: '4N5D', label: '4N/5D' },
+    74→  { value: '5N6D', label: '5N/6D' },
+    75→  { value: '6N7D', label: '6N/7D' },
+    76→  { value: '7N8D', label: '7N/8D' },
+    77→];
+    78→
+    79→const sortOptions = [
+    80→  { value: 'rating', label: 'Top Rated' },
+    81→  { value: 'price-low', label: 'Price: Low → High' },
+    82→  { value: 'price-high', label: 'Price: High → Low' },
+    83→];
+    84→
+    85→const getCategoryColor = (category: string) => {
+    86→  const colors: Record<string, string> = {
+    87→    honeymoon: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+    88→    adventure: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+    89→    family: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+    90→    pilgrimage: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    91→    wildlife: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    92→    beach: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+    93→    tourism: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+    94→    'hill-station': 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+    95→  };
+    96→  return colors[category] || 'bg-gray-500/10 text-gray-400 border-gray-500/20';
+    97→};
+    98→
+    99→const getCategoryPillColor = (category: string, isActive: boolean) => {
+   100→  if (isActive) {
+   101→    const activeColors: Record<string, string> = {
+   102→      honeymoon: 'bg-rose-500/20 text-rose-300 border-rose-500/40 glow-teal',
+   103→      adventure: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
+   104→      family: 'bg-teal-500/20 text-teal-300 border-teal-500/40 glow-teal',
+   105→      pilgrimage: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+   106→      wildlife: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 glow-teal',
+   107→      beach: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+   108→      tourism: 'bg-teal-500/20 text-teal-300 border-teal-500/40 glow-teal',
+   109→      'hill-station': 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+   110→    };
+   111→    return activeColors[category] || 'bg-teal-500/20 text-teal-300 border-teal-500/40 glow-teal';
+   112→  }
+   113→  return 'glass text-gray-400 border-white/10 hover:text-gray-200 hover:border-white/20';
+   114→};
+   115→
+   116→const getDiscount = (pkg: Package) => {
+   117→  if (!pkg.originalPrice) return 0;
+   118→  return Math.round(((pkg.originalPrice - pkg.price) / pkg.originalPrice) * 100);
+   119→};
+   120→
+   121→const getSavings = (pkg: Package) => {
+   122→  if (!pkg.originalPrice) return 0;
+   123→  return pkg.originalPrice - pkg.price;
+   124→};
+   125→
+   126→// Deterministic "booked recently" number based on package id
+   127→const getBookedRecently = (pkgId: string) => {
+   128→  let hash = 0;
+   129→  for (let i = 0; i < pkgId.length; i++) {
+   130→    hash = ((hash << 5) - hash) + pkgId.charCodeAt(i);
+   131→    hash |= 0;
+   132→  }
+   133→  return 12 + (Math.abs(hash) % 37); // 12-48
+   134→};
+   135→
+   136→// Generate destination thumbnails (small colored placeholder circles)
+   137→const getDestinationThumbnails = (pkg: Package) => {
+   138→  const colors = ['from-teal-400 to-emerald-500', 'from-amber-400 to-orange-500', 'from-rose-400 to-pink-500', 'from-cyan-400 to-blue-500'];
+   139→  const seed = pkg.id;
+   140→  return colors.map((color, i) => ({ color, seed: `${seed}-${i}` }));
+   141→};
+   142→
+   143→// ─── Skeleton Card ───────────────────────────────────────────────
+   144→function SkeletonCard() {
+   145→  return (
+   146→    <div className="rounded-2xl overflow-hidden glass-strong">
+   147→      <div className="relative aspect-[16/10] animate-shimmer bg-white/5">
+   148→        <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-transparent to-transparent" />
+   149→      </div>
+   150→      <div className="p-5 sm:p-6 space-y-3">
+   151→        <div className="flex items-center gap-2">
+   152→          <div className="animate-shimmer h-3 w-16 rounded bg-white/5" />
+   153→          <div className="animate-shimmer h-3 w-12 rounded bg-white/5" />
+   154→        </div>
+   155→        <div className="animate-shimmer h-5 w-3/4 rounded bg-white/5" />
+   156→        <div className="flex gap-1.5">
+   157→          <div className="animate-shimmer h-5 w-16 rounded-full bg-white/5" />
+   158→          <div className="animate-shimmer h-5 w-20 rounded-full bg-white/5" />
+   159→          <div className="animate-shimmer h-5 w-14 rounded-full bg-white/5" />
+   160→        </div>
+   161→        <div className="flex items-center gap-2 pt-1">
+   162→          <div className="animate-shimmer h-5 w-14 rounded bg-white/5" />
+   163→          <div className="animate-shimmer h-3 w-20 rounded bg-white/5" />
+   164→        </div>
+   165→        <div className="flex items-end justify-between pt-2">
+   166→          <div className="space-y-1">
+   167→            <div className="animate-shimmer h-3 w-20 rounded bg-white/5" />
+   168→            <div className="animate-shimmer h-6 w-24 rounded bg-white/5" />
+   169→          </div>
+   170→          <div className="animate-shimmer h-9 w-28 rounded-lg bg-white/5" />
+   171→        </div>
+   172→        <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+   173→          <div className="flex -space-x-1.5">
+   174→            {[0, 1, 2].map((i) => (
+   175→              <div key={i} className="animate-shimmer h-5 w-5 rounded-full bg-white/5 border border-white/10" />
+   176→            ))}
+   177→          </div>
+   178→          <div className="animate-shimmer h-3 w-24 rounded bg-white/5" />
+   179→        </div>
+   180→      </div>
+   181→    </div>
+   182→  );
+   183→}
+   184→
+   185→// ─── Animated Empty State ────────────────────────────────────────
+   186→function AnimatedEmptyState({ onClear, hasFilters }: { onClear: () => void; hasFilters: boolean }) {
+   187→  return (
+   188→    <motion.div
+   189→      initial={{ opacity: 0, scale: 0.9 }}
+   190→      animate={{ opacity: 1, scale: 1 }}
+   191→      transition={{ duration: 0.5 }}
+   192→      className="col-span-full py-24 text-center"
+   193→    >
+   194→      <div className="relative inline-block">
+   195→        {/* Spinning compass ring */}
+   196→        <motion.div
+   197→          animate={{ rotate: 360 }}
+   198→          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+   199→          className="absolute inset-0 flex items-center justify-center"
+   200→        >
+   201→          <div className="w-28 h-28 rounded-full border border-dashed border-teal-500/20" />
+   202→        </motion.div>
+   203→        {/* Pulsing ring */}
+   204→        <motion.div
+   205→          animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.1, 0.3] }}
+   206→          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+   207→          className="absolute inset-0 flex items-center justify-center"
+   208→        >
+   209→          <div className="w-24 h-24 rounded-full border border-teal-500/10" />
+   210→        </motion.div>
+   211→        {/* Compass icon */}
+   212→        <motion.div
+   213→          animate={{ y: [0, -8, 0] }}
+   214→          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+   215→          className="relative z-10 flex items-center justify-center w-20 h-20"
+   216→        >
+   217→          <Compass className="h-16 w-16 text-teal-500/30" />
+   218→        </motion.div>
+   219→      </div>
+   220→
+   221→      <motion.h3
+   222→        initial={{ opacity: 0, y: 10 }}
+   223→        animate={{ opacity: 1, y: 0 }}
+   224→        transition={{ delay: 0.2 }}
+   225→        className="text-xl font-bold text-gray-300 mt-8"
+   226→      >
+   227→        No packages found
+   228→      </motion.h3>
+   229→      <motion.p
+   230→        initial={{ opacity: 0, y: 10 }}
+   231→        animate={{ opacity: 1, y: 0 }}
+   232→        transition={{ delay: 0.3 }}
+   233→        className="text-sm text-gray-500 mt-2 max-w-sm mx-auto"
+   234→      >
+   235→        Looks like this destination is off the map. Try adjusting your filters or explore a different path.
+   236→      </motion.p>
+   237→      {hasFilters && (
+   238→        <motion.div
+   239→          initial={{ opacity: 0, y: 10 }}
+   240→          animate={{ opacity: 1, y: 0 }}
+   241→          transition={{ delay: 0.4 }}
+   242→        >
+   243→          <Button
+   244→            onClick={onClear}
+   245→            className="mt-6 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-xl font-semibold"
+   246→          >
+   247→            <Compass className="mr-2 h-4 w-4" />
+   248→            Clear All Filters
+   249→          </Button>
+   250→        </motion.div>
+   251→      )}
+   252→    </motion.div>
+   253→  );
+   254→}
+   255→
+   256→// ─── Section Header ──────────────────────────────────────────────
+   257→function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+   258→  return (
+   259→    <div className="flex items-center gap-4 pb-2">
+   260→      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-teal-500/30 to-transparent" />
+   261→      <div className="text-center">
+   262→        <h2 className="text-sm font-semibold uppercase tracking-widest gradient-text">{title}</h2>
+   263→        {subtitle && <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>}
+   264→      </div>
+   265→      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-teal-500/30 to-transparent" />
+   266→    </div>
+   267→  );
+   268→}
+   269→
+   270→// ─── FilterBar Component ─────────────────────────────────────────
+   271→function FilterBar({
+   272→  className = '',
+   273→  fullWidth = false,
+   274→  region,
+   275→  category,
+   276→  duration,
+   277→  sort,
+   278→  activeFilterCount,
+   279→  updateFilter,
+   280→  clearFilters,
+   281→}: {
+   282→  className?: string;
+   283→  fullWidth?: boolean;
+   284→  region: string;
+   285→  category: string;
+   286→  duration: string;
+   287→  sort: string;
+   288→  activeFilterCount: number;
+   289→  updateFilter: (key: string, value: string) => void;
+   290→  clearFilters: () => void;
+   291→}) {
+   292→  return (
+   293→    <div className={`flex flex-wrap items-center gap-2 ${className}`}>
+   294→      <Select value={region || '_all'} onValueChange={(v) => updateFilter('region', v === '_all' ? '' : v)}>
+   295→        <SelectTrigger className={`${fullWidth ? 'w-full' : 'w-[150px]'} glass border-white/10 bg-transparent text-gray-100 rounded-xl h-9 text-sm`}>
+   296→          <SelectValue placeholder="All Regions" />
+   297→        </SelectTrigger>
+   298→        <SelectContent className="bg-gray-900 border-white/10 text-gray-100">
+   299→          {regionOptions.map((opt) => (
+   300→            <SelectItem key={opt.value || '_all'} value={opt.value || '_all'}>
+   301→              {opt.label}
+   302→            </SelectItem>
+   303→          ))}
+   304→        </SelectContent>
+   305→      </Select>
+   306→
+   307→      <Select value={category || '_all'} onValueChange={(v) => updateFilter('category', v === '_all' ? '' : v)}>
+   308→        <SelectTrigger className={`${fullWidth ? 'w-full' : 'w-[160px]'} glass border-white/10 bg-transparent text-gray-100 rounded-xl h-9 text-sm`}>
+   309→          <SelectValue placeholder="All Categories" />
+   310→        </SelectTrigger>
+   311→        <SelectContent className="bg-gray-900 border-white/10 text-gray-100">
+   312→          {categoryOptions.map((opt) => (
+   313→            <SelectItem key={opt.value || '_all'} value={opt.value || '_all'}>
+   314→              {opt.label}
+   315→            </SelectItem>
+   316→          ))}
+   317→        </SelectContent>
+   318→      </Select>
+   319→
+   320→      <Select value={duration || '_all'} onValueChange={(v) => updateFilter('duration', v === '_all' ? '' : v)}>
+   321→        <SelectTrigger className={`${fullWidth ? 'w-full' : 'w-[140px]'} glass border-white/10 bg-transparent text-gray-100 rounded-xl h-9 text-sm`}>
+   322→          <SelectValue placeholder="Any Duration" />
+   323→        </SelectTrigger>
+   324→        <SelectContent className="bg-gray-900 border-white/10 text-gray-100">
+   325→          {durationOptions.map((opt) => (
+   326→            <SelectItem key={opt.value || '_all'} value={opt.value || '_all'}>
+   327→              {opt.label}
+   328→            </SelectItem>
+   329→          ))}
+   330→        </SelectContent>
+   331→      </Select>
+   332→
+   333→      <Select value={sort} onValueChange={(v) => updateFilter('sort', v)}>
+   334→        <SelectTrigger className={`${fullWidth ? 'w-full' : 'w-[155px]'} glass border-white/10 bg-transparent text-gray-100 rounded-xl h-9 text-sm`}>
+   335→          <SelectValue placeholder="Sort by" />
+   336→        </SelectTrigger>
+   337→        <SelectContent className="bg-gray-900 border-white/10 text-gray-100">
+   338→          {sortOptions.map((opt) => (
+   339→            <SelectItem key={opt.value} value={opt.value}>
+   340→              {opt.label}
+   341→            </SelectItem>
+   342→          ))}
+   343→        </SelectContent>
+   344→      </Select>
+   345→
+   346→      {activeFilterCount > 0 && (
+   347→        <Button
+   348→          variant="ghost"
+   349→          size="sm"
+   350→          onClick={clearFilters}
+   351→          className="text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl h-9 text-sm"
+   352→        >
+   353→          <X className="mr-1 h-3.5 w-3.5" />
+   354→          Clear ({activeFilterCount})
+   355→        </Button>
+   356→      )}
+   357→    </div>
+   358→  );
+   359→}
+   360→
+   361→// ─── Package Card ────────────────────────────────────────────────
+   362→function PackageCard({
+   363→  pkg,
+   364→  index,
+   365→  isVisible,
+   366→  isInWishlist,
+   367→  addItem,
+   368→  removeItem,
+   369→}: {
+   370→  pkg: Package;
+   371→  index: number;
+   372→  isVisible: boolean;
+   373→  isInWishlist: (id: string) => boolean;
+   374→  addItem: (item: Parameters<typeof addItem>[0]) => void;
+   375→  removeItem: (id: string) => void;
+   376→}) {
+   377→  const discount = getDiscount(pkg);
+   378→  const savings = getSavings(pkg);
+   379→  const isTopRated = pkg.rating >= 4.7;
+   380→  const bookedRecently = getBookedRecently(pkg.id);
+   381→  const thumbnails = getDestinationThumbnails(pkg);
+   382→  const isWishlisted = isInWishlist(pkg.id);
+   383→
+   384→  return (
+   385→    <motion.div
+   386→      initial={{ opacity: 0, y: 50, scale: 0.95 }}
+   387→      animate={isVisible ? { opacity: 1, y: 0, scale: 1 } : {}}
+   388→      transition={{ duration: 0.6, delay: index * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
+   389→    >
+   390→      <Card className="group overflow-hidden border-0 glass-strong tilt-card streak-effect cursor-pointer transition-all duration-500 hover:glow-teal hover:border-teal-500/10">
+   391→        <Link href={`/packages/${pkg.slug}`}>
+   392→          {/* Image Section */}
+   393→          <div className="relative aspect-[16/10] overflow-hidden">
+   394→            <img
+   395→              src={pkg.image}
+   396→              alt={pkg.name}
+   397→              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+   398→              loading="lazy"
+   399→            />
+   400→            <div className="absolute inset-0 bg-gradient-to-t from-gray-950/90 via-gray-950/20 to-transparent" />
+   401→
+   402→            {/* Top Badges Row */}
+   403→            <div className="absolute top-3 left-3 right-3 flex items-start justify-between">
+   404→              <div className="flex flex-col gap-1.5">
+   405→                {/* Best Seller / Trending Badge */}
+   406→                {isTopRated && (
+   407→                  <motion.div
+   408→                    initial={{ x: -20, opacity: 0 }}
+   409→                    animate={{ x: 0, opacity: 1 }}
+   410→                    transition={{ delay: index * 0.07 + 0.3 }}
+   411→                    className="flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500/90 to-orange-500/90 px-2.5 py-1 text-xs font-bold text-white shadow-lg backdrop-blur-sm"
+   412→                  >
+   413→                    <Trophy className="h-3 w-3" />
+   414→                    Best Seller
+   415→                  </motion.div>
+   416→                )}
+   417→                {/* Discount Badge */}
+   418→                {discount > 0 && (
+   419→                  <div className="rounded-full bg-gradient-to-r from-emerald-500/90 to-teal-500/90 px-2.5 py-1 text-xs font-bold text-white shadow-lg backdrop-blur-sm">
+   420→                    {discount}% OFF
+   421→                  </div>
+   422→                )}
+   423→              </div>
+   424→
+   425→              {/* Duration Badge */}
+   426→              <div className="flex items-center gap-1.5 rounded-full glass px-2.5 py-1 text-xs font-bold text-white backdrop-blur-md">
+   427→                <Clock className="h-3 w-3 text-teal-300" />
+   428→                {pkg.duration}
+   429→              </div>
+   430→            </div>
+   431→
+   432→            {/* Bottom overlay badges */}
+   433→            <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+   434→              <Badge className={`${getCategoryColor(pkg.category)} text-xs font-semibold border backdrop-blur-sm`}>
+   435→                {pkg.category.charAt(0).toUpperCase() + pkg.category.slice(1).replace('-', ' ')}
+   436→              </Badge>
+   437→
+   438→              {/* Heart / Wishlist */}
+   439→              <motion.button
+   440→                whileTap={{ scale: 0.85 }}
+   441→                className={`flex h-9 w-9 items-center justify-center rounded-full backdrop-blur-md transition-all duration-200 ${
+   442→                  isWishlisted
+   443→                    ? 'bg-rose-500/25 text-rose-400 border border-rose-500/30 shadow-lg shadow-rose-500/20'
+   444→                    : 'glass text-gray-300 hover:bg-white/20 hover:text-rose-400'
+   445→                }`}
+   446→                onClick={(e) => {
+   447→                  e.preventDefault();
+   448→                  e.stopPropagation();
+   449→                  if (isWishlisted) {
+   450→                    removeItem(pkg.id);
+   451→                  } else {
+   452→                    addItem({
+   453→                      id: pkg.id,
+   454→                      name: pkg.name,
+   455→                      destination: `${pkg.destination.name}, ${pkg.destination.country}`,
+   456→                      image: pkg.image,
+   457→                      price: pkg.price,
+   458→                      originalPrice: pkg.originalPrice || undefined,
+   459→                      duration: pkg.duration,
+   460→                      rating: pkg.rating,
+   461→                      category: pkg.category,
+   462→                    });
+   463→                  }
+   464→                }}
+   465→                aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+   466→              >
+   467→                <Heart className={`h-4 w-4 transition-transform duration-200 ${isWishlisted ? 'fill-rose-400 scale-110' : 'group-hover:scale-110'}`} />
+   468→              </motion.button>
+   469→            </div>
+   470→          </div>
+   471→
+   472→          {/* Content Section */}
+   473→          <CardContent className="p-5 sm:p-6">
+   474→            {/* Destination + Rating Row */}
+   475→            <div className="flex items-center justify-between mb-2">
+   476→              <div className="flex items-center gap-1.5 text-xs text-gray-500">
+   477→                <MapPin className="h-3 w-3 text-teal-500/60" />
+   478→                <span>{pkg.destination.name}, {pkg.destination.country}</span>
+   479→              </div>
+   480→              <div className="flex items-center gap-1.5 rounded-md bg-teal-500/10 px-2 py-0.5">
+   481→                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+   482→                <span className="text-xs font-bold text-amber-400">{pkg.rating}</span>
+   483→              </div>
+   484→            </div>
+   485→
+   486→            {/* Package Name */}
+   487→            <h3 className="font-bold text-white text-base sm:text-lg leading-tight line-clamp-2 group-hover:text-teal-100 transition-colors duration-300">
+   488→              {pkg.name}
+   489→            </h3>
+   490→
+   491→            {/* Highlights */}
+   492→            <div className="mt-2.5 flex flex-wrap gap-1.5">
+   493→              {pkg.highlights.split(',').slice(0, 3).map((h, idx) => (
+   494→                <span key={idx} className="text-[11px] bg-white/[0.03] text-gray-400 px-2 py-0.5 rounded-full border border-white/[0.06]">
+   495→                  {h.trim()}
+   496→                </span>
+   497→              ))}
+   498→            </div>
+   499→
+   500→            {/* Review count */}
+   501→            <div className="mt-2.5 flex items-center gap-1.5 text-xs text-gray-500">
+   502→              <Users className="h-3 w-3" />
+   503→              <span>{pkg.reviewCount.toLocaleString()} reviews</span>
+   504→            </div>
+   505→
+   506→            {/* Price & CTA */}
+   507→            <div className="mt-4 flex items-end justify-between gap-3">
+   508→              <div>
+   509→                {pkg.originalPrice && (
+   510→                  <span className="text-sm text-gray-500 line-through block">
+   511→                    ₹{pkg.originalPrice.toLocaleString()}
+   512→                  </span>
+   513→                )}
+   514→                <div className="flex items-baseline gap-1.5">
+   515→                  <span className="text-2xl font-extrabold gradient-text-gold">
+   516→                    ₹{pkg.price.toLocaleString()}
+   517→                  </span>
+   518→                  <span className="text-[11px] text-gray-500">/person</span>
+   519→                </div>
+   520→                {savings > 0 && (
+   521→                  <div className="flex items-center gap-1 mt-0.5">
+   522→                    <Sparkles className="h-3 w-3 text-emerald-400" />
+   523→                    <span className="text-xs font-semibold text-emerald-400">
+   524→                      You save ₹{savings.toLocaleString()}
+   525→                    </span>
+   526→                  </div>
+   527→                )}
+   528→              </div>
+   529→              <Button
+   530→                size="sm"
+   531→                className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-xl font-semibold shadow-lg shadow-teal-500/20 hover:shadow-teal-500/30 transition-all duration-300 group/btn"
+   532→              >
+   533→                View Details
+   534→                <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-1" />
+   535→              </Button>
+   536→            </div>
+   537→
+   538→            {/* Social proof + Destination thumbnails row */}
+   539→            <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between">
+   540→              <div className="flex items-center gap-2">
+   541→                {/* Mini destination thumbnails */}
+   542→                <div className="flex -space-x-1.5">
+   543→                  {thumbnails.map((thumb, i) => (
+   544→                    <div
+   545→                      key={i}
+   546→                      className={`h-5 w-5 rounded-full bg-gradient-to-br ${thumb.color} border-2 border-gray-900`}
+   547→                      title={pkg.destination.name}
+   548→                    />
+   549→                  ))}
+   550→                </div>
+   551→                <span className="text-[11px] text-gray-500">
+   552→                  <span className="text-teal-400 font-medium">{bookedRecently}</span> booked recently
+   553→                </span>
+   554→              </div>
+   555→              {isTopRated && (
+   556→                <div className="flex items-center gap-1 text-[11px] text-amber-500/70">
+   557→                  <TrendingUp className="h-3 w-3" />
+   558→                  Trending
+   559→                </div>
+   560→              )}
+   561→            </div>
+   562→          </CardContent>
+   563→        </Link>
+   564→      </Card>
+   565→    </motion.div>
+   566→  );
+   567→}
+   568→
+   569→// ─── Main Content Component ──────────────────────────────────────
+   570→function PackagesContent() {
+   571→  const searchParams = useSearchParams();
+   572→  const router = useRouter();
+   573→  const [packages, setPackages] = useState<Package[]>([]);
+   574→  const [fetchedKey, setFetchedKey] = useState<string>('');
+   575→  const [search, setSearch] = useState('');
+   576→  const [searchFocused, setSearchFocused] = useState(false);
+   577→  const [isVisible, setIsVisible] = useState(false);
+   578→  const [showMobileFilters, setShowMobileFilters] = useState(false);
+   579→  const gridRef = useRef<HTMLDivElement>(null);
+   580→  const { addItem, removeItem, isInWishlist } = useWishlist();
+   581→
+   582→  // Read filters from URL
+   583→  const region = searchParams.get('region') || '';
+   584→  const category = searchParams.get('category') || '';
+   585→  const duration = searchParams.get('duration') || '';
+   586→  const sort = searchParams.get('sort') || 'rating';
+   587→
+   588→  const filterKey = `${region}-${category}-${duration}-${sort}`;
+   589→  const loading = fetchedKey !== filterKey;
+   590→
+   591→  const updateFilter = useCallback((key: string, value: string) => {
+   592→    const params = new URLSearchParams(searchParams.toString());
+   593→    if (value) {
+   594→      params.set(key, value);
+   595→    } else {
+   596→      params.delete(key);
+   597→    }
+   598→    router.push(`/packages?${params.toString()}`, { scroll: false });
+   599→  }, [router, searchParams]);
+   600→
+   601→  const clearFilters = useCallback(() => {
+   602→    router.push('/packages', { scroll: false });
+   603→  }, [router]);
+   604→
+   605→  const activeFilterCount = [region, category, duration].filter(Boolean).length;
+   606→
+   607→  useEffect(() => {
+   608→    const params = new URLSearchParams();
+   609→    if (region) params.set('region', region);
+   610→    if (category) params.set('category', category);
+   611→    if (duration) params.set('duration', duration);
+   612→
+   613→    fetch(`/api/packages?${params.toString()}`)
+   614→      .then((res) => res.json())
+   615→      .then((data) => {
+   616→        let sorted = [...data];
+   617→        if (sort === 'price-low') {
+   618→          sorted.sort((a, b) => a.price - b.price);
+   619→        } else if (sort === 'price-high') {
+   620→          sorted.sort((a, b) => b.price - a.price);
+   621→        } else {
+   622→          sorted.sort((a, b) => b.rating - a.rating);
+   623→        }
+   624→        setPackages(sorted);
+   625→        setFetchedKey(filterKey);
+   626→      })
+   627→      .catch(() => {
+   628→        setFetchedKey(filterKey);
+   629→      });
+   630→  }, [region, category, duration, sort, filterKey]);
+   631→
+   632→  useEffect(() => {
+   633→    const observer = new IntersectionObserver(
+   634→      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
+   635→      { threshold: 0.05 }
+   636→    );
+   637→    if (gridRef.current) observer.observe(gridRef.current);
+   638→    return () => observer.disconnect();
+   639→  }, []);
+   640→
+   641→  // Client-side search filter
+   642→  const filteredPackages = packages.filter((pkg) =>
+   643→    pkg.name.toLowerCase().includes(search.toLowerCase()) ||
+   644→    pkg.destination.name.toLowerCase().includes(search.toLowerCase()) ||
+   645→    pkg.destination.country.toLowerCase().includes(search.toLowerCase())
+   646→  );
+   647→
+   648→  return (
+   649→    <PageTransition>
+   650→      <PageHero
+   651→        badge="Tour Packages"
+   652→        badgeIcon={Compass}
+   653→        title="Curated Tour Packages"
+   654→        subtitle="Handcrafted itineraries for every kind of traveler — from budget-friendly to luxury escapes"
+   655→        backgroundImage="/images/hero.png"
+   656→      />
+   657→
+   658→      <div className="bg-gray-950">
+   659→        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   660→          <Breadcrumbs items={[{ label: 'Packages' }]} />
+   661→
+   662→          {/* ═══ Quick Filter Pills ═══ */}
+   663→          <div className="py-4">
+   664→            <div className="flex items-center gap-2 mb-3">
+   665→              <Flame className="h-4 w-4 text-amber-400" />
+   666→              <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Quick Filters</span>
+   667→              <div className="h-px flex-1 bg-gradient-to-r from-white/5 to-transparent" />
+   668→            </div>
+   669→            <div className="flex flex-wrap gap-2">
+   670→              <button
+   671→                onClick={() => updateFilter('category', '')}
+   672→                className={`rounded-full px-4 py-1.5 text-xs font-medium border transition-all duration-300 ${
+   673→                  !category
+   674→                    ? 'bg-teal-500/20 text-teal-300 border-teal-500/40 glow-teal'
+   675→                    : 'glass text-gray-400 border-white/10 hover:text-gray-200 hover:border-white/20'
+   676→                }`}
+   677→              >
+   678→                ✨ All
+   679→              </button>
+   680→              {quickFilterCategories.map((cat) => (
+   681→                <button
+   682→                  key={cat.value}
+   683→                  onClick={() => updateFilter('category', category === cat.value ? '' : cat.value)}
+   684→                  className={`rounded-full px-4 py-1.5 text-xs font-medium border transition-all duration-300 ${
+   685→                    getCategoryPillColor(cat.value, category === cat.value)
+   686→                  }`}
+   687→                >
+   688→                  {cat.emoji} {cat.label}
+   689→                </button>
+   690→              ))}
+   691→            </div>
+   692→          </div>
+   693→
+   694→          {/* ═══ Desktop Filter Bar ═══ */}
+   695→          <div className="hidden lg:flex flex-col gap-3 pb-4">
+   696→            <div className="glass-strong rounded-2xl p-4">
+   697→              <div className="flex items-center justify-between mb-3">
+   698→                <div className="flex items-center gap-2">
+   699→                  <SlidersHorizontal className="h-4 w-4 text-teal-400" />
+   700→                  <span className="text-sm font-medium text-gray-300">Refine Results</span>
+   701→                  {activeFilterCount > 0 && (
+   702→                    <Badge className="bg-teal-500/15 text-teal-400 border-teal-500/30 text-xs animate-pulse-glow">
+   703→                      {activeFilterCount} active
+   704→                    </Badge>
+   705→                  )}
+   706→                </div>
+   707→                {/* Search bar */}
+   708→                <div className={`relative w-72 transition-all duration-300 ${searchFocused ? 'w-80' : ''}`}>
+   709→                  <Search className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors duration-300 ${searchFocused ? 'text-teal-400' : 'text-gray-500'}`} />
+   710→                  <Input
+   711→                    placeholder="Search destinations..."
+   712→                    value={search}
+   713→                    onChange={(e) => setSearch(e.target.value)}
+   714→                    onFocus={() => setSearchFocused(true)}
+   715→                    onBlur={() => setSearchFocused(false)}
+   716→                    className={`pl-9 glass border-white/10 bg-transparent text-gray-100 placeholder:text-gray-500 rounded-xl h-9 text-sm transition-all duration-300 ${
+   717→                      searchFocused ? 'border-teal-500/40 ring-2 ring-teal-500/10' : 'focus:border-teal-500/30'
+   718→                    }`}
+   719→                  />
+   720→                </div>
+   721→              </div>
+   722→              <FilterBar
+   723→                region={region}
+   724→                category={category}
+   725→                duration={duration}
+   726→                sort={sort}
+   727→                activeFilterCount={activeFilterCount}
+   728→                updateFilter={updateFilter}
+   729→                clearFilters={clearFilters}
+   730→              />
+   731→            </div>
+   732→          </div>
+   733→
+   734→          {/* ═══ Mobile Filter Area ═══ */}
+   735→          <div className="lg:hidden py-3 space-y-3">
+   736→            <div className="flex items-center gap-3">
+   737→              <div className={`relative flex-1 transition-all duration-300`}>
+   738→                <Search className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors duration-300 ${searchFocused ? 'text-teal-400' : 'text-gray-500'}`} />
+   739→                <Input
+   740→                  placeholder="Search destinations..."
+   741→                  value={search}
+   742→                  onChange={(e) => setSearch(e.target.value)}
+   743→                  onFocus={() => setSearchFocused(true)}
+   744→                  onBlur={() => setSearchFocused(false)}
+   745→                  className={`pl-9 glass border-white/10 bg-transparent text-gray-100 placeholder:text-gray-500 rounded-xl h-10 text-sm transition-all duration-300 ${
+   746→                    searchFocused ? 'border-teal-500/40 ring-2 ring-teal-500/10' : 'focus:border-teal-500/30'
+   747→                  }`}
+   748→                />
+   749→              </div>
+   750→              <Button
+   751→                variant="outline"
+   752→                size="icon"
+   753→                onClick={() => setShowMobileFilters(!showMobileFilters)}
+   754→                className={`shrink-0 border-white/10 rounded-xl h-10 w-10 relative transition-all duration-300 ${
+   755→                  activeFilterCount > 0 ? 'text-teal-400 bg-teal-500/10 border-teal-500/30' : 'text-teal-400 hover:bg-white/5'
+   756→                }`}
+   757→              >
+   758→                <SlidersHorizontal className="h-4 w-4" />
+   759→                {activeFilterCount > 0 && (
+   760→                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-teal-500 text-[10px] font-bold text-white">
+   761→                    {activeFilterCount}
+   762→                  </span>
+   763→                )}
+   764→              </Button>
+   765→            </div>
+   766→
+   767→            <AnimatePresence>
+   768→              {showMobileFilters && (
+   769→                <motion.div
+   770→                  initial={{ opacity: 0, height: 0 }}
+   771→                  animate={{ opacity: 1, height: 'auto' }}
+   772→                  exit={{ opacity: 0, height: 0 }}
+   773→                  className="glass-strong rounded-2xl p-4 space-y-3 overflow-hidden"
+   774→                >
+   775→                  <FilterBar
+   776→                    fullWidth
+   777→                    region={region}
+   778→                    category={category}
+   779→                    duration={duration}
+   780→                    sort={sort}
+   781→                    activeFilterCount={activeFilterCount}
+   782→                    updateFilter={updateFilter}
+   783→                    clearFilters={clearFilters}
+   784→                  />
+   785→                </motion.div>
+   786→              )}
+   787→            </AnimatePresence>
+   788→          </div>
+   789→
+   790→          {/* ═══ Result Count & Section Header ═══ */}
+   791→          <div className="pb-2 pt-2">
+   792→            <SectionHeader
+   793→              title={`${filteredPackages.length} ${filteredPackages.length === 1 ? 'Package' : 'Packages'} Available`}
+   794→              subtitle={
+   795→                activeFilterCount > 0
+   796→                  ? `Filtered by ${[
+   797→                      region && (region === 'domestic' ? 'Domestic' : 'International'),
+   798→                      category && category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' '),
+   799→                      duration,
+   800→                    ].filter(Boolean).join(' · ')}`
+   801→                  : undefined
+   802→              }
+   803→            />
+   804→          </div>
+   805→
+   806→          {/* Active filter badges */}
+   807→          {activeFilterCount > 0 && (
+   808→            <div className="flex flex-wrap items-center gap-2 pb-4">
+   809→              {region && (
+   810→                <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 text-xs font-medium hover:bg-teal-500/20 cursor-pointer transition-colors" onClick={() => updateFilter('region', '')}>
+   811→                  {region === 'domestic' ? '🇮🇳 Domestic' : '🌏 International'}
+   812→                  <X className="ml-1 h-3 w-3" />
+   813→                </Badge>
+   814→              )}
+   815→              {category && (
+   816→                <Badge className={`${getCategoryColor(category)} text-xs font-medium border cursor-pointer transition-colors`} onClick={() => updateFilter('category', '')}>
+   817→                  {category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')}
+   818→                  <X className="ml-1 h-3 w-3" />
+   819→                </Badge>
+   820→              )}
+   821→              {duration && (
+   822→                <Badge className="bg-white/5 text-gray-300 border-white/10 text-xs font-medium cursor-pointer hover:bg-white/10 transition-colors" onClick={() => updateFilter('duration', '')}>
+   823→                  {duration}
+   824→                  <X className="ml-1 h-3 w-3" />
+   825→                </Badge>
+   826→              )}
+   827→            </div>
+   828→          )}
+   829→
+   830→          {/* ═══ Packages Grid ═══ */}
+   831→          <div ref={gridRef} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 pb-16 sm:pb-20">
+   832→            {loading ? (
+   833→              Array.from({ length: 6 }).map((_, i) => (
+   834→                <SkeletonCard key={i} />
+   835→              ))
+   836→            ) : filteredPackages.length === 0 ? (
+   837→              <AnimatedEmptyState onClear={clearFilters} hasFilters={activeFilterCount > 0} />
+   838→            ) : (
+   839→              filteredPackages.map((pkg, i) => (
+   840→                <PackageCard
+   841→                  key={pkg.id}
+   842→                  pkg={pkg}
+   843→                  index={i}
+   844→                  isVisible={isVisible}
+   845→                  isInWishlist={isInWishlist}
+   846→                  addItem={addItem}
+   847→                  removeItem={removeItem}
+   848→                />
+   849→              ))
+   850→            )}
+   851→          </div>
+   852→        </div>
+   853→      </div>
+   854→    </PageTransition>
+   855→  );
+   856→}
+   857→
+   858→// ─── Page Export with Suspense ───────────────────────────────────
+   859→export default function PackagesPage() {
+   860→  return (
+   861→    <Suspense fallback={
+   862→      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+   863→        <div className="text-center">
+   864→          <motion.div
+   865→            animate={{ rotate: 360 }}
+   866→            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+   867→            className="inline-block"
+   868→          >
+   869→            <Compass className="h-8 w-8 text-teal-500/40" />
+   870→          </motion.div>
+   871→          <p className="mt-3 text-sm text-gray-500">Loading packages...</p>
+   872→        </div>
+   873→      </div>
+   874→    }>
+   875→      <PackagesContent />
+   876→    </Suspense>
+   877→  );
+   878→}
+   879→

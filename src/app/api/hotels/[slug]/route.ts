@@ -1,6 +1,39 @@
-export const runtime = 'edge';
-import { getEdgeHotel, enrichHotel, getAllEdgeDestinations } from '@/lib/edge-data';
+import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
+
+function transformHotel(hotel: any) {
+  let amenities = '';
+  try {
+    const parsed = JSON.parse(hotel.amenities);
+    amenities = Array.isArray(parsed) ? parsed.join(',') : hotel.amenities;
+  } catch {
+    amenities = hotel.amenities;
+  }
+
+  return {
+    id: hotel.id,
+    name: hotel.name,
+    slug: hotel.slug,
+    destinationId: hotel.destinationId,
+    destination: {
+      name: hotel.destination.name,
+      country: hotel.destination.country,
+      region: hotel.destination.region,
+      image: hotel.destination.image,
+      slug: hotel.destination.slug,
+    },
+    category: hotel.category,
+    stars: hotel.stars,
+    pricePerNight: hotel.pricePerNight,
+    originalPrice: hotel.originalPrice,
+    image: hotel.image,
+    description: hotel.description,
+    amenities,
+    rating: hotel.rating,
+    reviewCount: hotel.reviewCount,
+    featured: hotel.featured,
+  };
+}
 
 export async function GET(
   request: Request,
@@ -8,16 +41,16 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const rawHotel = getEdgeHotel(slug);
-    if (!rawHotel) {
+    const hotel = await db.hotel.findUnique({
+      where: { slug },
+      include: { destination: true },
+    });
+
+    if (!hotel || hotel.status !== 'active') {
       return NextResponse.json({ error: 'Hotel not found' }, { status: 404 });
     }
-    const hotel = enrichHotel(rawHotel);
-    const dest = getAllEdgeDestinations().find((d) => d.name === rawHotel.destination.name);
-    if (dest) {
-      hotel.destination = { ...hotel.destination, image: dest.image, slug: dest.slug } as typeof hotel.destination & { image: string; slug: string };
-    }
-    return NextResponse.json(hotel);
+
+    return NextResponse.json(transformHotel(hotel));
   } catch (error) {
     console.error('Error fetching hotel:', error);
     return NextResponse.json({ error: 'Failed to fetch hotel' }, { status: 500 });

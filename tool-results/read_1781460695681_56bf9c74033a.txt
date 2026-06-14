@@ -1,0 +1,711 @@
+     1→'use client';
+     2→
+     3→import { useEffect, useState, useRef } from 'react';
+     4→import { use } from 'react';
+     5→import Link from 'next/link';
+     6→import { motion } from 'framer-motion';
+     7→import { Package } from '@/lib/types';
+     8→import { Badge } from '@/components/ui/badge';
+     9→import { Button } from '@/components/ui/button';
+    10→import { Card, CardContent } from '@/components/ui/card';
+    11→import { Separator } from '@/components/ui/separator';
+    12→import {
+    13→  Star,
+    14→  Clock,
+    15→  MapPin,
+    16→  Heart,
+    17→  ArrowRight,
+    18→  ArrowLeft,
+    19→  Check,
+    20→  Calendar,
+    21→  Users,
+    22→  Phone,
+    23→  Compass,
+    24→  Share2,
+    25→} from 'lucide-react';
+    26→import Breadcrumbs from '@/components/wayfare/Breadcrumbs';
+    27→import PageTransition from '@/components/wayfare/PageTransition';
+    28→import { useWishlist } from '@/lib/wishlist';
+    29→
+    30→const getCategoryColor = (category: string) => {
+    31→  const colors: Record<string, string> = {
+    32→    honeymoon: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+    33→    adventure: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+    34→    family: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+    35→    pilgrimage: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    36→    wildlife: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    37→    beach: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+    38→    tourism: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+    39→    'hill-station': 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+    40→  };
+    41→  return colors[category] || 'bg-gray-500/10 text-gray-400 border-gray-500/20';
+    42→};
+    43→
+    44→export default function PackageDetailClient({
+    45→  params,
+    46→}: {
+    47→  params: Promise<{ slug: string }>;
+    48→}) {
+    49→  const { slug } = use(params);
+    50→  const [pkg, setPkg] = useState<Package | null>(null);
+    51→  const [loading, setLoading] = useState(true);
+    52→  const [notFound, setNotFound] = useState(false);
+    53→  const [relatedPackages, setRelatedPackages] = useState<Package[]>([]);
+    54→  const [relatedVisible, setRelatedVisible] = useState(false);
+    55→  const relatedRef = useRef<HTMLDivElement>(null);
+    56→  const { addItem, removeItem, isInWishlist } = useWishlist();
+    57→
+    58→  useEffect(() => {
+    59→    fetch(`/api/packages/${slug}`)
+    60→      .then((res) => {
+    61→        if (res.status === 404) {
+    62→          setNotFound(true);
+    63→          setLoading(false);
+    64→          return null;
+    65→        }
+    66→        return res.json();
+    67→      })
+    68→      .then((data) => {
+    69→        if (data) {
+    70→          setPkg(data);
+    71→          // Fetch related packages from same destination
+    72→          fetch(`/api/packages?destinationId=${data.destinationId}`)
+    73→            .then((res) => res.json())
+    74→            .then((related) =>
+    75→              setRelatedPackages(
+    76→                related.filter((p: Package) => p.id !== data.id).slice(0, 3)
+    77→              )
+    78→            )
+    79→            .catch(console.error);
+    80→        }
+    81→        setLoading(false);
+    82→      })
+    83→      .catch(() => {
+    84→        setNotFound(true);
+    85→        setLoading(false);
+    86→      });
+    87→  }, [slug]);
+    88→
+    89→  useEffect(() => {
+    90→    const observer = new IntersectionObserver(
+    91→      ([entry]) => { if (entry.isIntersecting) setRelatedVisible(true); },
+    92→      { threshold: 0.05 }
+    93→    );
+    94→    if (relatedRef.current) observer.observe(relatedRef.current);
+    95→    return () => observer.disconnect();
+    96→  }, [relatedPackages]);
+    97→
+    98→  // Loading state
+    99→  if (loading) {
+   100→    return (
+   101→      <div className="min-h-screen bg-gray-950">
+   102→        <div className="h-[50vh] animate-shimmer bg-white/5" />
+   103→        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-4">
+   104→          <div className="animate-shimmer h-6 w-48 rounded bg-white/5" />
+   105→          <div className="animate-shimmer h-10 w-3/4 rounded bg-white/5" />
+   106→          <div className="animate-shimmer h-4 w-1/2 rounded bg-white/5" />
+   107→          <div className="animate-shimmer h-40 w-full rounded bg-white/5 mt-6" />
+   108→        </div>
+   109→      </div>
+   110→    );
+   111→  }
+   112→
+   113→  // 404 state
+   114→  if (notFound || !pkg) {
+   115→    return (
+   116→      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+   117→        <div className="text-center">
+   118→          <Compass className="mx-auto h-16 w-16 text-gray-600 mb-4" />
+   119→          <h1 className="text-2xl font-bold text-white mb-2">Package Not Found</h1>
+   120→          <p className="text-gray-400 mb-6">The package you&apos;re looking for doesn&apos;t exist.</p>
+   121→          <Button asChild className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-lg font-semibold">
+   122→            <Link href="/packages">
+   123→              <ArrowLeft className="mr-2 h-4 w-4" />
+   124→              Back to Packages
+   125→            </Link>
+   126→          </Button>
+   127→        </div>
+   128→      </div>
+   129→    );
+   130→  }
+   131→
+   132→  const discount = pkg.originalPrice
+   133→    ? Math.round(((pkg.originalPrice - pkg.price) / pkg.originalPrice) * 100)
+   134→    : 0;
+   135→
+   136→  const highlights = pkg.highlights.split(',').map((h) => h.trim());
+   137→  const included = pkg.included.split(',').map((i) => i.trim());
+   138→
+   139→  let itinerary: { day: number; title: string; desc: string }[] = [];
+   140→  try {
+   141→    itinerary = JSON.parse(pkg.itinerary);
+   142→  } catch {
+   143→    itinerary = [];
+   144→  }
+   145→
+   146→  const inWishlist = isInWishlist(pkg.id);
+   147→
+   148→  return (
+   149→    <PageTransition>
+   150→      {/* Hero Image Section */}
+   151→      <section className="relative overflow-hidden min-h-[45vh] sm:min-h-[50vh] flex items-end">
+   152→        <img
+   153→          src={pkg.image}
+   154→          alt={pkg.name}
+   155→          className="absolute inset-0 h-full w-full object-cover"
+   156→        />
+   157→        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-gray-950/20" />
+   158→        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/80 via-transparent to-gray-950/40" />
+   159→
+   160→        {/* Floating badges */}
+   161→        <div className="absolute top-6 left-6 flex items-center gap-2 z-10">
+   162→          {discount > 0 && (
+   163→            <div className="rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-1.5 text-sm font-bold text-gray-950 shadow-lg glow-amber">
+   164→              {discount}% OFF
+   165→            </div>
+   166→          )}
+   167→        </div>
+   168→
+   169→        <div className="absolute top-6 right-6 flex items-center gap-2 z-10">
+   170→          <Badge className="glass text-white text-xs font-semibold border-0">
+   171→            <Clock className="mr-1 h-3 w-3" />
+   172→            {pkg.duration}
+   173→          </Badge>
+   174→          <Badge className={`${getCategoryColor(pkg.category)} text-xs font-semibold border`}>
+   175→            {pkg.category.charAt(0).toUpperCase() + pkg.category.slice(1).replace('-', ' ')}
+   176→          </Badge>
+   177→        </div>
+   178→
+   179→        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full pb-10 sm:pb-14">
+   180→          <motion.h1
+   181→            initial={{ opacity: 0, y: 30 }}
+   182→            animate={{ opacity: 1, y: 0 }}
+   183→            transition={{ duration: 0.6 }}
+   184→            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight max-w-3xl"
+   185→          >
+   186→            {pkg.name}
+   187→          </motion.h1>
+   188→
+   189→          <motion.div
+   190→            initial={{ opacity: 0, y: 20 }}
+   191→            animate={{ opacity: 1, y: 0 }}
+   192→            transition={{ duration: 0.6, delay: 0.15 }}
+   193→            className="mt-3 flex flex-wrap items-center gap-3"
+   194→          >
+   195→            <span className="flex items-center gap-1 text-sm text-gray-300">
+   196→              <MapPin className="h-4 w-4 text-teal-400" />
+   197→              {pkg.destination.name}, {pkg.destination.country}
+   198→            </span>
+   199→            <span className="flex items-center gap-1 text-sm">
+   200→              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+   201→              <span className="font-semibold text-amber-400">{pkg.rating}</span>
+   202→              <span className="text-gray-400">({pkg.reviewCount.toLocaleString()} reviews)</span>
+   203→            </span>
+   204→          </motion.div>
+   205→        </div>
+   206→      </section>
+   207→
+   208→      <div className="bg-gray-950">
+   209→        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   210→          <Breadcrumbs
+   211→            items={[
+   212→              { label: 'Packages', href: '/packages' },
+   213→              { label: pkg.name },
+   214→            ]}
+   215→          />
+   216→
+   217→          <div className="py-8 sm:py-12">
+   218→            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+   219→              {/* Main Content */}
+   220→              <div className="lg:col-span-2 space-y-10">
+   221→                {/* Price Card (Mobile) */}
+   222→                <div className="lg:hidden rounded-xl glass-strong p-5">
+   223→                  <div className="flex items-center justify-between">
+   224→                    <div>
+   225→                      <p className="text-xs font-medium text-teal-400 uppercase tracking-wider">Starting from</p>
+   226→                      <div className="flex items-baseline gap-2 mt-1">
+   227→                        {pkg.originalPrice && (
+   228→                          <span className="text-lg text-gray-500 line-through">
+   229→                            ₹{pkg.originalPrice.toLocaleString()}
+   230→                          </span>
+   231→                        )}
+   232→                        <span className="text-3xl font-bold gradient-text-gold">
+   233→                          ₹{pkg.price.toLocaleString()}
+   234→                        </span>
+   235→                        <span className="text-sm text-gray-500">/person</span>
+   236→                      </div>
+   237→                      {discount > 0 && (
+   238→                        <p className="text-sm text-teal-400 font-medium mt-1">
+   239→                          You save ₹{((pkg.originalPrice || 0) - pkg.price).toLocaleString()} per person!
+   240→                        </p>
+   241→                      )}
+   242→                    </div>
+   243→                    <div className="flex items-center gap-2">
+   244→                      <Button
+   245→                        variant="outline"
+   246→                        size="icon"
+   247→                        className={`rounded-full border-white/10 h-10 w-10 ${
+   248→                          inWishlist
+   249→                            ? 'bg-rose-500/20 text-rose-400 border-rose-500/30'
+   250→                            : 'text-gray-300 hover:text-rose-400 hover:bg-white/5'
+   251→                        }`}
+   252→                        onClick={() => {
+   253→                          if (inWishlist) {
+   254→                            removeItem(pkg.id);
+   255→                          } else {
+   256→                            addItem({
+   257→                              id: pkg.id,
+   258→                              name: pkg.name,
+   259→                              destination: `${pkg.destination.name}, ${pkg.destination.country}`,
+   260→                              image: pkg.image,
+   261→                              price: pkg.price,
+   262→                              originalPrice: pkg.originalPrice || undefined,
+   263→                              duration: pkg.duration,
+   264→                              rating: pkg.rating,
+   265→                              category: pkg.category,
+   266→                            });
+   267→                          }
+   268→                        }}
+   269→                      >
+   270→                        <Heart className={`h-5 w-5 ${inWishlist ? 'fill-rose-400' : ''}`} />
+   271→                      </Button>
+   272→                      <Button
+   273→                        variant="outline"
+   274→                        size="icon"
+   275→                        className="rounded-full border-white/10 text-gray-300 hover:text-teal-400 hover:bg-white/5 h-10 w-10"
+   276→                      >
+   277→                        <Share2 className="h-5 w-5" />
+   278→                      </Button>
+   279→                    </div>
+   280→                  </div>
+   281→                  <div className="flex items-center gap-4 mt-3 text-sm text-gray-400">
+   282→                    <span className="flex items-center gap-1">
+   283→                      <Calendar className="h-4 w-4 text-teal-400" />
+   284→                      {pkg.nights} Nights / {pkg.days} Days
+   285→                    </span>
+   286→                    <span className="flex items-center gap-1">
+   287→                      <Users className="h-4 w-4 text-teal-400" />
+   288→                      Per person on twin sharing
+   289→                    </span>
+   290→                  </div>
+   291→                </div>
+   292→
+   293→                {/* Description */}
+   294→                <section>
+   295→                  <h2 className="text-xl font-bold text-white mb-4">
+   296→                    About This <span className="gradient-text">Package</span>
+   297→                  </h2>
+   298→                  <p className="text-gray-400 leading-relaxed text-base">
+   299→                    {pkg.description}
+   300→                  </p>
+   301→                </section>
+   302→
+   303→                <Separator className="bg-white/10" />
+   304→
+   305→                {/* Highlights */}
+   306→                <section>
+   307→                  <h2 className="text-xl font-bold text-white mb-4">
+   308→                    Tour <span className="gradient-text">Highlights</span>
+   309→                  </h2>
+   310→                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+   311→                    {highlights.map((highlight, i) => (
+   312→                      <motion.div
+   313→                        key={i}
+   314→                        initial={{ opacity: 0, x: -20 }}
+   315→                        animate={{ opacity: 1, x: 0 }}
+   316→                        transition={{ duration: 0.3, delay: i * 0.05 }}
+   317→                        className="flex items-center gap-3 text-gray-300"
+   318→                      >
+   319→                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-500/10">
+   320→                          <Check className="h-3.5 w-3.5 text-teal-400" />
+   321→                        </div>
+   322→                        <span className="text-sm">{highlight}</span>
+   323→                      </motion.div>
+   324→                    ))}
+   325→                  </div>
+   326→                </section>
+   327→
+   328→                <Separator className="bg-white/10" />
+   329→
+   330→                {/* Day-by-Day Itinerary */}
+   331→                {itinerary.length > 0 && (
+   332→                  <section>
+   333→                    <h2 className="text-xl font-bold text-white mb-6">
+   334→                      Day-by-Day <span className="gradient-text">Itinerary</span>
+   335→                    </h2>
+   336→                    <div className="space-y-4">
+   337→                      {itinerary.map((day, i) => (
+   338→                        <motion.div
+   339→                          key={i}
+   340→                          initial={{ opacity: 0, x: -20 }}
+   341→                          animate={{ opacity: 1, x: 0 }}
+   342→                          transition={{ duration: 0.4, delay: i * 0.08 }}
+   343→                          className="relative flex gap-4 rounded-xl glass p-4 sm:p-5"
+   344→                        >
+   345→                          <div className="flex flex-col items-center shrink-0">
+   346→                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 text-sm font-bold text-white shadow-lg glow-teal">
+   347→                              {day.day}
+   348→                            </div>
+   349→                            {i < itinerary.length - 1 && (
+   350→                              <div className="mt-1 w-0.5 flex-1 bg-gradient-to-b from-teal-500/30 to-transparent min-h-[20px]" />
+   351→                            )}
+   352→                          </div>
+   353→                          <div className="min-w-0 pt-0.5">
+   354→                            <h4 className="text-sm sm:text-base font-semibold text-white">{day.title}</h4>
+   355→                            <p className="mt-1 text-sm text-gray-400 leading-relaxed">{day.desc}</p>
+   356→                          </div>
+   357→                        </motion.div>
+   358→                      ))}
+   359→                    </div>
+   360→                  </section>
+   361→                )}
+   362→
+   363→                <Separator className="bg-white/10" />
+   364→
+   365→                {/* What's Included */}
+   366→                <section>
+   367→                  <h2 className="text-xl font-bold text-white mb-4">
+   368→                    What&apos;s <span className="gradient-text">Included</span>
+   369→                  </h2>
+   370→                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+   371→                    {included.map((item, i) => (
+   372→                      <motion.div
+   373→                        key={i}
+   374→                        initial={{ opacity: 0, x: -20 }}
+   375→                        animate={{ opacity: 1, x: 0 }}
+   376→                        transition={{ duration: 0.3, delay: i * 0.04 }}
+   377→                        className="flex items-center gap-3 text-gray-300"
+   378→                      >
+   379→                        <Check className="h-5 w-5 text-emerald-400 shrink-0" />
+   380→                        <span className="text-sm">{item}</span>
+   381→                      </motion.div>
+   382→                    ))}
+   383→                  </div>
+   384→                </section>
+   385→
+   386→                <Separator className="bg-white/10" />
+   387→
+   388→                {/* CTA Buttons (Mobile) */}
+   389→                <div className="flex flex-col sm:flex-row items-center gap-3 lg:hidden">
+   390→                  <Button
+   391→                    className="w-full sm:w-auto bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-lg h-12 text-base font-bold glow-teal animate-glow-pulse"
+   392→                    asChild
+   393→                  >
+   394→                    <Link href="/contact">
+   395→                      Book This Package
+   396→                    </Link>
+   397→                  </Button>
+   398→                  <Button
+   399→                    variant="outline"
+   400→                    className="w-full sm:w-auto border-white/10 text-teal-400 hover:bg-white/5 hover:text-teal-300 rounded-lg h-12 text-base"
+   401→                    asChild
+   402→                  >
+   403→                    <a href="tel:+919876543210">
+   404→                      <Phone className="mr-2 h-4 w-4" />
+   405→                      Call for Details
+   406→                    </a>
+   407→                  </Button>
+   408→                </div>
+   409→              </div>
+   410→
+   411→              {/* Sidebar (Desktop) */}
+   412→              <div className="hidden lg:block">
+   413→                <div className="sticky top-24 space-y-6">
+   414→                  {/* Price Card */}
+   415→                  <Card className="glass-strong border-white/10 overflow-hidden">
+   416→                    <CardContent className="p-6">
+   417→                      <p className="text-xs font-medium text-teal-400 uppercase tracking-wider mb-2">Starting from</p>
+   418→                      <div className="flex items-baseline gap-2">
+   419→                        {pkg.originalPrice && (
+   420→                          <span className="text-xl text-gray-500 line-through">
+   421→                            ₹{pkg.originalPrice.toLocaleString()}
+   422→                          </span>
+   423→                        )}
+   424→                        <span className="text-4xl font-bold gradient-text-gold">
+   425→                          ₹{pkg.price.toLocaleString()}
+   426→                        </span>
+   427→                      </div>
+   428→                      <span className="text-sm text-gray-500">/person</span>
+   429→
+   430→                      {discount > 0 && (
+   431→                        <div className="mt-3 rounded-lg bg-teal-500/10 border border-teal-500/20 p-3">
+   432→                          <p className="text-sm text-teal-400 font-medium">
+   433→                            🎉 You save ₹{((pkg.originalPrice || 0) - pkg.price).toLocaleString()} per person!
+   434→                          </p>
+   435→                        </div>
+   436→                      )}
+   437→
+   438→                      <div className="mt-4 space-y-2 text-sm text-gray-400">
+   439→                        <div className="flex items-center gap-2">
+   440→                          <Calendar className="h-4 w-4 text-teal-400" />
+   441→                          {pkg.nights} Nights / {pkg.days} Days
+   442→                        </div>
+   443→                        <div className="flex items-center gap-2">
+   444→                          <Users className="h-4 w-4 text-teal-400" />
+   445→                          Per person on twin sharing
+   446→                        </div>
+   447→                        <div className="flex items-center gap-2">
+   448→                          <MapPin className="h-4 w-4 text-teal-400" />
+   449→                          {pkg.destination.name}, {pkg.destination.country}
+   450→                        </div>
+   451→                      </div>
+   452→
+   453→                      <Separator className="my-5 bg-white/10" />
+   454→
+   455→                      <div className="space-y-3">
+   456→                        <Button
+   457→                          className="w-full bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-lg h-12 text-base font-bold glow-teal animate-glow-pulse"
+   458→                          asChild
+   459→                        >
+   460→                          <Link href="/contact">
+   461→                            Book This Package
+   462→                          </Link>
+   463→                        </Button>
+   464→                        <Button
+   465→                          variant="outline"
+   466→                          className="w-full border-white/10 text-teal-400 hover:bg-white/5 hover:text-teal-300 rounded-lg h-11 text-base"
+   467→                          asChild
+   468→                        >
+   469→                          <a href="tel:+919876543210">
+   470→                            <Phone className="mr-2 h-4 w-4" />
+   471→                            Call for Details
+   472→                          </a>
+   473→                        </Button>
+   474→                      </div>
+   475→
+   476→                      <div className="mt-4 flex items-center justify-center gap-2">
+   477→                        <Button
+   478→                          variant="ghost"
+   479→                          size="sm"
+   480→                          className={`rounded-full ${inWishlist ? 'text-rose-400 hover:text-rose-300' : 'text-gray-400 hover:text-rose-400'}`}
+   481→                          onClick={() => {
+   482→                            if (inWishlist) {
+   483→                              removeItem(pkg.id);
+   484→                            } else {
+   485→                              addItem({
+   486→                                id: pkg.id,
+   487→                                name: pkg.name,
+   488→                                destination: `${pkg.destination.name}, ${pkg.destination.country}`,
+   489→                                image: pkg.image,
+   490→                                price: pkg.price,
+   491→                                originalPrice: pkg.originalPrice || undefined,
+   492→                                duration: pkg.duration,
+   493→                                rating: pkg.rating,
+   494→                                category: pkg.category,
+   495→                              });
+   496→                            }
+   497→                          }}
+   498→                        >
+   499→                          <Heart className={`mr-1.5 h-4 w-4 ${inWishlist ? 'fill-rose-400' : ''}`} />
+   500→                          {inWishlist ? 'Saved to Wishlist' : 'Add to Wishlist'}
+   501→                        </Button>
+   502→                      </div>
+   503→                    </CardContent>
+   504→                  </Card>
+   505→
+   506→                  {/* Quick Info */}
+   507→                  <Card className="glass border-white/10 overflow-hidden">
+   508→                    <CardContent className="p-5">
+   509→                      <h3 className="text-sm font-semibold text-white mb-3">Quick Info</h3>
+   510→                      <div className="space-y-2.5 text-sm">
+   511→                        <div className="flex items-center justify-between">
+   512→                          <span className="text-gray-400">Duration</span>
+   513→                          <span className="text-white font-medium">{pkg.duration}</span>
+   514→                        </div>
+   515→                        <div className="flex items-center justify-between">
+   516→                          <span className="text-gray-400">Category</span>
+   517→                          <Badge className={`${getCategoryColor(pkg.category)} text-xs font-semibold border`}>
+   518→                            {pkg.category.charAt(0).toUpperCase() + pkg.category.slice(1).replace('-', ' ')}
+   519→                          </Badge>
+   520→                        </div>
+   521→                        <div className="flex items-center justify-between">
+   522→                          <span className="text-gray-400">Rating</span>
+   523→                          <span className="flex items-center gap-1 text-white font-medium">
+   524→                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+   525→                            {pkg.rating}
+   526→                          </span>
+   527→                        </div>
+   528→                        <div className="flex items-center justify-between">
+   529→                          <span className="text-gray-400">Reviews</span>
+   530→                          <span className="text-white font-medium">{pkg.reviewCount.toLocaleString()}</span>
+   531→                        </div>
+   532→                      </div>
+   533→                    </CardContent>
+   534→                  </Card>
+   535→                </div>
+   536→              </div>
+   537→            </div>
+   538→          </div>
+   539→
+   540→          {/* Related Packages */}
+   541→          {relatedPackages.length > 0 && (
+   542→            <section ref={relatedRef} className="py-10 sm:py-14 border-t border-white/5">
+   543→              <div className="flex items-center justify-between mb-8">
+   544→                <div>
+   545→                  <Badge className="mb-3 bg-teal-500/10 text-teal-400 border-teal-500/20">
+   546→                    <Compass className="mr-1 h-3 w-3" />
+   547→                    More Packages
+   548→                  </Badge>
+   549→                  <h2 className="text-xl sm:text-2xl font-bold text-white">
+   550→                    Related <span className="gradient-text">Packages</span>
+   551→                  </h2>
+   552→                </div>
+   553→                <Button
+   554→                  variant="outline"
+   555→                  size="sm"
+   556→                  asChild
+   557→                  className="hidden sm:flex border-white/10 text-teal-400 hover:bg-white/5 hover:text-teal-300 rounded-xl"
+   558→                >
+   559→                  <Link href={`/packages?destinationId=${pkg.destinationId}`}>
+   560→                    View All <ArrowRight className="ml-1 h-4 w-4" />
+   561→                  </Link>
+   562→                </Button>
+   563→              </div>
+   564→
+   565→              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+   566→                {relatedPackages.map((relPkg, i) => {
+   567→                  const relDiscount = relPkg.originalPrice
+   568→                    ? Math.round(((relPkg.originalPrice - relPkg.price) / relPkg.originalPrice) * 100)
+   569→                    : 0;
+   570→
+   571→                  return (
+   572→                    <motion.div
+   573→                      key={relPkg.id}
+   574→                      initial={{ opacity: 0, y: 40 }}
+   575→                      animate={relatedVisible ? { opacity: 1, y: 0 } : {}}
+   576→                      transition={{ duration: 0.5, delay: i * 0.08 }}
+   577→                    >
+   578→                      <Card className="group overflow-hidden border-0 glass tilt-card cursor-pointer transition-all duration-300 hover:glow-teal">
+   579→                        <Link href={`/packages/${relPkg.slug}`}>
+   580→                          <div className="relative aspect-[16/10] overflow-hidden">
+   581→                            <img
+   582→                              src={relPkg.image}
+   583→                              alt={relPkg.name}
+   584→                              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+   585→                            />
+   586→                            <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-transparent to-transparent" />
+   587→
+   588→                            {relPkg.originalPrice && relDiscount > 0 && (
+   589→                              <div className="absolute top-3 left-3 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-2.5 py-1 text-xs font-bold text-gray-950 shadow-lg glow-amber">
+   590→                                {relDiscount}% OFF
+   591→                              </div>
+   592→                            )}
+   593→
+   594→                            <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full glass px-2.5 py-1 text-xs font-bold text-white">
+   595→                              <Clock className="h-3 w-3" />
+   596→                              {relPkg.duration}
+   597→                            </div>
+   598→
+   599→                            <div className="absolute bottom-3 left-3">
+   600→                              <Badge className={`${getCategoryColor(relPkg.category)} text-xs font-semibold border`}>
+   601→                                {relPkg.category.charAt(0).toUpperCase() + relPkg.category.slice(1).replace('-', ' ')}
+   602→                              </Badge>
+   603→                            </div>
+   604→
+   605→                            <button
+   606→                              className={`absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full glass transition-all duration-200 ${
+   607→                                isInWishlist(relPkg.id)
+   608→                                  ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+   609→                                  : 'text-gray-300 hover:bg-white/20 hover:text-rose-400'
+   610→                              }`}
+   611→                              onClick={(e) => {
+   612→                                e.preventDefault();
+   613→                                e.stopPropagation();
+   614→                                if (isInWishlist(relPkg.id)) {
+   615→                                  removeItem(relPkg.id);
+   616→                                } else {
+   617→                                  addItem({
+   618→                                    id: relPkg.id,
+   619→                                    name: relPkg.name,
+   620→                                    destination: `${relPkg.destination.name}, ${relPkg.destination.country}`,
+   621→                                    image: relPkg.image,
+   622→                                    price: relPkg.price,
+   623→                                    originalPrice: relPkg.originalPrice || undefined,
+   624→                                    duration: relPkg.duration,
+   625→                                    rating: relPkg.rating,
+   626→                                    category: relPkg.category,
+   627→                                  });
+   628→                                }
+   629→                              }}
+   630→                            >
+   631→                              <Heart className={`h-4 w-4 ${isInWishlist(relPkg.id) ? 'fill-rose-400' : ''}`} />
+   632→                            </button>
+   633→                          </div>
+   634→
+   635→                          <CardContent className="p-4 sm:p-5">
+   636→                            <div className="flex items-center gap-1 text-xs text-gray-500 mb-1.5">
+   637→                              <MapPin className="h-3 w-3" />
+   638→                              {relPkg.destination.name}, {relPkg.destination.country}
+   639→                            </div>
+   640→
+   641→                            <h3 className="font-bold text-white text-base sm:text-lg leading-tight line-clamp-2">
+   642→                              {relPkg.name}
+   643→                            </h3>
+   644→
+   645→                            <div className="mt-2 flex flex-wrap gap-1.5">
+   646→                              {relPkg.highlights.split(',').slice(0, 3).map((h, idx) => (
+   647→                                <span key={idx} className="text-xs bg-white/5 text-gray-400 px-2 py-0.5 rounded-full border border-white/5">
+   648→                                  {h.trim()}
+   649→                                </span>
+   650→                              ))}
+   651→                            </div>
+   652→
+   653→                            <div className="mt-3 flex items-center gap-2">
+   654→                              <div className="flex items-center gap-1 rounded-md bg-teal-500/10 px-2 py-0.5">
+   655→                                <Star className="h-3.5 w-3.5 fill-teal-400 text-teal-400" />
+   656→                                <span className="text-xs font-bold text-teal-400">{relPkg.rating}</span>
+   657→                              </div>
+   658→                              <span className="text-xs text-gray-500">
+   659→                                ({relPkg.reviewCount.toLocaleString()} reviews)
+   660→                              </span>
+   661→                            </div>
+   662→
+   663→                            <div className="mt-4 flex items-end justify-between">
+   664→                              <div>
+   665→                                {relPkg.originalPrice && (
+   666→                                  <span className="text-sm text-gray-500 line-through">
+   667→                                    ₹{relPkg.originalPrice.toLocaleString()}
+   668→                                  </span>
+   669→                                )}
+   670→                                <div className="flex items-baseline gap-1">
+   671→                                  <span className="text-2xl font-bold text-amber-400">
+   672→                                    ₹{relPkg.price.toLocaleString()}
+   673→                                  </span>
+   674→                                  <span className="text-xs text-gray-500">/person</span>
+   675→                                </div>
+   676→                              </div>
+   677→                              <Button
+   678→                                size="sm"
+   679→                                className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-lg font-semibold"
+   680→                              >
+   681→                                View Details
+   682→                                <ArrowRight className="ml-1 h-3.5 w-3.5" />
+   683→                              </Button>
+   684→                            </div>
+   685→                          </CardContent>
+   686→                        </Link>
+   687→                      </Card>
+   688→                    </motion.div>
+   689→                  );
+   690→                })}
+   691→              </div>
+   692→
+   693→              <div className="mt-6 text-center sm:hidden">
+   694→                <Button
+   695→                  variant="outline"
+   696→                  asChild
+   697→                  className="border-white/10 text-teal-400 hover:bg-white/5 hover:text-teal-300 rounded-xl"
+   698→                >
+   699→                  <Link href={`/packages?destinationId=${pkg.destinationId}`}>
+   700→                    View All Related <ArrowRight className="ml-1 h-4 w-4" />
+   701→                  </Link>
+   702→                </Button>
+   703→              </div>
+   704→            </section>
+   705→          )}
+   706→        </div>
+   707→      </div>
+   708→    </PageTransition>
+   709→  );
+   710→}
+   711→

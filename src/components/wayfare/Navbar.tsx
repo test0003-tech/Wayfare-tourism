@@ -17,6 +17,7 @@ import {
   BookOpen,
   MessageSquare,
   Sparkles,
+  Shield,
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -79,6 +80,19 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* Dashboard Link - Admin */}
+          <Link
+            href="/dashboard"
+            className={`flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium transition-all hover:border-teal-500/50 hover:bg-teal-500/5 hover:text-teal-400 ${
+              isActive('/dashboard')
+                ? 'border-teal-500/50 bg-teal-500/10 text-teal-400'
+                : 'text-gray-500'
+            }`}
+          >
+            <Shield className="h-3.5 w-3.5" />
+            Dashboard
+          </Link>
 
           {/* More Dropdown */}
           <div className="relative">
@@ -173,6 +187,21 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+          </div>
+
+          <div className="pt-3 border-t border-white/10 space-y-2">
+            <Link
+              href="/dashboard"
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2.5 text-sm font-medium transition-all hover:border-teal-500/50 hover:bg-teal-500/5 hover:text-teal-400 ${
+                isActive('/dashboard')
+                  ? 'border-teal-500/50 bg-teal-500/10 text-teal-400'
+                  : 'text-gray-500'
+              }`}
+            >
+              <Shield className="h-4 w-4" />
+              Admin Dashboard
+            </Link>
           </div>
 
           <div className="pt-3 border-t border-white/10 space-y-2">

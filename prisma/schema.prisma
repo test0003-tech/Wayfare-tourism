@@ -7,6 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ============================================
+// CORE TRAVEL ENTITIES
+// ============================================
+
 model Destination {
   id          String    @id @default(cuid())
   name        String
@@ -17,10 +21,12 @@ model Destination {
   description String
   tagline     String
   featured    Boolean   @default(false)
+  status      String    @default("active") // "active", "draft", "archived"
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   packages    Package[]
   hotels      Hotel[]
+  reviews     Review[]
 }
 
 model Package {
@@ -36,15 +42,19 @@ model Package {
   price         Int      // price in INR
   originalPrice Int?     // original price before discount
   image         String
+  gallery       String   @default("[]") // JSON array of image URLs
   description   String
-  highlights    String   // comma-separated highlights
-  included      String   // comma-separated inclusions
-  itinerary     String   // JSON string for day-by-day itinerary
+  highlights    String   // JSON array of highlights
+  included      String   // JSON array of inclusions
+  itinerary     String   @default("[]") // JSON string for day-by-day itinerary
   rating        Float    @default(4.5)
   reviewCount   Int      @default(0)
   featured      Boolean  @default(false)
+  status        String   @default("active") // "active", "draft", "archived"
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  reviews       Review[]
+  bookings      Booking[]
 }
 
 model Hotel {
@@ -58,13 +68,16 @@ model Hotel {
   pricePerNight Int
   originalPrice Int?
   image         String
+  gallery       String   @default("[]") // JSON array of image URLs
   description   String
-  amenities     String   // comma-separated amenities
+  amenities     String   // JSON array of amenities
   rating        Float    @default(4.0)
   reviewCount   Int      @default(0)
   featured      Boolean  @default(false)
+  status        String   @default("active") // "active", "draft", "archived"
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  reviews       Review[]
 }
 
 model FlightDeal {
@@ -78,9 +91,122 @@ model FlightDeal {
   image         String
   description   String
   featured      Boolean  @default(false)
+  status        String   @default("active") // "active", "draft", "archived"
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+// ============================================
+// USER-GENERATED CONTENT
+// ============================================
+
+model Review {
+  id           String   @id @default(cuid())
+  name         String
+  avatar       String   @default("") // initials or emoji
+  location     String   @default("")
+  rating       Int      // 1-5
+  title        String   @default("")
+  text         String
+  date         String   // display date like "2 weeks ago"
+  verified     Boolean  @default(false)
+  category     String   @default("") // "Honeymoon", "Adventure", "Luxury", etc.
+  photos       Int      @default(0)
+  status       String   @default("active") // "active", "pending", "rejected"
+  // Polymorphic relation: review can belong to package, hotel, or destination
+  packageId    String?
+  package      Package? @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  hotelId      String?
+  hotel        Hotel?   @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  destinationId String?
+  destination  Destination? @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  location  String
+  trip      String   // trip/package name
+  rating    Int      // 1-5
+  text      String
+  avatar    String   @default("") // emoji or initials
+  happyNote String   @default("") // short happy note
+  verified  Boolean  @default(false)
+  featured  Boolean  @default(false)
+  status    String   @default("active") // "active", "draft", "archived"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================
+// MEDIA & CONTENT
+// ============================================
+
+model Video {
+  id          String   @id @default(cuid())
+  title       String
+  url         String   // YouTube/Vimeo embed URL
+  thumbnail   String   @default("") // thumbnail image URL
+  description String   @default("")
+  category    String   @default("general") // "destination", "experience", "testimonial", "general"
+  featured    Boolean  @default(false)
+  status      String   @default("active") // "active", "draft", "archived"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  title     String
+  image     String   // image URL or path
+  caption   String   @default("")
+  category  String   @default("general") // "destination", "hotel", "adventure", "beach", "culture", "food", "nature", "general"
+  featured  Boolean  @default(false)
+  status    String   @default("active") // "active", "draft", "archived"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  content     String   // HTML content
+  authorName  String   @default("Wayfare Team")
+  authorAvatar String  @default("")
+  authorBio   String   @default("")
+  date        String   // display date
+  category    String   @default("Destinations") // "Destinations", "Tips", "Guides", "News", "Reviews"
+  image       String
+  readingTime String   @default("5 min read")
+  tags        String   @default("[]") // JSON array of tag strings
+  featured    Boolean  @default(false)
+  status      String   @default("active") // "active", "draft", "archived"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ============================================
+// SITE CONFIGURATION
+// ============================================
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  type      String   @default("text") // "text", "number", "boolean", "json", "image"
+  group     String   @default("general") // "general", "seo", "social", "contact", "appearance"
+  label     String   @default("") // human-readable label for dashboard
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================
+// BUSINESS OPERATIONS
+// ============================================
 
 model Inquiry {
   id        String   @id @default(cuid())
@@ -89,7 +215,9 @@ model Inquiry {
   phone     String?
   type      String   // "package", "hotel", "flight", "custom"
   message   String
+  status    String   @default("new") // "new", "read", "replied", "closed"
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Booking {
@@ -99,6 +227,7 @@ model Booking {
   phone           String
   age             Int?
   packageId       String?
+  package         Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
   travelers       Int      @default(1)
   adults          Int      @default(1)
   children        Int      @default(0)
@@ -108,7 +237,20 @@ model Booking {
   specialRequests String?
   addOns          String?  // JSON string: airport transfer, insurance, meal plan, guided tour
   totalPrice      Int
-  status          String   @default("pending") // "pending", "confirmed", "cancelled"
+  status          String   @default("pending") // "pending", "confirmed", "cancelled", "completed"
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+// ============================================
+// DEPLOY & AUDIT
+// ============================================
+
+model DeployLog {
+  id          String   @id @default(cuid())
+  action      String   // "deploy", "rollback", "sync"
+  details     String   @default("")
+  status      String   @default("pending") // "pending", "running", "success", "failed"
+  triggeredBy String   @default("admin")
+  createdAt   DateTime @default(now())
 }

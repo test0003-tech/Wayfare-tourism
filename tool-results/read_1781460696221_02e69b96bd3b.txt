@@ -1,0 +1,646 @@
+     1→'use client';
+     2→
+     3→import { useEffect, useState, useRef, useMemo, useCallback, Suspense } from 'react';
+     4→import { useSearchParams } from 'next/navigation';
+     5→import { motion, AnimatePresence } from 'framer-motion';
+     6→import { Hotel as HotelType } from '@/lib/types';
+     7→import { useWishlist, WishlistItem } from '@/lib/wishlist';
+     8→import PageHero from '@/components/wayfare/PageHero';
+     9→import Breadcrumbs from '@/components/wayfare/Breadcrumbs';
+    10→import PageTransition from '@/components/wayfare/PageTransition';
+    11→import { Badge } from '@/components/ui/badge';
+    12→import { Button } from '@/components/ui/button';
+    13→import { Card, CardContent } from '@/components/ui/card';
+    14→import { Input } from '@/components/ui/input';
+    15→import {
+    16→  Select,
+    17→  SelectContent,
+    18→  SelectItem,
+    19→  SelectTrigger,
+    20→  SelectValue,
+    21→} from '@/components/ui/select';
+    22→import {
+    23→  Star,
+    24→  MapPin,
+    25→  Search,
+    26→  Hotel as HotelIcon,
+    27→  Wifi,
+    28→  Waves,
+    29→  UtensilsCrossed,
+    30→  Dumbbell,
+    31→  Car,
+    32→  Snowflake,
+    33→  SlidersHorizontal,
+    34→  Heart,
+    35→  Eye,
+    36→  ShieldCheck,
+    37→  Sparkles,
+    38→  Crown,
+    39→  Building2,
+    40→  Palmtree,
+    41→  Landmark,
+    42→  ChevronLeft,
+    43→  ChevronRight,
+    44→  Flame,
+    45→  CheckCircle2,
+    46→  X,
+    47→} from 'lucide-react';
+    48→
+    49→const amenityIcons: Record<string, typeof Wifi> = {
+    50→  'Wi-Fi': Wifi,
+    51→  'Swimming Pool': Waves,
+    52→  'Pool': Waves,
+    53→  'Restaurant': UtensilsCrossed,
+    54→  'Gym': Dumbbell,
+    55→  'Parking': Car,
+    56→  'AC': Snowflake,
+    57→  'Air Conditioning': Snowflake,
+    58→};
+    59→
+    60→const amenityColors: Record<string, string> = {
+    61→  'Wi-Fi': 'bg-blue-500/20 text-blue-400 border-blue-500/20',
+    62→  'Swimming Pool': 'bg-cyan-500/20 text-cyan-400 border-cyan-500/20',
+    63→  'Pool': 'bg-cyan-500/20 text-cyan-400 border-cyan-500/20',
+    64→  'Restaurant': 'bg-orange-500/20 text-orange-400 border-orange-500/20',
+    65→  'Gym': 'bg-red-500/20 text-red-400 border-red-500/20',
+    66→  'Parking': 'bg-purple-500/20 text-purple-400 border-purple-500/20',
+    67→  'AC': 'bg-teal-500/20 text-teal-400 border-teal-500/20',
+    68→  'Air Conditioning': 'bg-teal-500/20 text-teal-400 border-teal-500/20',
+    69→};
+    70→
+    71→const ITEMS_PER_PAGE = 9;
+    72→
+    73→const categories = ['All', 'Luxury', 'Boutique', 'Heritage', 'Resort'];
+    74→const sortOptions = [
+    75→  { value: 'rating-desc', label: 'Highest Rated' },
+    76→  { value: 'rating-asc', label: 'Lowest Rated' },
+    77→  { value: 'price-asc', label: 'Price: Low to High' },
+    78→  { value: 'price-desc', label: 'Price: High to Low' },
+    79→  { value: 'stars-desc', label: 'Most Stars' },
+    80→];
+    81→
+    82→const quickFilterCategories = [
+    83→  { label: 'Luxury', icon: Crown, color: 'from-amber-500/20 to-yellow-600/20 border-amber-500/30 text-amber-400' },
+    84→  { label: 'Resort', icon: Palmtree, color: 'from-cyan-500/20 to-teal-600/20 border-cyan-500/30 text-cyan-400' },
+    85→  { label: 'Heritage', icon: Landmark, color: 'from-orange-500/20 to-red-600/20 border-orange-500/30 text-orange-400' },
+    86→  { label: 'Boutique', icon: Building2, color: 'from-purple-500/20 to-pink-600/20 border-purple-500/30 text-purple-400' },
+    87→];
+    88→
+    89→// Fake "viewing" numbers for urgency
+    90→const viewingCounts = [2, 3, 5, 4, 7, 2, 6, 3, 8, 4, 5, 2];
+    91→
+    92→function StarRating({ count, size = 'md' }: { count: number; size?: 'sm' | 'md' | 'lg' }) {
+    93→  const sizeClass = size === 'sm' ? 'h-3 w-3' : size === 'lg' ? 'h-5 w-5' : 'h-4 w-4';
+    94→  return (
+    95→    <div className="flex items-center gap-0.5">
+    96→      {Array.from({ length: 5 }).map((_, i) => (
+    97→        <Star
+    98→          key={i}
+    99→          className={`${sizeClass} ${i < count ? 'fill-amber-400 text-amber-400' : 'fill-gray-700 text-gray-700'}`}
+   100→        />
+   101→      ))}
+   102→    </div>
+   103→  );
+   104→}
+   105→
+   106→function StarFilter({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+   107→  const options = [
+   108→    { label: 'All', value: 'All' },
+   109→    { label: '5★', value: '5' },
+   110→    { label: '4★+', value: '4' },
+   111→    { label: '3★+', value: '3' },
+   112→  ];
+   113→
+   114→  return (
+   115→    <div className="flex items-center gap-1.5">
+   116→      {options.map((opt) => (
+   117→        <button
+   118→          key={opt.value}
+   119→          onClick={() => onChange(opt.value)}
+   120→          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 border ${
+   121→            value === opt.value
+   122→              ? 'bg-amber-500/20 border-amber-500/40 text-amber-400 glow-amber'
+   123→              : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:border-white/20'
+   124→          }`}
+   125→        >
+   126→          {opt.label}
+   127→        </button>
+   128→      ))}
+   129→    </div>
+   130→  );
+   131→}
+   132→
+   133→function HotelsContent() {
+   134→  const searchParams = useSearchParams();
+   135→  const { addItem, removeItem, isInWishlist } = useWishlist();
+   136→  const [hotels, setHotels] = useState<HotelType[]>([]);
+   137→  const [loading, setLoading] = useState(true);
+   138→  const [searchQuery, setSearchQuery] = useState('');
+   139→  const [category, setCategory] = useState('All');
+   140→  const [stars, setStars] = useState('All');
+   141→  const [sortBy, setSortBy] = useState('rating-desc');
+   142→  const [page, setPage] = useState(1);
+   143→  const [isVisible, setIsVisible] = useState(false);
+   144→  const [heartAnimation, setHeartAnimation] = useState<string | null>(null);
+   145→  const sectionRef = useRef<HTMLDivElement>(null);
+   146→
+   147→  useEffect(() => {
+   148→    const categoryParam = searchParams.get('category');
+   149→    if (categoryParam && categories.includes(categoryParam)) {
+   150→      queueMicrotask(() => setCategory(categoryParam));
+   151→    }
+   152→  }, [searchParams]);
+   153→
+   154→  useEffect(() => {
+   155→    queueMicrotask(() => setLoading(true));
+   156→    const params = new URLSearchParams();
+   157→    if (category && category !== 'All') params.set('category', category.toLowerCase());
+   158→    fetch(`/api/hotels?${params.toString()}`)
+   159→      .then((res) => res.json())
+   160→      .then((data) => {
+   161→        setHotels(data);
+   162→        setLoading(false);
+   163→      })
+   164→      .catch((err) => {
+   165→        console.error(err);
+   166→        setLoading(false);
+   167→      });
+   168→  }, [category]);
+   169→
+   170→  useEffect(() => {
+   171→    const observer = new IntersectionObserver(
+   172→      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
+   173→      { threshold: 0.02 }
+   174→    );
+   175→    if (sectionRef.current) observer.observe(sectionRef.current);
+   176→    return () => observer.disconnect();
+   177→  }, []);
+   178→
+   179→  const filtered = useMemo(() => {
+   180→    let result = [...hotels];
+   181→
+   182→    if (searchQuery.trim()) {
+   183→      const q = searchQuery.toLowerCase();
+   184→      result = result.filter(
+   185→        (h) =>
+   186→          h.name.toLowerCase().includes(q) ||
+   187→          h.destination.name.toLowerCase().includes(q) ||
+   188→          h.destination.country.toLowerCase().includes(q)
+   189→      );
+   190→    }
+   191→
+   192→    if (stars !== 'All') {
+   193→      const starNum = parseInt(stars);
+   194→      result = result.filter((h) => h.stars >= starNum);
+   195→    }
+   196→
+   197→    switch (sortBy) {
+   198→      case 'rating-desc':
+   199→        result.sort((a, b) => b.rating - a.rating);
+   200→        break;
+   201→      case 'rating-asc':
+   202→        result.sort((a, b) => a.rating - b.rating);
+   203→        break;
+   204→      case 'price-asc':
+   205→        result.sort((a, b) => a.pricePerNight - b.pricePerNight);
+   206→        break;
+   207→      case 'price-desc':
+   208→        result.sort((a, b) => b.pricePerNight - a.pricePerNight);
+   209→        break;
+   210→      case 'stars-desc':
+   211→        result.sort((a, b) => b.stars - a.stars);
+   212→        break;
+   213→    }
+   214→
+   215→    return result;
+   216→  }, [hotels, searchQuery, stars, sortBy]);
+   217→
+   218→  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+   219→  const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+   220→
+   221→  useEffect(() => { queueMicrotask(() => setPage(1)); }, [searchQuery, category, stars, sortBy]);
+   222→
+   223→  const toggleWishlist = useCallback((hotel: HotelType) => {
+   224→    if (isInWishlist(hotel.id)) {
+   225→      removeItem(hotel.id);
+   226→    } else {
+   227→      const item: WishlistItem = {
+   228→        id: hotel.id,
+   229→        name: hotel.name,
+   230→        destination: `${hotel.destination.name}, ${hotel.destination.country}`,
+   231→        image: hotel.image,
+   232→        price: hotel.pricePerNight,
+   233→        originalPrice: hotel.originalPrice ?? undefined,
+   234→        duration: 'Per Night',
+   235→        rating: hotel.rating,
+   236→        category: hotel.category,
+   237→      };
+   238→      addItem(item);
+   239→      setHeartAnimation(hotel.id);
+   240→      setTimeout(() => setHeartAnimation(null), 600);
+   241→    }
+   242→  }, [addItem, removeItem, isInWishlist]);
+   243→
+   244→  return (
+   245→    <PageTransition>
+   246→      <div className="bg-gray-950 min-h-screen">
+   247→        <PageHero
+   248→          badge="Premium Stays"
+   249→          badgeIcon={HotelIcon}
+   250→          title="Hotels & Resorts"
+   251→          subtitle="Handpicked luxury hotels, boutique resorts & heritage stays"
+   252→          backgroundImage="/images/flights-hero.png"
+   253→        />
+   254→
+   255→        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   256→          <Breadcrumbs items={[{ label: 'Hotels' }]} />
+   257→
+   258→          {/* Quick Filters Row */}
+   259→          <div className="mb-4 flex flex-wrap items-center gap-3">
+   260→            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mr-1">Quick Filters</span>
+   261→            {quickFilterCategories.map((qf) => {
+   262→              const Icon = qf.icon;
+   263→              const isActive = category === qf.label;
+   264→              return (
+   265→                <motion.button
+   266→                  key={qf.label}
+   267→                  whileTap={{ scale: 0.95 }}
+   268→                  onClick={() => setCategory(isActive ? 'All' : qf.label)}
+   269→                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-300 ${
+   270→                    isActive
+   271→                      ? `bg-gradient-to-r ${qf.color} shadow-lg`
+   272→                      : 'glass hover:bg-white/10 border-white/10 text-gray-400'
+   273→                  }`}
+   274→                >
+   275→                  <Icon className="h-4 w-4" />
+   276→                  {qf.label}
+   277→                </motion.button>
+   278→              );
+   279→            })}
+   280→          </div>
+   281→
+   282→          {/* Filters Section */}
+   283→          <div className="mb-8 glass rounded-2xl p-4 sm:p-5">
+   284→            <div className="flex items-center justify-between mb-4">
+   285→              <div className="flex items-center gap-2">
+   286→                <SlidersHorizontal className="h-4 w-4 text-teal-400" />
+   287→                <span className="text-sm font-semibold text-gray-300">Filter & Search</span>
+   288→              </div>
+   289→              <button
+   290→                onClick={() => {
+   291→                  setSearchQuery('');
+   292→                  setCategory('All');
+   293→                  setStars('All');
+   294→                  setSortBy('rating-desc');
+   295→                }}
+   296→                className="flex items-center gap-1 text-xs text-gray-500 hover:text-teal-400 transition-colors"
+   297→              >
+   298→                <X className="h-3 w-3" />
+   299→                Reset
+   300→              </button>
+   301→            </div>
+   302→            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+   303→              {/* Search */}
+   304→              <div className="relative">
+   305→                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+   306→                <Input
+   307→                  placeholder="Search hotels, destinations..."
+   308→                  value={searchQuery}
+   309→                  onChange={(e) => setSearchQuery(e.target.value)}
+   310→                  className="pl-9 bg-white/5 border-white/10 text-gray-100 placeholder:text-gray-500 focus-visible:border-teal-500/50 focus-visible:ring-teal-500/20"
+   311→                />
+   312→              </div>
+   313→
+   314→              {/* Category */}
+   315→              <Select value={category} onValueChange={setCategory}>
+   316→                <SelectTrigger className="bg-white/5 border-white/10 text-gray-100 w-full">
+   317→                  <SelectValue placeholder="Category" />
+   318→                </SelectTrigger>
+   319→                <SelectContent className="bg-gray-900 border-white/10">
+   320→                  {categories.map((cat) => (
+   321→                    <SelectItem key={cat} value={cat} className="text-gray-200 focus:bg-white/10 focus:text-teal-400">
+   322→                      {cat}
+   323→                    </SelectItem>
+   324→                  ))}
+   325→                </SelectContent>
+   326→              </Select>
+   327→
+   328→              {/* Stars - Now using StarFilter component */}
+   329→              <div className="flex items-center">
+   330→                <StarFilter value={stars} onChange={setStars} />
+   331→              </div>
+   332→
+   333→              {/* Sort */}
+   334→              <Select value={sortBy} onValueChange={setSortBy}>
+   335→                <SelectTrigger className="bg-white/5 border-white/10 text-gray-100 w-full">
+   336→                  <SelectValue placeholder="Sort by" />
+   337→                </SelectTrigger>
+   338→                <SelectContent className="bg-gray-900 border-white/10">
+   339→                  {sortOptions.map((opt) => (
+   340→                    <SelectItem key={opt.value} value={opt.value} className="text-gray-200 focus:bg-white/10 focus:text-teal-400">
+   341→                      {opt.label}
+   342→                    </SelectItem>
+   343→                  ))}
+   344→                </SelectContent>
+   345→              </Select>
+   346→            </div>
+   347→          </div>
+   348→
+   349→          {/* Results count */}
+   350→          <div className="mb-6 flex items-center justify-between">
+   351→            <p className="text-sm text-gray-400">
+   352→              Showing <span className="text-teal-400 font-semibold">{paginated.length}</span> of{' '}
+   353→              <span className="text-teal-400 font-semibold">{filtered.length}</span> hotels
+   354→            </p>
+   355→            {filtered.length > 0 && (
+   356→              <p className="text-xs text-gray-600">
+   357→                Page {page} of {totalPages}
+   358→              </p>
+   359→            )}
+   360→          </div>
+   361→
+   362→          {/* Loading state */}
+   363→          {loading ? (
+   364→            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+   365→              {Array.from({ length: 6 }).map((_, i) => (
+   366→                <div key={i} className="glass rounded-2xl overflow-hidden animate-pulse">
+   367→                  <div className="aspect-[16/12] bg-white/5" />
+   368→                  <div className="p-5 space-y-3">
+   369→                    <div className="h-4 bg-white/5 rounded w-1/2" />
+   370→                    <div className="h-5 bg-white/5 rounded w-3/4" />
+   371→                    <div className="h-3 bg-white/5 rounded w-full" />
+   372→                    <div className="flex gap-2">
+   373→                      <div className="h-6 w-14 bg-white/5 rounded-full" />
+   374→                      <div className="h-6 w-14 bg-white/5 rounded-full" />
+   375→                      <div className="h-6 w-14 bg-white/5 rounded-full" />
+   376→                    </div>
+   377→                    <div className="h-10 bg-white/5 rounded-lg" />
+   378→                  </div>
+   379→                </div>
+   380→              ))}
+   381→            </div>
+   382→          ) : paginated.length === 0 ? (
+   383→            <div className="text-center py-20">
+   384→              <HotelIcon className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+   385→              <h3 className="text-lg font-semibold text-gray-300 mb-2">No hotels found</h3>
+   386→              <p className="text-gray-500 mb-4">Try adjusting your filters or search query</p>
+   387→              <Button
+   388→                variant="outline"
+   389→                onClick={() => {
+   390→                  setSearchQuery('');
+   391→                  setCategory('All');
+   392→                  setStars('All');
+   393→                  setSortBy('rating-desc');
+   394→                }}
+   395→                className="border-white/10 text-teal-400 hover:bg-white/5 hover:text-teal-300 rounded-xl"
+   396→              >
+   397→                Clear Filters
+   398→              </Button>
+   399→            </div>
+   400→          ) : (
+   401→            <>
+   402→              {/* Hotel Cards Grid */}
+   403→              <div ref={sectionRef} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+   404→                {paginated.map((hotel, i) => {
+   405→                  const amenities = hotel.amenities.split(',').slice(0, 4);
+   406→                  const discount = hotel.originalPrice
+   407→                    ? Math.round(((hotel.originalPrice - hotel.pricePerNight) / hotel.originalPrice) * 100)
+   408→                    : 0;
+   409→                  const wishlisted = isInWishlist(hotel.id);
+   410→                  const viewingNum = viewingCounts[(hotel.id.charCodeAt(0) + i) % viewingCounts.length];
+   411→                  const isFeatured = hotel.featured;
+   412→                  const hasFreeCancellation = hotel.pricePerNight > 3000;
+   413→
+   414→                  return (
+   415→                    <motion.div
+   416→                      key={hotel.id}
+   417→                      initial={{ opacity: 0, y: 40 }}
+   418→                      animate={isVisible ? { opacity: 1, y: 0 } : {}}
+   419→                      transition={{ duration: 0.5, delay: i * 0.06 }}
+   420→                    >
+   421→                      <Card className="group overflow-hidden border-0 glass rounded-2xl tilt-card transition-all duration-300 hover:glow-amber streak-effect">
+   422→                        {/* Image Section - Taller for more impact */}
+   423→                        <div className="relative aspect-[16/12] overflow-hidden">
+   424→                          <img
+   425→                            src={hotel.image}
+   426→                            alt={hotel.name}
+   427→                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+   428→                          />
+   429→                          <div className="absolute inset-0 bg-gradient-to-t from-gray-950/90 via-gray-950/20 to-transparent" />
+   430→
+   431→                          {/* Best Price Guaranteed badge for featured */}
+   432→                          {isFeatured && (
+   433→                            <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-1 text-xs font-bold text-gray-950 shadow-lg glow-amber">
+   434→                              <Sparkles className="h-3 w-3" />
+   435→                              Best Price Guaranteed
+   436→                            </div>
+   437→                          )}
+   438→
+   439→                          {/* Discount badge */}
+   440→                          {discount > 0 && !isFeatured && (
+   441→                            <div className="absolute top-3 left-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 px-3 py-1 text-xs font-bold text-white shadow-lg">
+   442→                              {discount}% OFF
+   443→                            </div>
+   444→                          )}
+   445→
+   446→                          {/* Star rating - prominent gold stars */}
+   447→                          <div className="absolute top-3 right-3 glass-strong rounded-lg px-2 py-1.5 flex items-center gap-1">
+   448→                            <StarRating count={hotel.stars} size="sm" />
+   449→                          </div>
+   450→
+   451→                          {/* Wishlist heart button */}
+   452→                          <button
+   453→                            onClick={(e) => {
+   454→                              e.preventDefault();
+   455→                              e.stopPropagation();
+   456→                              toggleWishlist(hotel);
+   457→                            }}
+   458→                            className={`absolute top-3 right-[88px] flex items-center justify-center h-8 w-8 rounded-full glass-strong transition-all duration-300 hover:scale-110 ${
+   459→                              wishlisted ? 'text-rose-500' : 'text-white/70 hover:text-rose-400'
+   460→                            } ${heartAnimation === hotel.id ? 'animate-heartbeat' : ''}`}
+   461→                            aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+   462→                          >
+   463→                            <Heart className={`h-4 w-4 ${wishlisted ? 'fill-rose-500' : ''}`} />
+   464→                          </button>
+   465→
+   466→                          {/* Bottom overlay info */}
+   467→                          <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+   468→                            <Badge className="glass text-white text-xs font-semibold border-0">
+   469→                              {hotel.category.charAt(0).toUpperCase() + hotel.category.slice(1)}
+   470→                            </Badge>
+   471→
+   472→                            {/* Urgency indicator */}
+   473→                            <div className="flex items-center gap-1 glass-strong rounded-full px-2.5 py-1">
+   474→                              <Eye className="h-3 w-3 text-rose-400" />
+   475→                              <span className="text-[10px] font-semibold text-rose-400">{viewingNum} viewing</span>
+   476→                            </div>
+   477→                          </div>
+   478→                        </div>
+   479→
+   480→                        <CardContent className="p-4 sm:p-5">
+   481→                          {/* Location & Name */}
+   482→                          <div className="flex items-center gap-1 text-xs text-gray-500 mb-1.5">
+   483→                            <MapPin className="h-3 w-3 text-teal-400" />
+   484→                            {hotel.destination.name}, {hotel.destination.country}
+   485→                          </div>
+   486→
+   487→                          <h3 className="font-bold text-white text-base sm:text-lg leading-tight group-hover:text-teal-300 transition-colors">
+   488→                            {hotel.name}
+   489→                          </h3>
+   490→
+   491→                          {/* Prominent star rating + review count */}
+   492→                          <div className="mt-1.5 flex items-center gap-2">
+   493→                            <StarRating count={hotel.stars} size="sm" />
+   494→                            <div className="flex items-center gap-1 rounded-md bg-teal-500/10 px-2 py-0.5">
+   495→                              <Star className="h-3 w-3 fill-teal-400 text-teal-400" />
+   496→                              <span className="text-xs font-bold text-teal-400">{hotel.rating}</span>
+   497→                            </div>
+   498→                            <span className="text-[11px] text-gray-500">
+   499→                              ({hotel.reviewCount.toLocaleString()} reviews)
+   500→                            </span>
+   501→                          </div>
+   502→
+   503→                          <p className="mt-2 text-sm text-gray-400 line-clamp-2">{hotel.description}</p>
+   504→
+   505→                          {/* Amenities with colored circles */}
+   506→                          <div className="mt-3 flex flex-wrap gap-2">
+   507→                            {amenities.map((amenity, idx) => {
+   508→                              const Icon = amenityIcons[amenity.trim()] || null;
+   509→                              const colorClass = amenityColors[amenity.trim()] || 'bg-white/5 text-gray-400 border-white/5';
+   510→                              return (
+   511→                                <span key={idx} className={`flex items-center gap-1.5 text-xs px-2 py-1 rounded-full border ${colorClass}`}>
+   512→                                  <span className="flex items-center justify-center h-4 w-4 rounded-full bg-current/20">
+   513→                                    {Icon ? <Icon className="h-2.5 w-2.5" /> : <span className="h-1.5 w-1.5 rounded-full bg-current" />}
+   514→                                  </span>
+   515→                                  {amenity.trim()}
+   516→                                </span>
+   517→                              );
+   518→                            })}
+   519→                          </div>
+   520→
+   521→                          {/* Free Cancellation tag */}
+   522→                          {hasFreeCancellation && (
+   523→                            <div className="mt-3 flex items-center gap-1.5 text-xs text-emerald-400">
+   524→                              <CheckCircle2 className="h-3.5 w-3.5" />
+   525→                              <span className="font-semibold">Free Cancellation</span>
+   526→                            </div>
+   527→                          )}
+   528→
+   529→                          {/* Price & Savings */}
+   530→                          <div className="mt-3 flex items-end justify-between">
+   531→                            <div className="flex flex-col gap-0.5">
+   532→                              {hotel.originalPrice && discount > 0 && (
+   533→                                <div className="flex items-center gap-2">
+   534→                                  <span className="text-xs text-gray-500 line-through">
+   535→                                    ₹{hotel.originalPrice.toLocaleString()}
+   536→                                  </span>
+   537→                                  <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+   538→                                    <Flame className="h-2.5 w-2.5" />
+   539→                                    Save {discount}% tonight
+   540→                                  </span>
+   541→                                </div>
+   542→                              )}
+   543→                              <div className="flex items-baseline gap-1">
+   544→                                <span className="text-2xl font-bold text-amber-400">
+   545→                                  ₹{hotel.pricePerNight.toLocaleString()}
+   546→                                </span>
+   547→                                <span className="text-xs text-gray-500">/night</span>
+   548→                              </div>
+   549→                            </div>
+   550→
+   551→                            {/* Rating pill */}
+   552→                            <div className="flex items-center gap-1 bg-amber-500/10 rounded-lg px-2 py-1">
+   553→                              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+   554→                              <span className="text-sm font-bold text-amber-400">{hotel.rating}</span>
+   555→                            </div>
+   556→                          </div>
+   557→
+   558→                          {/* Book Now CTA */}
+   559→                          <Button
+   560→                            asChild
+   561→                            className="w-full mt-4 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-xl font-semibold glow-teal transition-all duration-300 group-hover:animate-glow-pulse h-11"
+   562→                          >
+   563→                            <a href={`/hotels/${hotel.slug}`} className="flex items-center justify-center gap-2">
+   564→                              <span>Book Now</span>
+   565→                              <ShieldCheck className="h-4 w-4 opacity-70" />
+   566→                            </a>
+   567→                          </Button>
+   568→                        </CardContent>
+   569→                      </Card>
+   570→                    </motion.div>
+   571→                  );
+   572→                })}
+   573→              </div>
+   574→
+   575→              {/* Pagination - Glass effect with Page X of Y */}
+   576→              {totalPages > 1 && (
+   577→                <div className="mt-10 flex flex-col items-center gap-4">
+   578→                  <p className="text-sm text-gray-500">
+   579→                    Page <span className="text-teal-400 font-semibold">{page}</span> of{' '}
+   580→                    <span className="text-teal-400 font-semibold">{totalPages}</span>
+   581→                  </p>
+   582→                  <div className="flex items-center gap-2">
+   583→                    <Button
+   584→                      variant="outline"
+   585→                      size="sm"
+   586→                      disabled={page === 1}
+   587→                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+   588→                      className="glass border-white/10 text-gray-300 hover:bg-white/10 hover:text-teal-400 rounded-xl disabled:opacity-30 h-10 px-4"
+   589→                    >
+   590→                      <ChevronLeft className="h-4 w-4 mr-1" />
+   591→                      Prev
+   592→                    </Button>
+   593→
+   594→                    <div className="flex items-center gap-1">
+   595→                      {Array.from({ length: totalPages }).map((_, idx) => (
+   596→                        <motion.button
+   597→                          key={idx}
+   598→                          whileTap={{ scale: 0.9 }}
+   599→                          onClick={() => setPage(idx + 1)}
+   600→                          className={`h-10 w-10 rounded-xl text-sm font-semibold transition-all duration-300 ${
+   601→                            page === idx + 1
+   602→                              ? 'bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-lg glow-teal'
+   603→                              : 'glass border-white/10 text-gray-400 hover:bg-white/10 hover:text-teal-400'
+   604→                          }`}
+   605→                        >
+   606→                          {idx + 1}
+   607→                        </motion.button>
+   608→                      ))}
+   609→                    </div>
+   610→
+   611→                    <Button
+   612→                      variant="outline"
+   613→                      size="sm"
+   614→                      disabled={page === totalPages}
+   615→                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+   616→                      className="glass border-white/10 text-gray-300 hover:bg-white/10 hover:text-teal-400 rounded-xl disabled:opacity-30 h-10 px-4"
+   617→                    >
+   618→                      Next
+   619→                      <ChevronRight className="h-4 w-4 ml-1" />
+   620→                    </Button>
+   621→                  </div>
+   622→                </div>
+   623→              )}
+   624→            </>
+   625→          )}
+   626→        </div>
+   627→
+   628→        {/* Bottom spacer */}
+   629→        <div className="h-16" />
+   630→      </div>
+   631→    </PageTransition>
+   632→  );
+   633→}
+   634→
+   635→export default function HotelsPage() {
+   636→  return (
+   637→    <Suspense fallback={
+   638→      <div className="bg-gray-950 min-h-screen flex items-center justify-center">
+   639→        <div className="animate-spin h-8 w-8 border-2 border-teal-500 border-t-transparent rounded-full" />
+   640→      </div>
+   641→    }>
+   642→      <HotelsContent />
+   643→    </Suspense>
+   644→  );
+   645→}
+   646→

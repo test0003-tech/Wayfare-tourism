@@ -1,0 +1,1063 @@
+     1→import { db } from '@/lib/db';
+     2→
+     3→async function seed() {
+     4→  console.log('🌱 Seeding database...');
+     5→
+     6→  // Clear existing data
+     7→  await db.inquiry.deleteMany();
+     8→  await db.flightDeal.deleteMany();
+     9→  await db.hotel.deleteMany();
+    10→  await db.package.deleteMany();
+    11→  await db.destination.deleteMany();
+    12→
+    13→  // ============ DOMESTIC DESTINATIONS ============
+    14→  const kerala = await db.destination.create({
+    15→    data: {
+    16→      name: 'Kerala',
+    17→      slug: 'kerala',
+    18→      country: 'India',
+    19→      region: 'domestic',
+    20→      image: '/images/destinations/kerala.png',
+    21→      description: 'Known as "God\'s Own Country," Kerala is a tropical paradise with serene backwaters, lush hill stations, exotic wildlife, and beautiful beaches. Experience the magic of houseboat stays on tranquil backwaters surrounded by palm trees.',
+    22→      tagline: 'God\'s Own Country',
+    23→      featured: true,
+    24→    },
+    25→  });
+    26→
+    27→  const kashmir = await db.destination.create({
+    28→    data: {
+    29→      name: 'Kashmir',
+    30→      slug: 'kashmir',
+    31→      country: 'India',
+    32→      region: 'domestic',
+    33→      image: '/images/destinations/kashmir.png',
+    34→      description: 'Paradise on Earth, Kashmir enchants with its pristine valleys, snow-capped mountains, crystal-clear lakes, and vibrant Mughal gardens. Sail on Dal Lake in a shikara and experience the breathtaking beauty of the Himalayas.',
+    35→      tagline: 'Paradise on Earth',
+    36→      featured: true,
+    37→    },
+    38→  });
+    39→
+    40→  const goa = await db.destination.create({
+    41→    data: {
+    42→      name: 'Goa',
+    43→      slug: 'goa',
+    44→      country: 'India',
+    45→      region: 'domestic',
+    46→      image: '/images/destinations/goa.png',
+    47→      description: 'India\'s sunshine state, Goa is famous for its golden beaches, vibrant nightlife, Portuguese heritage, and delicious seafood. From sun-kissed beaches to spice plantations, Goa offers the perfect blend of relaxation and adventure.',
+    48→      tagline: 'Sun, Sand & Surf',
+    49→      featured: true,
+    50→    },
+    51→  });
+    52→
+    53→  const darjeeling = await db.destination.create({
+    54→    data: {
+    55→      name: 'Darjeeling',
+    56→      slug: 'darjeeling',
+    57→      country: 'India',
+    58→      region: 'domestic',
+    59→      image: '/images/destinations/darjeeling.png',
+    60→      description: 'The Queen of Hills, Darjeeling captivates with its tea gardens, the iconic toy train, and stunning views of Kanchenjunga. Sip world-famous tea while watching the sunrise paint the Himalayas in golden hues.',
+    61→      tagline: 'Queen of the Hills',
+    62→      featured: true,
+    63→    },
+    64→  });
+    65→
+    66→  const andaman = await db.destination.create({
+    67→    data: {
+    68→      name: 'Andaman & Nicobar',
+    69→      slug: 'andaman',
+    70→      country: 'India',
+    71→      region: 'domestic',
+    72→      image: '/images/destinations/andaman.png',
+    73→      description: 'A tropical archipelago in the Bay of Bengal, the Andaman Islands boast pristine white-sand beaches, crystal-clear turquoise waters, and vibrant coral reefs. Perfect for snorkeling, scuba diving, and beach lovers.',
+    74→      tagline: 'Emerald Islands',
+    75→      featured: true,
+    76→    },
+    77→  });
+    78→
+    79→  const manali = await db.destination.create({
+    80→    data: {
+    81→      name: 'Manali',
+    82→      slug: 'manali',
+    83→      country: 'India',
+    84→      region: 'domestic',
+    85→      image: '/images/destinations/manali.png',
+    86→      description: 'A picturesque hill station nestled in the Beas River Valley, Manali is a haven for adventure enthusiasts and nature lovers. From skiing in Solang Valley to trekking through pine forests, Manali offers thrilling experiences year-round.',
+    87→      tagline: 'Valley of the Gods',
+    88→      featured: true,
+    89→    },
+    90→  });
+    91→
+    92→  const dharamshala = await db.destination.create({
+    93→    data: {
+    94→      name: 'Dharamshala',
+    95→      slug: 'dharamshala',
+    96→      country: 'India',
+    97→      region: 'domestic',
+    98→      image: '/images/destinations/dharamshala.png',
+    99→      description: 'Nestled in the Kangra Valley, Dharamshala is a serene hill station with Tibetan culture, stunning mountain views, and the famous cricket stadium. McLeod Ganj, its upper suburb, offers a unique cultural experience.',
+   100→      tagline: 'Little Lhasa of India',
+   101→      featured: false,
+   102→    },
+   103→  });
+   104→
+   105→  const delhi = await db.destination.create({
+   106→    data: {
+   107→      name: 'Delhi - Golden Triangle',
+   108→      slug: 'delhi-golden-triangle',
+   109→      country: 'India',
+   110→      region: 'domestic',
+   111→      image: '/images/destinations/delhi.png',
+   112→      description: 'The Golden Triangle circuit covers Delhi, Agra, and Jaipur — three cities that showcase India\'s rich heritage. From the Taj Mahal to the Amber Fort, experience the best of Indian history, culture, and architecture.',
+   113→      tagline: 'Heritage Triangle',
+   114→      featured: true,
+   115→    },
+   116→  });
+   117→
+   118→  const sikkim = await db.destination.create({
+   119→    data: {
+   120→      name: 'Sikkim',
+   121→      slug: 'sikkim',
+   122→      country: 'India',
+   123→      region: 'domestic',
+   124→      image: '/images/destinations/sikkim.png',
+   125→      description: 'A small but stunning state in northeast India, Sikkim offers breathtaking views of Kanchenjunga, ancient Buddhist monasteries, pristine lakes, and vibrant rhododendron forests. A perfect blend of nature and spirituality.',
+   126→      tagline: 'The Land of Monasteries',
+   127→      featured: false,
+   128→    },
+   129→  });
+   130→
+   131→  const himachal = await db.destination.create({
+   132→    data: {
+   133→      name: 'Himachal Pradesh',
+   134→      slug: 'himachal',
+   135→      country: 'India',
+   136→      region: 'domestic',
+   137→      image: '/images/destinations/himachal.png',
+   138→      description: 'From the colonial charm of Shimla to the adventure capital of Manali, Himachal Pradesh is a land of diverse landscapes. Snow-capped peaks, lush valleys, apple orchards, and warm hospitality await you.',
+   139→      tagline: 'Land of Gods & Beauty',
+   140→      featured: true,
+   141→    },
+   142→  });
+   143→
+   144→  // ============ INTERNATIONAL DESTINATIONS ============
+   145→  const dubai = await db.destination.create({
+   146→    data: {
+   147→      name: 'Dubai',
+   148→      slug: 'dubai',
+   149→      country: 'UAE',
+   150→      region: 'international',
+   151→      image: '/images/destinations/dubai.png',
+   152→      description: 'A gleaming metropolis of luxury and innovation, Dubai dazzles with its iconic Burj Khalifa, pristine beaches, world-class shopping, and desert safaris. Experience the perfect blend of tradition and modernity.',
+   153→      tagline: 'City of Gold',
+   154→      featured: true,
+   155→    },
+   156→  });
+   157→
+   158→  const maldives = await db.destination.create({
+   159→    data: {
+   160→      name: 'Maldives',
+   161→      slug: 'maldives',
+   162→      country: 'Maldives',
+   163→      region: 'international',
+   164→      image: '/images/destinations/maldives.png',
+   165→      description: 'The ultimate tropical paradise, the Maldives features overwater villas, crystal-clear lagoons, and vibrant coral reefs. A bucket-list destination for honeymooners and luxury seekers with unmatched serenity.',
+   166→      tagline: 'Sun, Sand & Serenity',
+   167→      featured: true,
+   168→    },
+   169→  });
+   170→
+   171→  const thailand = await db.destination.create({
+   172→    data: {
+   173→      name: 'Thailand',
+   174→      slug: 'thailand',
+   175→      country: 'Thailand',
+   176→      region: 'international',
+   177→      image: '/images/destinations/thailand.png',
+   178→      description: 'The Land of Smiles offers ornate temples, pristine beaches, vibrant street markets, and world-famous cuisine. From Bangkok\'s bustling streets to Phuket\'s serene shores, Thailand has something for everyone.',
+   179→      tagline: 'Land of Smiles',
+   180→      featured: true,
+   181→    },
+   182→  });
+   183→
+   184→  const singapore = await db.destination.create({
+   185→    data: {
+   186→      name: 'Singapore',
+   187→      slug: 'singapore',
+   188→      country: 'Singapore',
+   189→      region: 'international',
+   190→      image: '/images/destinations/singapore.png',
+   191→      description: 'A futuristic city-state, Singapore blends stunning architecture, lush gardens, and a melting pot of cultures. From Marina Bay Sands to Gardens by the Bay, it\'s a city that never fails to amaze.',
+   192→      tagline: 'The Lion City',
+   193→      featured: true,
+   194→    },
+   195→  });
+   196→
+   197→  const malaysia = await db.destination.create({
+   198→    data: {
+   199→      name: 'Malaysia',
+   200→      slug: 'malaysia',
+   201→      country: 'Malaysia',
+   202→      region: 'international',
+   203→      image: '/images/destinations/malaysia.png',
+   204→      description: 'Truly Asia! Malaysia offers a rich cultural tapestry, from the Petronas Twin Towers to the lush rainforests of Borneo. Enjoy diverse cuisine, stunning islands, and vibrant cities all in one destination.',
+   205→      tagline: 'Truly Asia',
+   206→      featured: true,
+   207→    },
+   208→  });
+   209→
+   210→  const bali = await db.destination.create({
+   211→    data: {
+   212→      name: 'Bali (Indonesia)',
+   213→      slug: 'bali',
+   214→      country: 'Indonesia',
+   215→      region: 'international',
+   216→      image: '/images/destinations/bali.png',
+   217→      description: 'The Island of the Gods, Bali mesmerizes with its terraced rice paddies, ancient temples, volcanic hills, and stunning beaches. A spiritual and cultural haven with world-class surfing and wellness retreats.',
+   218→      tagline: 'Island of the Gods',
+   219→      featured: true,
+   220→    },
+   221→  });
+   222→
+   223→  const srilanka = await db.destination.create({
+   224→    data: {
+   225→      name: 'Sri Lanka',
+   226→      slug: 'srilanka',
+   227→      country: 'Sri Lanka',
+   228→      region: 'international',
+   229→      image: '/images/destinations/srilanka.png',
+   230→      description: 'The Pearl of the Indian Ocean, Sri Lanka offers ancient ruins, lush tea plantations, exotic wildlife, and golden beaches. A compact island with incredible diversity from culture to nature.',
+   231→      tagline: 'Pearl of the Indian Ocean',
+   232→      featured: false,
+   233→    },
+   234→  });
+   235→
+   236→  const vietnam = await db.destination.create({
+   237→    data: {
+   238→      name: 'Vietnam',
+   239→      slug: 'vietnam',
+   240→      country: 'Vietnam',
+   241→      region: 'international',
+   242→      image: '/images/destinations/vietnam.png',
+   243→      description: 'From the emerald waters of Ha Long Bay to the charming streets of Hoi An, Vietnam captivates with its natural beauty, rich history, and incredible cuisine. An affordable yet unforgettable destination.',
+   244→      tagline: 'Hidden Charm',
+   245→      featured: false,
+   246→    },
+   247→  });
+   248→
+   249→  const nepal = await db.destination.create({
+   250→    data: {
+   251→      name: 'Nepal',
+   252→      slug: 'nepal',
+   253→      country: 'Nepal',
+   254→      region: 'international',
+   255→      image: '/images/destinations/nepal.png',
+   256→      description: 'Home to the Himalayas and Mount Everest, Nepal offers trekking adventures, ancient temples, and warm hospitality. From Kathmandu\'s cultural heritage to Pokhara\'s serene lakes, Nepal is a trekker\'s paradise.',
+   257→      tagline: 'Roof of the World',
+   258→      featured: true,
+   259→    },
+   260→  });
+   261→
+   262→  // ============ PACKAGES ============
+   263→  // Kerala Packages
+   264→  await db.package.createMany({
+   265→    data: [
+   266→      {
+   267→        name: 'Kerala Backwaters & Beaches',
+   268→        slug: 'kerala-backwaters-5n6d',
+   269→        destinationId: kerala.id,
+   270→        category: 'tourism',
+   271→        duration: '5N6D',
+   272→        nights: 5,
+   273→        days: 6,
+   274→        price: 18999,
+   275→        originalPrice: 24999,
+   276→        image: '/images/destinations/kerala.png',
+   277→        description: 'Experience the magical backwaters of Kerala with houseboat stays, visit pristine beaches, explore tea plantations in Munnar, and witness traditional Kathakali performances.',
+   278→        highlights: 'Alleppey Houseboat,Munnar Tea Gardens,Kovalam Beach,Kathakali Show,Spice Plantation Tour',
+   279→        included: 'Accommodation,Breakfast & Dinner,Houseboat Stay,Airport Transfers,Sightseeing Tours',
+   280→        itinerary: JSON.stringify([
+   281→          { day: 1, title: 'Arrival in Kochi', desc: 'Airport pickup, check-in, evening visit to Fort Kochi and Chinese Fishing Nets' },
+   282→          { day: 2, title: 'Munnar Hill Station', desc: 'Drive to Munnar, visit tea gardens, Mattupetty Dam, and Echo Point' },
+   283→          { day: 3, title: 'Munnar to Thekkady', desc: 'Visit Eravikulam National Park, drive to Thekkady, spice plantation tour' },
+   284→          { day: 4, title: 'Alleppey Houseboat', desc: 'Board traditional houseboat, cruise through backwaters, overnight on houseboat' },
+   285→          { day: 5, title: 'Kovalam Beach', desc: 'Disembark houseboat, drive to Kovalam, beach relaxation and Ayurvedic massage' },
+   286→          { day: 6, title: 'Departure', desc: 'Morning at leisure, airport drop-off' },
+   287→        ]),
+   288→        rating: 4.7,
+   289→        reviewCount: 342,
+   290→        featured: true,
+   291→      },
+   292→      {
+   293→        name: 'Kerala Honeymoon Special',
+   294→        slug: 'kerala-honeymoon-4n5d',
+   295→        destinationId: kerala.id,
+   296→        category: 'honeymoon',
+   297→        duration: '4N5D',
+   298→        nights: 4,
+   299→        days: 5,
+   300→        price: 22999,
+   301→        originalPrice: 29999,
+   302→        image: '/images/packages/honeymoon.png',
+   303→        description: 'A romantic getaway through Kerala\'s most enchanting destinations. Private houseboat stays, candlelight dinners, and couples spa treatments make this the perfect honeymoon.',
+   304→        highlights: 'Private Houseboat,Candlelight Dinner,Couples Spa,Munnar Romantic Walk,Sunset Cruise',
+   305→        included: 'Premium Accommodation,Breakfast & Dinner,Private Houseboat,Couples Spa,Airport Transfers',
+   306→        itinerary: JSON.stringify([
+   307→          { day: 1, title: 'Welcome to Kerala', desc: 'Airport pickup with flower garlands, transfer to resort, candlelight welcome dinner' },
+   308→          { day: 2, title: 'Romantic Munnar', desc: 'Drive to Munnar, visit tea gardens, romantic walk through tea estates' },
+   309→          { day: 3, title: 'Houseboat Romance', desc: 'Private houseboat cruise through Alleppey backwaters, couples spa on board' },
+   310→          { day: 4, title: 'Kovalam Beach', desc: 'Beach day, sunset cruise, Ayurvedic couples massage' },
+   311→          { day: 5, title: 'Farewell', desc: 'Morning at leisure, airport drop-off with memories' },
+   312→        ]),
+   313→        rating: 4.9,
+   314→        reviewCount: 189,
+   315→        featured: true,
+   316→      },
+   317→    ],
+   318→  });
+   319→
+   320→  // Kashmir Packages
+   321→  await db.package.createMany({
+   322→    data: [
+   323→      {
+   324→        name: 'Kashmir Valley Explorer',
+   325→        slug: 'kashmir-valley-5n6d',
+   326→        destinationId: kashmir.id,
+   327→        category: 'tourism',
+   328→        duration: '5N6D',
+   329→        nights: 5,
+   330→        days: 6,
+   331→        price: 17999,
+   332→        originalPrice: 22999,
+   333→        image: '/images/destinations/kashmir.png',
+   334→        description: 'Discover the breathtaking beauty of Kashmir with stays in Srinagar, Gulmarg, and Pahalgam. Experience shikara rides, gondola cable car, and the stunning Mughal Gardens.',
+   335→        highlights: 'Shikara Ride on Dal Lake,Gulmarg Gondola,Mughal Gardens,Pahalgam Valley,Betaab Valley',
+   336→        included: 'Accommodation,Breakfast & Dinner,Shikara Ride,Airport Transfers,Sightseeing Tours',
+   337→        itinerary: JSON.stringify([
+   338→          { day: 1, title: 'Arrival in Srinagar', desc: 'Airport pickup, shikara ride on Dal Lake, evening visit to Mughal Gardens' },
+   339→          { day: 2, title: 'Gulmarg Adventure', desc: 'Drive to Gulmarg, gondola ride to Phase 1 & 2, snow activities' },
+   340→          { day: 3, title: 'Pahalgam Valley', desc: 'Drive to Pahalgam, visit Betaab Valley, Aru Valley, and Lidder River' },
+   341→          { day: 4, title: 'Srinagar Local', desc: 'Visit Shankaracharya Temple, local market, walnut wood craft shopping' },
+   342→          { day: 5, title: 'Sonmarg Day Trip', desc: 'Drive to Sonmarg, Thajiwas Glacier, horse riding' },
+   343→          { day: 6, title: 'Departure', desc: 'Morning at leisure, airport drop-off' },
+   344→        ]),
+   345→        rating: 4.8,
+   346→        reviewCount: 456,
+   347→        featured: true,
+   348→      },
+   349→      {
+   350→        name: 'Kashmir Honeymoon Delight',
+   351→        slug: 'kashmir-honeymoon-6n7d',
+   352→        destinationId: kashmir.id,
+   353→        category: 'honeymoon',
+   354→        duration: '6N7D',
+   355→        nights: 6,
+   356→        days: 7,
+   357→        price: 28999,
+   358→        originalPrice: 35999,
+   359→        image: '/images/packages/honeymoon.png',
+   360→        description: 'A dreamy honeymoon in paradise with luxury houseboat stays, romantic shikara rides, candlelight dinners, and the stunning backdrop of the Himalayas.',
+   361→        highlights: 'Luxury Houseboat,Romantic Shikara,Candlelight Dinner,Gulmarg Snow Play,Pahalgam Walks',
+   362→        included: 'Premium Houseboat & Hotel,Breakfast & Dinner,Shikara Rides,Candlelight Dinner,Transfers',
+   363→        itinerary: JSON.stringify([
+   364→          { day: 1, title: 'Welcome to Paradise', desc: 'Airport pickup, check-in to luxury houseboat, romantic shikara ride' },
+   365→          { day: 2, title: 'Srinagar Romance', desc: 'Mughal Gardens, floating market visit, candlelight dinner on houseboat' },
+   366→          { day: 3, title: 'Gulmarg Magic', desc: 'Gondola ride, snow play together, cozy cafe lunch' },
+   367→          { day: 4, title: 'Pahalgam Retreat', desc: 'Drive to Pahalgam, riverside walk, Betaab Valley' },
+   368→          { day: 5, title: 'Pahalgam Leisure', desc: 'Aru Valley, horse riding, picnic by the river' },
+   369→          { day: 6, title: 'Back to Srinagar', desc: 'Return to Srinagar, shopping for Pashmina, farewell dinner' },
+   370→          { day: 7, title: 'Departure', desc: 'Morning at leisure, airport drop-off' },
+   371→        ]),
+   372→        rating: 4.9,
+   373→        reviewCount: 234,
+   374→        featured: true,
+   375→      },
+   376→    ],
+   377→  });
+   378→
+   379→  // Goa Packages
+   380→  await db.package.createMany({
+   381→    data: [
+   382→      {
+   383→        name: 'Goa Beach Getaway',
+   384→        slug: 'goa-beach-4n5d',
+   385→        destinationId: goa.id,
+   386→        category: 'beach',
+   387→        duration: '4N5D',
+   388→        nights: 4,
+   389→        days: 5,
+   390→        price: 12999,
+   391→        originalPrice: 16999,
+   392→        image: '/images/destinations/goa.png',
+   393→        description: 'Sun, sand, and party! Experience Goa\'s best beaches, vibrant nightlife, water sports, Portuguese heritage, and mouthwatering seafood on this unforgettable beach vacation.',
+   394→        highlights: 'Baga & Calangute Beach,Water Sports,Dolphelphin Spotting,Old Goa Churches,Spice Plantation',
+   395→        included: 'Beach Resort Stay,Breakfast,Water Sports,Spice Plantation Tour,Transfers',
+   396→        itinerary: JSON.stringify([
+   397→          { day: 1, title: 'Welcome to Goa', desc: 'Airport/railway pickup, check-in to beach resort, evening at Baga Beach' },
+   398→          { day: 2, title: 'Beach & Water Sports', desc: 'Calangute Beach, parasailing, jet ski, banana boat rides' },
+   399→          { day: 3, title: 'Heritage & Culture', desc: 'Old Goa churches, Basilica of Bom Jesus, Mangueshi Temple, spice plantation' },
+   400→          { day: 4, title: 'Adventure Day', desc: 'Dolphin spotting cruise, Aguada Fort, shopping at Anjuna Flea Market' },
+   401→          { day: 5, title: 'Departure', desc: 'Morning at leisure, airport/railway drop-off' },
+   402→        ]),
+   403→        rating: 4.5,
+   404→        reviewCount: 567,
+   405→        featured: true,
+   406→      },
+   407→    ],
+   408→  });
+   409→
+   410→  // Darjeeling Package
+   411→  await db.package.createMany({
+   412→    data: [
+   413→      {
+   414→        name: 'Darjeeling & Sikkim Combo',
+   415→        slug: 'darjeeling-sikkim-5n6d',
+   416→        destinationId: darjeeling.id,
+   417→        category: 'hill-station',
+   418→        duration: '5N6D',
+   419→        nights: 5,
+   420→        days: 6,
+   421→        price: 15999,
+   422→        originalPrice: 20999,
+   423→        image: '/images/destinations/darjeeling.png',
+   424→        description: 'Explore the Queen of Hills and the magical land of Sikkim. Witness sunrise at Tiger Hill, ride the toy train, visit Buddhist monasteries, and enjoy stunning mountain views.',
+   425→        highlights: 'Tiger Hill Sunrise,Toy Train Ride,Tsomgo Lake,Rumtek Monastery,Batasia Loop',
+   426→        included: 'Accommodation,Breakfast & Dinner,Toy Train Ride,Transfers,Sightseeing',
+   427→        itinerary: JSON.stringify([
+   428→          { day: 1, title: 'Arrival in Darjeeling', desc: 'Pickup from NJP/Bagdogra, check-in, evening walk on Mall Road' },
+   429→          { day: 2, title: 'Darjeeling Sights', desc: 'Tiger Hill sunrise, Batasia Loop, Toy Train, Tea Garden visit' },
+   430→          { day: 3, title: 'Gangtok Bound', desc: 'Drive to Gangtok, evening at MG Marg' },
+   431→          { day: 4, title: 'Gangtk Excursion', desc: 'Tsomgo Lake, Baba Mandir, Nathula Pass (if open)' },
+   432→          { day: 5, title: 'Sikkim Monasteries', desc: 'Rumtek Monastery, Do Drul Chorten, Institute of Tibetology' },
+   433→          { day: 6, title: 'Departure', desc: 'Morning at leisure, drop-off at NJP/Bagdogra' },
+   434→        ]),
+   435→        rating: 4.6,
+   436→        reviewCount: 278,
+   437→        featured: true,
+   438→      },
+   439→    ],
+   440→  });
+   441→
+   442→  // Andaman Package
+   443→  await db.package.createMany({
+   444→    data: [
+   445→      {
+   446→        name: 'Andaman Island Escape',
+   447→        slug: 'andaman-island-5n6d',
+   448→        destinationId: andaman.id,
+   449→        category: 'beach',
+   450→        duration: '5N6D',
+   451→        nights: 5,
+   452→        days: 6,
+   453→        price: 24999,
+   454→        originalPrice: 31999,
+   455→        image: '/images/destinations/andaman.png',
+   456→        description: 'Escape to the pristine islands of Andaman with crystal-clear waters, vibrant coral reefs, and untouched beaches. Perfect for snorkeling, scuba diving, and tropical relaxation.',
+   457→        highlights: 'Radhanagar Beach,Scuba Diving,Snorkeling at North Bay,Cellular Jail,Ross Island',
+   458→        included: 'Island Resort Stay,Breakfast & Dinner,Scuba Diving,Ferry Transfers,Sightseeing',
+   459→        itinerary: JSON.stringify([
+   460→          { day: 1, title: 'Arrival in Port Blair', desc: 'Airport pickup, Cellular Jail & Light & Sound Show' },
+   461→          { day: 2, title: 'North Bay & Ross Island', desc: 'Snorkeling at North Bay, Ross Island exploration' },
+   462→          { day: 3, title: 'Havelock Island', desc: 'Ferry to Havelock, Radhanagar Beach - Asia\'s best beach' },
+   463→          { day: 4, title: 'Scuba Diving', desc: 'Scuba diving experience, Elephant Beach, water sports' },
+   464→          { day: 5, title: 'Port Blair Return', desc: 'Return to Port Blair, Chidiya Tapu, local markets' },
+   465→          { day: 6, title: 'Departure', desc: 'Morning at leisure, airport drop-off' },
+   466→        ]),
+   467→        rating: 4.7,
+   468→        reviewCount: 198,
+   469→        featured: true,
+   470→      },
+   471→    ],
+   472→  });
+   473→
+   474→  // Manali Packages
+   475→  await db.package.createMany({
+   476→    data: [
+   477→      {
+   478→        name: 'Manali Adventure Package',
+   479→        slug: 'manali-adventure-4n5d',
+   480→        destinationId: manali.id,
+   481→        category: 'adventure',
+   482→        duration: '4N5D',
+   483→        nights: 4,
+   484→        days: 5,
+   485→        price: 11999,
+   486→        originalPrice: 15999,
+   487→        image: '/images/packages/adventure.png',
+   488→        description: 'An adventure-packed trip to Manali with paragliding, river rafting, trekking, and skiing (seasonal). Experience the thrill of the Himalayas with stunning valley views.',
+   489→        highlights: 'Solang Valley,Paragliding,River Rafting in Beas,Hadimba Temple,Old Manali Cafe Hopping',
+   490→        included: 'Accommodation,Breakfast & Dinner,Adventure Activities,Transfers,Sightseeing',
+   491→        itinerary: JSON.stringify([
+   492→          { day: 1, title: 'Arrival in Manali', desc: 'Volvo/bus pickup, check-in, evening at Mall Road' },
+   493→          { day: 2, title: 'Solang Valley Thrills', desc: 'Paragliding, zorbing, rope way, snow activities (seasonal)' },
+   494→          { day: 3, title: 'River Rafting Day', desc: 'Beas river rafting, Hadimba Temple, Vashisht Hot Springs' },
+   495→          { day: 4, title: 'Old Manali & Leisure', desc: 'Old Manali cafes, Manu Temple, Jagatsukh, evening free' },
+   496→          { day: 5, title: 'Departure', desc: 'Morning at leisure, Volvo/bus drop-off' },
+   497→        ]),
+   498→        rating: 4.5,
+   499→        reviewCount: 389,
+   500→        featured: true,
+   501→      },
+   502→      {
+   503→        name: 'Manali Honeymoon Retreat',
+   504→        slug: 'manali-honeymoon-5n6d',
+   505→        destinationId: manali.id,
+   506→        category: 'honeymoon',
+   507→        duration: '5N6D',
+   508→        nights: 5,
+   509→        days: 6,
+   510→        price: 19999,
+   511→        originalPrice: 25999,
+   512→        image: '/images/packages/honeymoon.png',
+   513→        description: 'A romantic escape to the mountains with cozy resort stays, candlelight dinners, scenic walks, and unforgettable sunsets. The perfect honeymoon in the Himalayas.',
+   514→        highlights: 'Candlelight Dinner,Solang Valley Visit,Romantic Mountain Walks,Hot Spring Bath,Couples Activity',
+   515→        included: 'Premium Resort,Breakfast & Dinner,Candlelight Dinner,Sightseeing,Transfers',
+   516→        itinerary: JSON.stringify([
+   517→          { day: 1, title: 'Welcome to the Mountains', desc: 'Pickup, check-in to premium resort, welcome drinks, evening walk' },
+   518→          { day: 2, title: 'Solang Valley Romance', desc: 'Solang Valley visit, gondola ride, snow play, hot chocolate dates' },
+   519→          { day: 3, title: 'Manali Local', desc: 'Hadimba Temple, Club House, Vashisht Hot Spring bath together' },
+   520→          { day: 4, title: 'Naggar Castle', desc: 'Day trip to Naggar, Roerich Art Gallery, castle visit, riverside picnic' },
+   521→          { day: 5, title: 'Leisure & Love', desc: 'Free day for shopping, cafes, candlelight farewell dinner' },
+   522→          { day: 6, title: 'Departure', desc: 'Morning at leisure, drop-off' },
+   523→        ]),
+   524→        rating: 4.8,
+   525→        reviewCount: 167,
+   526→        featured: true,
+   527→      },
+   528→    ],
+   529→  });
+   530→
+   531→  // Delhi Golden Triangle
+   532→  await db.package.createMany({
+   533→    data: [
+   534→      {
+   535→        name: 'Golden Triangle Tour',
+   536→        slug: 'golden-triangle-5n6d',
+   537→        destinationId: delhi.id,
+   538→        category: 'tourism',
+   539→        duration: '5N6D',
+   540→        nights: 5,
+   541→        days: 6,
+   542→        price: 15999,
+   543→        originalPrice: 19999,
+   544→        image: '/images/destinations/delhi.png',
+   545→        description: 'Explore India\'s most iconic circuit — Delhi, Agra, and Jaipur. Visit the magnificent Taj Mahal, explore majestic forts, and experience the vibrant culture of Rajasthan.',
+   546→        highlights: 'Taj Mahal at Sunrise,Amber Fort Jaipur,India Gate,Qutub Minar,Hawa Mahal',
+   547→        included: 'Accommodation,Breakfast & Dinner,All Transfers,Monument Entries,Guide',
+   548→        itinerary: JSON.stringify([
+   549→          { day: 1, title: 'Delhi Arrival', desc: 'Airport pickup, India Gate, Rashtrapati Bhavan drive past' },
+   550→          { day: 2, title: 'Delhi to Agra', desc: 'Drive to Agra, Taj Mahal visit at sunset, Agra Fort' },
+   551→          { day: 3, title: 'Agra to Jaipur', desc: 'Sunrise Taj Mahal, Fatehpur Sikri, drive to Jaipur' },
+   552→          { day: 4, title: 'Jaipur Exploration', desc: 'Amber Fort, City Palace, Hawa Mahal, Jantar Mantar' },
+   553→          { day: 5, title: 'Jaipur to Delhi', desc: 'Morning at leisure, drive back to Delhi, local markets' },
+   554→          { day: 6, title: 'Delhi & Departure', desc: 'Qutub Minar, Humayun\'s Tomb, Lotus Temple, airport drop' },
+   555→        ]),
+   556→        rating: 4.7,
+   557→        reviewCount: 623,
+   558→        featured: true,
+   559→      },
+   560→    ],
+   561→  });
+   562→
+   563→  // Sikkim Package
+   564→  await db.package.createMany({
+   565→    data: [
+   566→      {
+   567→        name: 'Sikkim Serenity Tour',
+   568→        slug: 'sikkim-serenity-5n6d',
+   569→        destinationId: sikkim.id,
+   570→        category: 'hill-station',
+   571→        duration: '5N6D',
+   572→        nights: 5,
+   573→        days: 6,
+   574→        price: 16999,
+   575→        originalPrice: 21999,
+   576→        image: '/images/destinations/sikkim.png',
+   577→        description: 'Discover the mystical beauty of Sikkim with its ancient monasteries, pristine lakes, and panoramic mountain views. A journey of peace and natural wonder.',
+   578→        highlights: 'Tsomgo Lake,Nathula Pass,Rumtek Monastery,Pelling Skywalk,Kanchenjunga View',
+   579→        included: 'Accommodation,Breakfast & Dinner,Permits,Transfers,Sightseeing',
+   580→        itinerary: JSON.stringify([
+   581→          { day: 1, title: 'Arrival in Gangtok', desc: 'Pickup from NJP/Bagdogra, check-in, evening at MG Marg' },
+   582→          { day: 2, title: 'Gangtok Excursion', desc: 'Tsomgo Lake, Baba Mandir, Nathula Pass' },
+   583→          { day: 3, title: 'Gangtok to Pelling', desc: 'Rumtek Monastery, drive to Pelling via Ravangla' },
+   584→          { day: 4, title: 'Pelling Sights', desc: 'Pelling Skywalk, Kanchenjunga Falls, Rabdentse Ruins' },
+   585→          { day: 5, title: 'Pelling to Gangtok', desc: 'Return to Gangtok, Do Drul Chorten, flower exhibition' },
+   586→          { day: 6, title: 'Departure', desc: 'Morning at leisure, drop-off' },
+   587→        ]),
+   588→        rating: 4.6,
+   589→        reviewCount: 145,
+   590→        featured: false,
+   591→      },
+   592→    ],
+   593→  });
+   594→
+   595→  // Himachal Package
+   596→  await db.package.createMany({
+   597→    data: [
+   598→      {
+   599→        name: 'Himachal Himalayan Journey',
+   600→        slug: 'himachal-himalayan-6n7d',
+   601→        destinationId: himachal.id,
+   602→        category: 'hill-station',
+   603→        duration: '6N7D',
+   604→        nights: 6,
+   605→        days: 7,
+   606→        price: 21999,
+   607→        originalPrice: 27999,
+   608→        image: '/images/destinations/himachal.png',
+   609→        description: 'A complete Himachal Pradesh experience covering Shimla, Manali, and Dharamshala. From colonial charm to adventure sports and Tibetan culture, this trip has it all.',
+   610→        highlights: 'Shimla Mall Road,Manali Solang Valley,Dharamshala Cricket Stadium,Toy Train,Kullu Valley',
+   611→        included: 'Accommodation,Breakfast & Dinner,Toy Train,Transfers,Sightseeing',
+   612→        itinerary: JSON.stringify([
+   613→          { day: 1, title: 'Arrival in Shimla', desc: 'Pickup from Kalka/Chandigarh, check-in, evening on Mall Road' },
+   614→          { day: 2, title: 'Shimla Sights', desc: 'Kufri, Jakhoo Temple, Christ Church, Lakkar Bazaar' },
+   615→          { day: 3, title: 'Shimla to Manali', desc: 'Scenic drive via Kullu, check-in Manali, Hadimba Temple' },
+   616→          { day: 4, title: 'Manali Adventure', desc: 'Solang Valley, adventure activities, river rafting' },
+   617→          { day: 5, title: 'Manali to Dharamshala', desc: 'Drive to Dharamshala, evening at McLeod Ganj' },
+   618→          { day: 6, title: 'Dharamshala Exploration', desc: 'Bhagsu Waterfall, Dal Lake, St. John\'s Church, local markets' },
+   619→          { day: 7, title: 'Departure', desc: 'Morning at leisure, drop-off at Pathankot/Kangra' },
+   620→        ]),
+   621→        rating: 4.7,
+   622→        reviewCount: 234,
+   623→        featured: true,
+   624→      },
+   625→    ],
+   626→  });
+   627→
+   628→  // Dharamshala Package
+   629→  await db.package.createMany({
+   630→    data: [
+   631→      {
+   632→        name: 'Dharamshala & McLeod Ganj',
+   633→        slug: 'dharamshala-mcleod-4n5d',
+   634→        destinationId: dharamshala.id,
+   635→        category: 'hill-station',
+   636→        duration: '4N5D',
+   637→        nights: 4,
+   638→        days: 5,
+   639→        price: 12999,
+   640→        originalPrice: 16999,
+   641→        image: '/images/destinations/dharamshala.png',
+   642→        description: 'Experience the serene beauty of Dharamshala and McLeod Ganj with Tibetan culture, stunning mountain views, and peaceful monasteries. A perfect mountain retreat.',
+   643→        highlights: 'McLeod Ganj,Bhagsu Waterfall,Dal Lake,Tibetan Markets,Mountain Views',
+   644→        included: 'Accommodation,Breakfast & Dinner,Transfers,Sightseeing,Guide',
+   645→        itinerary: JSON.stringify([
+   646→          { day: 1, title: 'Arrival in Dharamshala', desc: 'Pickup from Pathankot/Kangra, check-in, evening at McLeod Ganj' },
+   647→          { day: 2, title: 'McLeod Ganj Exploration', desc: 'Bhagsu Temple & Waterfall, Dal Lake, Tibetan markets' },
+   648→          { day: 3, title: 'Triund Trek', desc: 'Day trek to Triund, panoramic mountain views, return by evening' },
+   649→          { day: 4, title: 'Dharamshala Local', desc: 'Cricket Stadium, St. John\'s Church, War Memorial, Kangra Fort' },
+   650→          { day: 5, title: 'Departure', desc: 'Morning at leisure, drop-off' },
+   651→        ]),
+   652→        rating: 4.5,
+   653→        reviewCount: 112,
+   654→        featured: false,
+   655→      },
+   656→    ],
+   657→  });
+   658→
+   659→  // ============ INTERNATIONAL PACKAGES ============
+   660→  // Dubai Packages
+   661→  await db.package.createMany({
+   662→    data: [
+   663→      {
+   664→        name: 'Dubai Luxury Experience',
+   665→        slug: 'dubai-luxury-4n5d',
+   666→        destinationId: dubai.id,
+   667→        category: 'tourism',
+   668→        duration: '4N5D',
+   669→        nights: 4,
+   670→        days: 5,
+   671→        price: 44999,
+   672→        originalPrice: 54999,
+   673→        image: '/images/destinations/dubai.png',
+   674→        description: 'Experience the glitz and glamour of Dubai with Burj Khalifa, desert safari, dhow cruise, and world-class shopping. A luxurious getaway in the city of gold.',
+   675→        highlights: 'Burj Khalifa,Desert Safari,Dhow Cruise,Dubai Mall,Marina Walk',
+   676→        included: '4-star Hotel,Breakfast,Desert Safari,Burj Khalifa Ticket,Transfers',
+   677→        itinerary: JSON.stringify([
+   678→          { day: 1, title: 'Welcome to Dubai', desc: 'Airport pickup, check-in, evening Dhow Cruise in Dubai Marina' },
+   679→          { day: 2, title: 'Dubai City Tour', desc: 'Burj Khalifa, Dubai Mall, Dubai Frame, Jumeirah Beach' },
+   680→          { day: 3, title: 'Desert Adventure', desc: 'Morning free, afternoon desert safari with BBQ dinner & belly dance' },
+   681→          { day: 4, title: 'Shopping & Leisure', desc: 'Gold Souk, Spice Souk, Miracle Garden, evening at Palm Jumeirah' },
+   682→          { day: 5, title: 'Departure', desc: 'Morning at leisure, airport drop-off' },
+   683→        ]),
+   684→        rating: 4.8,
+   685→        reviewCount: 567,
+   686→        featured: true,
+   687→      },
+   688→      {
+   689→        name: 'Dubai Honeymoon Special',
+   690→        slug: 'dubai-honeymoon-5n6d',
+   691→        destinationId: dubai.id,
+   692→        category: 'honeymoon',
+   693→        duration: '5N6D',
+   694→        nights: 5,
+   695→        days: 6,
+   696→        price: 59999,
+   697→        originalPrice: 74999,
+   698→        image: '/images/packages/honeymoon.png',
+   699→        description: 'A romantic honeymoon in Dubai with luxury stays, private desert dinner, couples spa, and unforgettable skyline views. The perfect blend of romance and luxury.',
+   700→        highlights: 'Private Desert Dinner,Burj Khalifa At The Top,Couples Spa,Yacht Cruise,Fine Dining',
+   701→        included: '5-star Hotel,Breakfast,Private Desert Dinner,Burj Khalifa,Transfers',
+   702→        itinerary: JSON.stringify([
+   703→          { day: 1, title: 'Romantic Arrival', desc: 'Airport pickup in luxury car, check-in, welcome cake & flowers' },
+   704→          { day: 2, title: 'Dubai Wonders', desc: 'Burj Khalifa, Dubai Mall, evening yacht cruise for two' },
+   705→          { day: 3, title: 'Desert Romance', desc: 'Private desert dinner under the stars, camel ride, stargazing' },
+   706→          { day: 4, title: 'Couples Spa Day', desc: 'Full day couples spa, evening at La Mer beach' },
+   707→          { day: 5, title: 'Shopping & Celebration', desc: 'Dubai Marina, Mall of Emirates, farewell dinner at fine restaurant' },
+   708→          { day: 6, title: 'Departure', desc: 'Morning at leisure, luxury airport drop-off' },
+   709→        ]),
+   710→        rating: 4.9,
+   711→        reviewCount: 234,
+   712→        featured: true,
+   713→      },
+   714→    ],
+   715→  });
+   716→
+   717→  // Maldives Packages
+   718→  await db.package.createMany({
+   719→    data: [
+   720→      {
+   721→        name: 'Maldives Paradise Escape',
+   722→        slug: 'maldives-paradise-4n5d',
+   723→        destinationId: maldives.id,
+   724→        category: 'honeymoon',
+   725→        duration: '4N5D',
+   726→        nights: 4,
+   727→        days: 5,
+   728→        price: 79999,
+   729→        originalPrice: 99999,
+   730→        image: '/images/destinations/maldives.png',
+   731→        description: 'The ultimate tropical paradise experience with overwater villa, crystal-clear lagoon, underwater restaurant, and sunset dolphin cruise. A once-in-a-lifetime luxury escape.',
+   732→        highlights: 'Overwater Villa,Snorkeling with Mantas,Sunset Dolphin Cruise,Underwater Dining,Spa Over Water',
+   733→        included: 'Overwater Villa,All Meals,Snorkeling,Dolphin Cruise,Speedboat Transfers',
+   734→        itinerary: JSON.stringify([
+   735→          { day: 1, title: 'Welcome to Paradise', desc: 'Speedboat transfer to resort, welcome drink, check-in to overwater villa' },
+   736→          { day: 2, title: 'Ocean Adventures', desc: 'Snorkeling with manta rays, sandbank picnic, sunset dolphin cruise' },
+   737→          { day: 3, title: 'Luxury & Relaxation', desc: 'Couples spa, underwater restaurant lunch, bioluminescent beach night' },
+   738→          { day: 4, title: 'Island Exploration', desc: 'Local island visit, water sports, farewell dinner on the beach' },
+   739→          { day: 5, title: 'Departure', desc: 'Morning swim, breakfast, speedboat to airport' },
+   740→        ]),
+   741→        rating: 4.9,
+   742→        reviewCount: 345,
+   743→        featured: true,
+   744→      },
+   745→    ],
+   746→  });
+   747→
+   748→  // Thailand Packages
+   749→  await db.package.createMany({
+   750→    data: [
+   751→      {
+   752→        name: 'Thailand Explorer',
+   753→        slug: 'thailand-explorer-5n6d',
+   754→        destinationId: thailand.id,
+   755→        category: 'tourism',
+   756→        duration: '5N6D',
+   757→        nights: 5,
+   758→        days: 6,
+   759→        price: 32999,
+   760→        originalPrice: 39999,
+   761→        image: '/images/destinations/thailand.png',
+   762→        description: 'Explore the best of Thailand from Bangkok\'s vibrant streets to Phuket\'s stunning beaches. Temples, street food, island hopping, and nightlife — Thailand has it all!',
+   763→        highlights: 'Grand Palace Bangkok,Phi Phi Island Tour,Phuket Beaches,Floating Market,Thai Massage',
+   764→        included: 'Hotels,Breakfast,Phi Phi Island Tour,City Tour,Transfers',
+   765→        itinerary: JSON.stringify([
+   766→          { day: 1, title: 'Welcome to Bangkok', desc: 'Airport pickup, check-in, evening street food tour' },
+   767→          { day: 2, title: 'Bangkok Explorer', desc: 'Grand Palace, Wat Pho, Wat Arun, floating market, Thai massage' },
+   768→          { day: 3, title: 'Fly to Phuket', desc: 'Morning flight, check-in, Patong Beach evening' },
+   769→          { day: 4, title: 'Phi Phi Islands', desc: 'Full day Phi Phi Island tour, Maya Bay, snorkeling' },
+   770→          { day: 5, title: 'Phuket Leisure', desc: 'Free day for beaches, water sports, or Phang Nga Bay tour' },
+   771→          { day: 6, title: 'Departure', desc: 'Morning at leisure, airport drop-off' },
+   772→        ]),
+   773→        rating: 4.6,
+   774→        reviewCount: 789,
+   775→        featured: true,
+   776→      },
+   777→    ],
+   778→  });
+   779→
+   780→  // Singapore Package
+   781→  await db.package.createMany({
+   782→    data: [
+   783→      {
+   784→        name: 'Singapore Delight',
+   785→        slug: 'singapore-delight-4n5d',
+   786→        destinationId: singapore.id,
+   787→        category: 'tourism',
+   788→        duration: '4N5D',
+   789→        nights: 4,
+   790→        days: 5,
+   791→        price: 38999,
+   792→        originalPrice: 45999,
+   793→        image: '/images/destinations/singapore.png',
+   794→        description: 'Experience the futuristic city of Singapore with Gardens by the Bay, Universal Studios, Sentosa Island, and the iconic Marina Bay Sands. A perfect family destination.',
+   795→        highlights: 'Gardens by the Bay,Universal Studios,Sentosa Island,Marina Bay Sands,Night Safari',
+   796→        included: 'Hotel,Breakfast,Universal Studios Ticket,City Tour,Transfers',
+   797→        itinerary: JSON.stringify([
+   798→          { day: 1, title: 'Welcome to Singapore', desc: 'Airport pickup, check-in, Gardens by the Bay, Marina Bay light show' },
+   799→          { day: 2, title: 'Universal Studios', desc: 'Full day at Universal Studios Singapore' },
+   800→          { day: 3, title: 'Sentosa Island', desc: 'Sentosa attractions, beach time, Wings of Time show' },
+   801→          { day: 4, title: 'City & Culture', desc: 'Chinatown, Little India, Night Safari, Orchard Road shopping' },
+   802→          { day: 5, title: 'Departure', desc: 'Morning at leisure, airport drop-off' },
+   803→        ]),
+   804→        rating: 4.7,
+   805→        reviewCount: 456,
+   806→        featured: true,
+   807→      },
+   808→    ],
+   809→  });
+   810→
+   811→  // Malaysia Package
+   812→  await db.package.createMany({
+   813→    data: [
+   814→      {
+   815→        name: 'Malaysia & Singapore Combo',
+   816→        slug: 'malaysia-singapore-6n7d',
+   817→        destinationId: malaysia.id,
+   818→        category: 'tourism',
+   819→        duration: '6N7D',
+   820→        nights: 6,
+   821→        days: 7,
+   822→        price: 42999,
+   823→        originalPrice: 52999,
+   824→        image: '/images/destinations/malaysia.png',
+   825→        description: 'The best of two amazing countries! Explore Kuala Lumpur\'s Petronas Towers, Genting Highlands, and then Singapore\'s iconic attractions. Double the fun!',
+   826→        highlights: 'Petronas Twin Towers,Genting Highlands,Batu Caves,Gardens by the Bay,Universal Studios',
+   827→        included: 'Hotels,Breakfast,City Tours,Universal Studios,Transfers',
+   828→        itinerary: JSON.stringify([
+   829→          { day: 1, title: 'Welcome to KL', desc: 'Airport pickup, check-in, Petronas Towers at night' },
+   830→          { day: 2, title: 'KL Explorer', desc: 'Batu Caves, King\'s Palace, National Mosque, Chinatown' },
+   831→          { day: 3, title: 'Genting Highlands', desc: 'Cable car ride, theme park, casino, return to KL' },
+   832→          { day: 4, title: 'Fly to Singapore', desc: 'Flight to Singapore, check-in, Marina Bay evening' },
+   833→          { day: 5, title: 'Universal Studios', desc: 'Full day at Universal Studios' },
+   834→          { day: 6, title: 'Singapore Sights', desc: 'Gardens by the Bay, Sentosa, Night Safari' },
+   835→          { day: 7, title: 'Departure', desc: 'Morning at leisure, airport drop-off' },
+   836→        ]),
+   837→        rating: 4.6,
+   838→        reviewCount: 345,
+   839→        featured: true,
+   840→      },
+   841→    ],
+   842→  });
+   843→
+   844→  // Bali Package
+   845→  await db.package.createMany({
+   846→    data: [
+   847→      {
+   848→        name: 'Bali Romantic Getaway',
+   849→        slug: 'bali-romantic-5n6d',
+   850→        destinationId: bali.id,
+   851→        category: 'honeymoon',
+   852→        duration: '5N6D',
+   853→        nights: 5,
+   854→        days: 6,
+   855→        price: 45999,
+   856→        originalPrice: 55999,
+   857→        image: '/images/destinations/bali.png',
+   858→        description: 'A romantic escape to Bali with private pool villas, sunset temple visits, rice terrace walks, and couples spa. The Island of the Gods sets the stage for love.',
+   859→        highlights: 'Private Pool Villa,Uluwatu Temple Sunset,Tegallalang Rice Terraces,Couples Spa,Mount Batur Sunrise',
+   860→        included: 'Private Villa,Breakfast,Couples Spa,Sunset Dinner,Transfers',
+   861→        itinerary: JSON.stringify([
+   862→          { day: 1, title: 'Welcome to Bali', desc: 'Airport pickup, check-in to private pool villa, welcome flower bath' },
+   863→          { day: 2, title: 'Ubud & Culture', desc: 'Tegallalang Rice Terraces, Monkey Forest, traditional dance show' },
+   864→          { day: 3, title: 'Adventure Day', desc: 'Mount Batur sunrise trek, coffee plantation, Tirta Empul temple' },
+   865→          { day: 4, title: 'Beach & Relaxation', desc: 'Seminyak Beach, couples Balinese spa, beach club' },
+   866→          { day: 5, title: 'Uluwatu & Sunset', desc: 'Uluwatu Temple, Kecak dance, cliffside sunset dinner' },
+   867→          { day: 6, title: 'Departure', desc: 'Morning at leisure, airport drop-off' },
+   868→        ]),
+   869→        rating: 4.8,
+   870→        reviewCount: 267,
+   871→        featured: true,
+   872→      },
+   873→    ],
+   874→  });
+   875→
+   876→  // Sri Lanka Package
+   877→  await db.package.createMany({
+   878→    data: [
+   879→      {
+   880→        name: 'Sri Lanka Cultural Tour',
+   881→        slug: 'srilanka-cultural-5n6d',
+   882→        destinationId: srilanka.id,
+   883→        category: 'tourism',
+   884→        duration: '5N6D',
+   885→        nights: 5,
+   886→        days: 6,
+   887→        price: 29999,
+   888→        originalPrice: 36999,
+   889→        image: '/images/destinations/srilanka.png',
+   890→        description: 'Discover the Pearl of the Indian Ocean with ancient ruins, lush tea plantations, wildlife safaris, and golden beaches. Sri Lanka offers incredible diversity in a compact island.',
+   891→        highlights: 'Sigiriya Rock Fortress,Tea Plantations,Yala Safari,Galle Fort,Bentota Beach',
+   892→        included: 'Hotels,Breakfast & Dinner,Safari,City Tour,Transfers',
+   893→        itinerary: JSON.stringify([
+   894→          { day: 1, title: 'Arrival in Colombo', desc: 'Airport pickup, drive to Sigiriya, evening at leisure' },
+   895→          { day: 2, title: 'Sigiriya & Dambulla', desc: 'Sigiriya Rock climb, Dambulla Cave Temple' },
+   896→          { day: 3, title: 'Kandy & Tea', desc: 'Drive to Kandy, Temple of the Tooth, tea plantation visit' },
+   897→          { day: 4, title: 'Yala Safari', desc: 'Drive to Yala, afternoon wildlife safari' },
+   898→          { day: 5, title: 'Galle & Beach', desc: 'Galle Fort exploration, Bentota Beach relaxation' },
+   899→          { day: 6, title: 'Departure', desc: 'Colombo city tour, airport drop-off' },
+   900→        ]),
+   901→        rating: 4.5,
+   902→        reviewCount: 178,
+   903→        featured: false,
+   904→      },
+   905→    ],
+   906→  });
+   907→
+   908→  // Vietnam Package
+   909→  await db.package.createMany({
+   910→    data: [
+   911→      {
+   912→        name: 'Vietnam Discovery',
+   913→        slug: 'vietnam-discovery-5n6d',
+   914→        destinationId: vietnam.id,
+   915→        category: 'tourism',
+   916→        duration: '5N6D',
+   917→        nights: 5,
+   918→        days: 6,
+   919→        price: 27999,
+   920→        originalPrice: 34999,
+   921→        image: '/images/destinations/vietnam.png',
+   922→        description: 'From the emerald waters of Ha Long Bay to the lantern-lit streets of Hoi An, Vietnam captivates with its beauty, history, and incredible cuisine. An affordable yet unforgettable experience.',
+   923→        highlights: 'Ha Long Bay Cruise,Hoi An Ancient Town,Ha Noi Old Quarter,Cu Chi Tunnels,Mekong Delta',
+   924→        included: 'Hotels,Breakfast,Ha Long Bay Cruise,City Tours,Transfers',
+   925→        itinerary: JSON.stringify([
+   926→          { day: 1, title: 'Welcome to Hanoi', desc: 'Airport pickup, Old Quarter walk, street food tour' },
+   927→          { day: 2, title: 'Ha Long Bay', desc: 'Cruise through limestone karsts, cave visits, sunset on deck' },
+   928→          { day: 3, title: 'Hanoi to Da Nang', desc: 'Flight to Da Nang, Marble Mountains, Hoi An evening' },
+   929→          { day: 4, title: 'Hoi An Magic', desc: 'Ancient town exploration, lantern boat ride, cooking class' },
+   930→          { day: 5, title: 'Ho Chi Minh City', desc: 'Flight to HCMC, Cu Chi Tunnels, War Museum, Ben Thanh Market' },
+   931→          { day: 6, title: 'Departure', desc: 'Mekong Delta morning tour, airport drop-off' },
+   932→        ]),
+   933→        rating: 4.6,
+   934→        reviewCount: 156,
+   935→        featured: false,
+   936→      },
+   937→    ],
+   938→  });
+   939→
+   940→  // Nepal Package
+   941→  await db.package.createMany({
+   942→    data: [
+   943→      {
+   944→        name: 'Nepal Himalayan Adventure',
+   945→        slug: 'nepal-himalayan-5n6d',
+   946→        destinationId: nepal.id,
+   947→        category: 'adventure',
+   948→        duration: '5N6D',
+   949→        nights: 5,
+   950→        days: 6,
+   951→        price: 21999,
+   952→        originalPrice: 26999,
+   953→        image: '/images/destinations/nepal.png',
+   954→        description: 'Experience the majesty of the Himalayas in Nepal with temple visits in Kathmandu, lakeside serenity in Pokhara, and stunning mountain views. An affordable yet epic adventure.',
+   955→        highlights: 'Pashupatinath Temple,Phewa Lake,Sarangkot Sunrise,World Peace Pagoda,Nagarkot Himalayan View',
+   956→        included: 'Hotels,Breakfast & Dinner,City Tours,Sarangkot Trip,Transfers',
+   957→        itinerary: JSON.stringify([
+   958→          { day: 1, title: 'Welcome to Kathmandu', desc: 'Airport pickup, Thamel exploration, welcome dinner' },
+   959→          { day: 2, title: 'Kathmandu Valley', desc: 'Pashupatinath, Boudhanath, Swayambhunath (Monkey Temple)' },
+   960→          { day: 3, title: 'Fly to Pokhara', desc: 'Flight to Pokhara, Phewa Lake boating, Lakeside evening' },
+   961→          { day: 4, title: 'Pokhara Sights', desc: 'Sarangkot sunrise, Davis Falls, Gupteshwor Cave, Peace Pagoda' },
+   962→          { day: 5, title: 'Nagarkot', desc: 'Return to Kathmandu, drive to Nagarkot, Himalayan sunset' },
+   963→          { day: 6, title: 'Departure', desc: 'Sunrise over Himalayas, Bhaktapur Durbar Square, airport drop' },
+   964→        ]),
+   965→        rating: 4.6,
+   966→        reviewCount: 189,
+   967→        featured: true,
+   968→      },
+   969→    ],
+   970→  });
+   971→
+   972→  // ============ HOTELS ============
+   973→  const hotels = [
+   974→    // Domestic Hotels
+   975→    { name: 'Taj Malabar Resort & Spa', slug: 'taj-malabar-kerala', destId: kerala.id, cat: 'luxury', stars: 5, price: 12000, orig: 15000, img: '/images/hotels/luxury-resort.png', desc: 'A luxury waterfront resort on Willingdon Island offering world-class amenities, Ayurvedic spa, and stunning views of the Kochi harbor.', amenities: 'Swimming Pool,Ayurvedic Spa,Multi-cuisine Restaurant,Bar,Wi-Fi,Room Service,Concierge', rating: 4.8, reviews: 234, featured: true },
+   976→    { name: 'Coconut Lagoon Resort', slug: 'coconut-lagoon-kerala', destId: kerala.id, cat: 'resort', stars: 4, price: 8000, orig: 10000, img: '/images/hotels/luxury-resort.png', desc: 'A heritage resort set on the banks of Vembanad Lake, offering authentic Kerala experiences with houseboat stays and traditional cuisine.', amenities: 'Heritage Rooms,Swimming Pool,Ayurvedic Spa,Lake View Restaurant,Wi-Fi,Cycling', rating: 4.6, reviews: 189, featured: false },
+   977→    { name: 'The Lalit Grand Palace', slug: 'lalit-grand-kashmir', destId: kashmir.id, cat: 'luxury', stars: 5, price: 15000, orig: 18000, img: '/images/hotels/luxury-resort.png', desc: 'A grand palace hotel overlooking Dal Lake with magnificent Mughal-inspired architecture, lush gardens, and world-class hospitality.', amenities: 'Heated Pool,Spa,Fine Dining,Golf Course,Wi-Fi,Room Service,Royal Suites', rating: 4.9, reviews: 312, featured: true },
+   978→    { name: 'Houseboat Heavenly Kashmir', slug: 'houseboat-kashmir', destId: kashmir.id, cat: 'boutique', stars: 4, price: 6500, orig: 8500, img: '/images/hotels/beach-hotel.png', desc: 'Experience authentic Kashmiri hospitality on a luxury houseboat on Dal Lake with carved walnut interiors and traditional Kashmiri cuisine.', amenities: 'Lake View,Traditional Cuisine,Shikara Rides,Room Service,Cultural Evenings', rating: 4.7, reviews: 278, featured: true },
+   979→    { name: 'Taj Holiday Village Goa', slug: 'taj-holiday-goa', destId: goa.id, cat: 'resort', stars: 5, price: 10000, orig: 13000, img: '/images/hotels/beach-hotel.png', desc: 'A charming Portuguese-style resort on Sinquerim Beach with lush tropical gardens, multiple pools, and direct beach access.', amenities: 'Beach Access,3 Swimming Pools,Spa,3 Restaurants,Bar,Wi-Fi,Water Sports', rating: 4.7, reviews: 456, featured: true },
+   980→    { name: 'Windamere Hotel Darjeeling', slug: 'windamere-darjeeling', destId: darjeeling.id, cat: 'boutique', stars: 4, price: 7000, orig: 9000, img: '/images/hotels/mountain-resort.png', desc: 'A colonial heritage hotel on Observatory Hill offering old-world charm, roaring fireplaces, and panoramic views of the Himalayas.', amenities: 'Heritage Rooms,Fireplace,Mountain View,Dining Room,High Tea,Gardens,Wi-Fi', rating: 4.8, reviews: 167, featured: true },
+   981→    { name: 'Wildflower Hall Shimla', slug: 'wildflower-shimla', destId: himachal.id, cat: 'luxury', stars: 5, price: 18000, orig: 22000, img: '/images/hotels/mountain-resort.png', desc: 'A luxury Oberoi resort at 8,250 feet offering panoramic Himalayan views, world-class spa, and colonial elegance in the lap of nature.', amenities: 'Infinity Pool,Spa,Fine Dining,Mountain View,Trekking,Library,Wi-Fi', rating: 4.9, reviews: 189, featured: true },
+   982→    { name: 'Welcomhotel By ITC Bay Island', slug: 'welcomhotel-andaman', destId: andaman.id, cat: 'resort', stars: 4, price: 9000, orig: 11000, img: '/images/hotels/beach-hotel.png', desc: 'A beautiful beachfront resort in Port Blair offering stunning ocean views, water sports, and easy access to the best Andaman attractions.', amenities: 'Beach Access,Pool,Water Sports,Restaurant,Bar,Wi-Fi,Scuba Center', rating: 4.5, reviews: 145, featured: false },
+   983→    { name: 'The Taj Palace Delhi', slug: 'taj-palace-delhi', destId: delhi.id, cat: 'luxury', stars: 5, price: 14000, orig: 17000, img: '/images/hotels/luxury-resort.png', desc: 'An iconic luxury hotel in the heart of New Delhi offering world-class dining, spa, and impeccable service near major attractions.', amenities: 'Swimming Pool,Spa,6 Restaurants,Bar,Business Center,Wi-Fi,Concierge', rating: 4.8, reviews: 567, featured: true },
+   984→    { name: 'The Leela Palace Manali', slug: 'leela-manali', destId: manali.id, cat: 'luxury', stars: 5, price: 13000, orig: 16000, img: '/images/hotels/mountain-resort.png', desc: 'A riverside luxury resort in Manali with stunning mountain views, heated pools, and adventure sports facilities.', amenities: 'Heated Pool,Spa,River View,Adventure Desk,Restaurant,Bar,Wi-Fi', rating: 4.7, reviews: 234, featured: false },
+   985→
+   986→    // International Hotels
+   987→    { name: 'Burj Al Arab Dubai', slug: 'burj-al-arab-dubai', destId: dubai.id, cat: 'luxury', stars: 5, price: 65000, orig: 80000, img: '/images/hotels/luxury-resort.png', desc: 'The world\'s most luxurious hotel, shaped like a sail on its own island. Offers unparalleled opulence, 9 restaurants, and a private beach.', amenities: 'Private Beach,9 Restaurants,Spa,Butler Service,Helipad,Rolls Royce Transfer,Wi-Fi', rating: 4.9, reviews: 678, featured: true },
+   988→    { name: 'Atlantis The Palm Dubai', slug: 'atlantis-dubai', destId: dubai.id, cat: 'resort', stars: 5, price: 25000, orig: 30000, img: '/images/hotels/beach-hotel.png', desc: 'An iconic resort on Palm Jumeirah with Aquaventure Waterpark, private beach, underwater aquarium, and 23 restaurants.', amenities: 'Waterpark,Aquarium,Private Beach,23 Restaurants,Spa,Kids Club,Wi-Fi', rating: 4.7, reviews: 890, featured: true },
+   989→    { name: 'Soneva Fushi Maldives', slug: 'soneva-fushi-maldives', destId: maldives.id, cat: 'luxury', stars: 5, price: 85000, orig: 100000, img: '/images/hotels/beach-hotel.png', desc: 'A barefoot luxury resort with private villa, personal butler, world-class snorkeling, and an observatory for stargazing.', amenities: 'Private Villa,Personal Butler,Snorkeling,Observatory,Spa,Multi-cuisine,Wi-Fi', rating: 4.9, reviews: 234, featured: true },
+   990→    { name: 'Marina Bay Sands Singapore', slug: 'marina-bay-sands', destId: singapore.id, cat: 'luxury', stars: 5, price: 35000, orig: 42000, img: '/images/hotels/luxury-resort.png', desc: 'The iconic three-tower hotel with the world-famous infinity pool on the 57th floor, offering breathtaking views of the Singapore skyline.', amenities: 'Infinity Pool,SkyPark,20 Restaurants,Casino,Spa,Shopping Mall,Wi-Fi', rating: 4.8, reviews: 1234, featured: true },
+   991→    { name: 'Mandarin Oriental Bangkok', slug: 'mandarin-oriental-bangkok', destId: thailand.id, cat: 'luxury', stars: 5, price: 20000, orig: 25000, img: '/images/hotels/luxury-resort.png', desc: 'A legendary riverside hotel offering timeless elegance, world-class dining, and authentic Thai experiences in the heart of Bangkok.', amenities: 'River View,Spa,3 Restaurants,Cooking School,River Cruise,Wi-Fi,Butler', rating: 4.8, reviews: 567, featured: false },
+   992→    { name: 'COMO Uma Canggu Bali', slug: 'como-uma-bali', destId: bali.id, cat: 'boutique', stars: 5, price: 18000, orig: 22000, img: '/images/hotels/beach-hotel.png', desc: 'A chic beachfront resort in Bali with surf school, holistic wellness programs, and stunning ocean views from every room.', amenities: 'Beachfront,Surf School,Wellness Center,Pool,Restaurant,Yoga,Wi-Fi', rating: 4.7, reviews: 189, featured: false },
+   993→    { name: 'Shangri-La Kuala Lumpur', slug: 'shangri-la-kl', destId: malaysia.id, cat: 'luxury', stars: 5, price: 12000, orig: 15000, img: '/images/hotels/luxury-resort.png', desc: 'A premier luxury hotel with stunning Petronas Twin Towers views, award-winning restaurants, and a serene spa in the heart of KL.', amenities: 'Pool,Spa,5 Restaurants,Bar,Gym,Petronas View,Wi-Fi', rating: 4.7, reviews: 345, featured: false },
+   994→  ];
+   995→
+   996→  for (const hotel of hotels) {
+   997→    await db.hotel.create({
+   998→      data: {
+   999→        name: hotel.name,
+  1000→        slug: hotel.slug,
+  1001→        destinationId: hotel.destId,
+  1002→        category: hotel.cat,
+  1003→        stars: hotel.stars,
+  1004→        pricePerNight: hotel.price,
+  1005→        originalPrice: hotel.orig,
+  1006→        image: hotel.img,
+  1007→        description: hotel.desc,
+  1008→        amenities: hotel.amenities,
+  1009→        rating: hotel.rating,
+  1010→        reviewCount: hotel.reviews,
+  1011→        featured: hotel.featured,
+  1012→      },
+  1013→    });
+  1014→  }
+  1015→
+  1016→  // ============ FLIGHT DEALS ============
+  1017→  const flightDeals = [
+  1018→    { from: 'Delhi', to: 'Dubai', airline: 'Emirates', price: 15999, orig: 22000, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Direct flight to Dubai with Emirates. Includes meals, entertainment, and 30kg baggage.', featured: true },
+  1019→    { from: 'Mumbai', to: 'Maldives', airline: 'IndiGo', price: 18999, orig: 25000, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Connecting flight to Malé via IndiGo. Great value for a paradise escape.', featured: true },
+  1020→    { from: 'Delhi', to: 'Bangkok', airline: 'Thai Airways', price: 16999, orig: 23000, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Direct flight to Bangkok with Thai Airways. Full service with meals and entertainment.', featured: true },
+  1021→    { from: 'Mumbai', to: 'Singapore', airline: 'Singapore Airlines', price: 21999, orig: 29000, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Premium direct flight to Singapore. World-class service and comfort.', featured: true },
+  1022→    { from: 'Delhi', to: 'Kathmandu', airline: 'IndiGo', price: 7999, orig: 11000, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Quick direct flight to Kathmandu. Perfect for a Himalayan adventure.', featured: false },
+  1023→    { from: 'Chennai', to: 'Colombo', airline: 'SriLankan Airlines', price: 9999, orig: 14000, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Short direct flight to Colombo. Start your Sri Lankan adventure quickly.', featured: false },
+  1024→    { from: 'Delhi', to: 'Srinagar', airline: 'Air India', price: 5999, orig: 8500, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Direct flight to Srinagar. Gateway to the paradise of Kashmir.', featured: true },
+  1025→    { from: 'Mumbai', to: 'Goa', airline: 'Vistara', price: 4499, orig: 6500, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Quick direct flight to Goa. Sun, sand, and fun await!', featured: true },
+  1026→    { from: 'Kolkata', to: 'Port Blair', airline: 'Air India', price: 8999, orig: 12000, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Direct flight to Port Blair. Your Andaman island adventure starts here.', featured: false },
+  1027→    { from: 'Delhi', to: 'Kuala Lumpur', airline: 'Malaysia Airlines', price: 18999, orig: 25000, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Direct flight to Kuala Lumpur with full service and great comfort.', featured: false },
+  1028→    { from: 'Mumbai', to: 'Bali', airline: 'Garuda Indonesia', price: 24999, orig: 32000, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Connecting flight to Denpasar, Bali. Premium service included.', featured: false },
+  1029→    { from: 'Delhi', to: 'Ho Chi Minh', airline: 'Vietnam Airlines', price: 19999, orig: 26000, type: 'round-trip', img: '/images/flights-hero.png', desc: 'Direct flight to Ho Chi Minh City. Discover the charm of Vietnam.', featured: false },
+  1030→  ];
+  1031→
+  1032→  for (const deal of flightDeals) {
+  1033→    await db.flightDeal.create({
+  1034→      data: {
+  1035→        from: deal.from,
+  1036→        to: deal.to,
+  1037→        airline: deal.airline,
+  1038→        price: deal.price,
+  1039→        originalPrice: deal.orig,
+  1040→        type: deal.type,
+  1041→        image: deal.img,
+  1042→        description: deal.desc,
+  1043→        featured: deal.featured,
+  1044→      },
+  1045→    });
+  1046→  }
+  1047→
+  1048→  console.log('✅ Seeding completed!');
+  1049→  console.log(`📍 Destinations: ${await db.destination.count()}`);
+  1050→  console.log(`📦 Packages: ${await db.package.count()}`);
+  1051→  console.log(`🏨 Hotels: ${await db.hotel.count()}`);
+  1052→  console.log(`✈️ Flight Deals: ${await db.flightDeal.count()}`);
+  1053→}
+  1054→
+  1055→seed()
+  1056→  .catch((e) => {
+  1057→    console.error(e);
+  1058→    process.exit(1);
+  1059→  })
+  1060→  .finally(async () => {
+  1061→    await db.$disconnect();
+  1062→  });
+  1063→

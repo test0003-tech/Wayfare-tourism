@@ -1,0 +1,664 @@
+     1→'use client';
+     2→
+     3→import { useEffect, useState, useRef, useMemo, Suspense, useCallback } from 'react';
+     4→import { useSearchParams } from 'next/navigation';
+     5→import { motion, AnimatePresence } from 'framer-motion';
+     6→import { FlightDeal } from '@/lib/types';
+     7→import PageHero from '@/components/wayfare/PageHero';
+     8→import Breadcrumbs from '@/components/wayfare/Breadcrumbs';
+     9→import PageTransition from '@/components/wayfare/PageTransition';
+    10→import { Badge } from '@/components/ui/badge';
+    11→import { Button } from '@/components/ui/button';
+    12→import { Input } from '@/components/ui/input';
+    13→import { Switch } from '@/components/ui/switch';
+    14→import {
+    15→  Plane,
+    16→  ArrowRight,
+    17→  Tag,
+    18→  PlaneIcon,
+    19→  Filter,
+    20→  Search,
+    21→  Flame,
+    22→  Star,
+    23→  Zap,
+    24→  Clock,
+    25→  Users,
+    26→  ChevronRight,
+    27→  MapPin,
+    28→  TrendingDown,
+    29→  Sparkles,
+    30→  CircleDot,
+    31→} from 'lucide-react';
+    32→
+    33→const flightTypes = ['All', 'Round Trip', 'One Way'];
+    34→const ITEMS_PER_PAGE = 9;
+    35→
+    36→// Airline color mapping for logo placeholders
+    37→const airlineColors: Record<string, string> = {
+    38→  'Emirates': 'from-red-500 to-red-700',
+    39→  'IndiGo': 'from-blue-400 to-blue-600',
+    40→  'Thai Airways': 'from-purple-500 to-purple-700',
+    41→  'Singapore Airlines': 'from-yellow-500 to-yellow-700',
+    42→  'SriLankan Airlines': 'from-teal-500 to-teal-700',
+    43→  'Air India': 'from-orange-500 to-red-600',
+    44→  'Vistara': 'from-indigo-400 to-purple-600',
+    45→  'Malaysia Airlines': 'from-blue-500 to-blue-700',
+    46→  'Garuda Indonesia': 'from-emerald-500 to-teal-600',
+    47→  'Vietnam Airlines': 'from-sky-500 to-blue-600',
+    48→};
+    49→
+    50→// Destination theme gradients (beach=blue, mountains=white/cool, city=warm)
+    51→const destinationGradients: Record<string, string> = {
+    52→  'Dubai': 'from-amber-900/40 via-orange-800/20 to-yellow-900/30',
+    53→  'Maldives': 'from-cyan-800/40 via-teal-700/20 to-blue-900/30',
+    54→  'Bangkok': 'from-purple-900/40 via-pink-800/20 to-orange-900/30',
+    55→  'Singapore': 'from-emerald-900/40 via-teal-800/20 to-cyan-900/30',
+    56→  'Kathmandu': 'from-slate-800/40 via-blue-800/20 to-indigo-900/30',
+    57→  'Colombo': 'from-emerald-900/40 via-green-800/20 to-teal-900/30',
+    58→  'Srinagar': 'from-sky-900/40 via-slate-700/20 to-blue-900/30',
+    59→  'Goa': 'from-orange-900/40 via-amber-800/20 to-cyan-900/30',
+    60→  'Port Blair': 'from-cyan-900/40 via-teal-800/20 to-emerald-900/30',
+    61→  'Kuala Lumpur': 'from-pink-900/40 via-rose-800/20 to-purple-900/30',
+    62→  'Bali': 'from-emerald-900/40 via-teal-800/20 to-amber-900/30',
+    63→  'Ho Chi Minh': 'from-red-900/40 via-amber-800/20 to-yellow-900/30',
+    64→};
+    65→
+    66→function PopularRouteCard({ from, to, price, airline, discount }: { from: string; to: string; price: number; airline: string; discount: number }) {
+    67→  return (
+    68→    <motion.div
+    69→      whileHover={{ scale: 1.03, y: -4 }}
+    70→      className="glass-strong rounded-2xl p-4 cursor-pointer group relative overflow-hidden streak-effect"
+    71→    >
+    72→      <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-teal-500/10 transition-colors" />
+    73→      <div className="flex items-center gap-3 mb-3">
+    74→        <div className="flex items-center gap-2 text-white">
+    75→          <MapPin className="h-3.5 w-3.5 text-teal-400" />
+    76→          <span className="text-sm font-semibold">{from}</span>
+    77→        </div>
+    78→        <div className="flex-1 flex items-center">
+    79→          <div className="h-px flex-1 bg-gradient-to-r from-teal-500/40 to-amber-500/40" />
+    80→          <Plane className="h-3 w-3 mx-2 text-amber-400 -rotate-0" />
+    81→          <div className="h-px flex-1 bg-gradient-to-r from-amber-500/40 to-teal-500/40" />
+    82→        </div>
+    83→        <div className="flex items-center gap-2 text-white">
+    84→          <span className="text-sm font-semibold">{to}</span>
+    85→          <MapPin className="h-3.5 w-3.5 text-amber-400" />
+    86→        </div>
+    87→      </div>
+    88→      <div className="flex items-center justify-between">
+    89→        <div className="flex items-center gap-2">
+    90→          <span className="text-xs text-gray-400">{airline}</span>
+    91→          {discount > 0 && (
+    92→            <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-[10px] px-1.5 py-0">
+    93→              <TrendingDown className="h-2.5 w-2.5 mr-0.5" />
+    94→              {discount}% off
+    95→            </Badge>
+    96→          )}
+    97→        </div>
+    98→        <div className="flex items-baseline gap-1">
+    99→          <span className="text-lg font-bold text-amber-400">₹{price.toLocaleString()}</span>
+   100→          <span className="text-[10px] text-gray-500">/person</span>
+   101→        </div>
+   102→      </div>
+   103→    </motion.div>
+   104→  );
+   105→}
+   106→
+   107→function FlightCard({ flight, index, isVisible, isBestDeal }: { flight: FlightDeal; index: number; isVisible: boolean; isBestDeal: boolean }) {
+   108→  const discount = flight.originalPrice
+   109→    ? Math.round(((flight.originalPrice - flight.price) / flight.originalPrice) * 100)
+   110→    : 0;
+   111→  const gradient = destinationGradients[flight.to] || 'from-teal-900/40 via-emerald-800/20 to-cyan-900/30';
+   112→  const airlineColor = airlineColors[flight.airline] || 'from-gray-500 to-gray-700';
+   113→  const airlineInitial = flight.airline.charAt(0).toUpperCase();
+   114→  const isRoundTrip = flight.type?.toLowerCase().includes('round');
+   115→
+   116→  return (
+   117→    <motion.div
+   118→      initial={{ opacity: 0, y: 50 }}
+   119→      animate={isVisible ? { opacity: 1, y: 0 } : {}}
+   120→      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+   121→    >
+   122→      <div className="group relative overflow-hidden rounded-2xl glass tilt-card streak-effect transition-all duration-500 hover:glow-teal">
+   123→        {/* Destination-themed gradient background */}
+   124→        <div className={`relative h-40 sm:h-44 overflow-hidden bg-gradient-to-br ${gradient}`}>
+   125→          {/* Background image with overlay */}
+   126→          <img
+   127→            src={flight.image}
+   128→            alt={`${flight.from} to ${flight.to}`}
+   129→            className="h-full w-full object-cover opacity-20 mix-blend-overlay group-hover:opacity-30 transition-opacity duration-500"
+   130→          />
+   131→
+   132→          {/* Animated shimmer overlay */}
+   133→          <div className="absolute inset-0 animate-shimmer opacity-30" />
+   134→
+   135→          {/* Decorative floating circles */}
+   136→          <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors duration-500" />
+   137→          <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors duration-500" />
+   138→
+   139→          {/* Badges row */}
+   140→          <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
+   141→            {isBestDeal && (
+   142→              <div className="flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2.5 py-1 text-[10px] font-bold text-gray-950 shadow-lg glow-amber animate-pulse-glow">
+   143→                <Sparkles className="h-3 w-3" />
+   144→                BEST DEAL
+   145→              </div>
+   146→            )}
+   147→            {flight.featured && (
+   148→              <Badge className="bg-teal-500/20 text-teal-300 border-teal-500/30 backdrop-blur-sm text-[10px] font-semibold px-2">
+   149→                <Star className="h-2.5 w-2.5 mr-0.5 fill-teal-400 text-teal-400" />
+   150→                Featured
+   151→              </Badge>
+   152→            )}
+   153→          </div>
+   154→
+   155→          {/* Discount badge */}
+   156→          {discount > 0 && (
+   157→            <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-rose-500 to-pink-600 px-2.5 py-1 text-xs font-bold text-white shadow-lg z-10">
+   158→              <Tag className="h-3 w-3" />
+   159→              {discount}% OFF
+   160→            </div>
+   161→          )}
+   162→
+   163→          {/* Flight type badge */}
+   164→          <div className="absolute bottom-3 right-3 z-10">
+   165→            <Badge className="bg-white/10 text-gray-300 border-white/20 backdrop-blur-md text-[10px] font-medium px-2 py-0.5">
+   166→              <Plane className="h-2.5 w-2.5 mr-1" />
+   167→              {isRoundTrip ? 'Round Trip' : 'One Way'}
+   168→            </Badge>
+   169→          </div>
+   170→
+   171→          {/* Limited Seats urgency for featured */}
+   172→          {flight.featured && (
+   173→            <div className="absolute bottom-3 left-3 z-10">
+   174→              <div className="flex items-center gap-1 rounded-full bg-red-500/20 border border-red-500/30 backdrop-blur-md px-2 py-0.5">
+   175→                <Users className="h-2.5 w-2.5 text-red-400" />
+   176→                <span className="text-[10px] font-semibold text-red-300">Limited Seats</span>
+   177→              </div>
+   178→            </div>
+   179→          )}
+   180→
+   181→          {/* Route visualization - the hero of the card */}
+   182→          <div className="absolute inset-0 flex items-center justify-center px-4">
+   183→            <div className="flex items-center gap-2 sm:gap-4 w-full max-w-xs">
+   184→              {/* Departure city */}
+   185→              <div className="text-center flex-shrink-0">
+   186→                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full glass-strong flex items-center justify-center mx-auto mb-1 border border-white/20">
+   187→                  <span className="text-lg sm:text-xl font-bold text-white">{flight.from.substring(0, 3).toUpperCase()}</span>
+   188→                </div>
+   189→                <p className="text-xs sm:text-sm font-bold text-white drop-shadow-lg">{flight.from}</p>
+   190→              </div>
+   191→
+   192→              {/* Animated route line with plane */}
+   193→              <div className="flex-1 relative flex flex-col items-center">
+   194→                {/* Dashed line with gradient */}
+   195→                <div className="w-full relative h-0.5">
+   196→                  <div className="absolute inset-0 bg-gradient-to-r from-teal-400 via-amber-400 to-teal-400 rounded-full" style={{ backgroundSize: '200% 100%' }} />
+   197→                  {/* Dashes overlay */}
+   198→                  <div className="absolute inset-0" style={{
+   199→                    backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.4) 4px, rgba(0,0,0,0.4) 8px)',
+   200→                  }} />
+   201→                  {/* Animated plane that moves on hover */}
+   202→                  <motion.div
+   203→                    className="absolute -top-3 left-0 text-amber-400 z-10"
+   204→                    initial={{ left: '0%' }}
+   205→                    whileHover={{ left: '85%' }}
+   206→                    transition={{ duration: 1.5, ease: 'easeInOut' }}
+   207→                  >
+   208→                    <div className="group-hover:translate-x-[calc(100cqw-100%)] transition-transform duration-[1.5s] ease-in-out">
+   209→                      <Plane className="h-5 w-5 sm:h-6 sm:w-6 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)]" />
+   210→                    </div>
+   211→                  </motion.div>
+   212→                </div>
+   213→                {/* Dots at line endpoints */}
+   214→                <div className="flex items-center justify-between w-full -mt-0.5">
+   215→                  <CircleDot className="h-2.5 w-2.5 text-teal-400" />
+   216→                  <CircleDot className="h-2.5 w-2.5 text-teal-400" />
+   217→                </div>
+   218→                <span className="mt-1 text-[9px] uppercase tracking-widest text-gray-400 font-medium">
+   219→                  {isRoundTrip ? 'Round Trip' : 'One Way'}
+   220→                </span>
+   221→              </div>
+   222→
+   223→              {/* Arrival city */}
+   224→              <div className="text-center flex-shrink-0">
+   225→                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full glass-strong flex items-center justify-center mx-auto mb-1 border border-white/20">
+   226→                  <span className="text-lg sm:text-xl font-bold text-white">{flight.to.substring(0, 3).toUpperCase()}</span>
+   227→                </div>
+   228→                <p className="text-xs sm:text-sm font-bold text-white drop-shadow-lg">{flight.to}</p>
+   229→              </div>
+   230→            </div>
+   231→          </div>
+   232→        </div>
+   233→
+   234→        {/* Card content */}
+   235→        <div className="p-4 sm:p-5">
+   236→          {/* Airline row */}
+   237→          <div className="flex items-center justify-between mb-3">
+   238→            <div className="flex items-center gap-2.5">
+   239→              {/* Airline logo placeholder */}
+   240→              <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${airlineColor} flex items-center justify-center text-white text-xs font-bold shadow-md`}>
+   241→                {airlineInitial}
+   242→              </div>
+   243→              <div>
+   244→                <p className="text-sm font-semibold text-white">{flight.airline}</p>
+   245→                <p className="text-[11px] text-gray-500 leading-tight line-clamp-1">{flight.description}</p>
+   246→              </div>
+   247→            </div>
+   248→          </div>
+   249→
+   250→          {/* Savings callout */}
+   251→          {discount > 0 && (
+   252→            <motion.div
+   253→              initial={{ opacity: 0, scale: 0.9 }}
+   254→              animate={{ opacity: 1, scale: 1 }}
+   255→              className="mb-3 rounded-lg bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 p-2 flex items-center gap-2"
+   256→            >
+   257→              <Zap className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+   258→              <span className="text-[11px] font-medium text-amber-300">
+   259→                Save ₹{(flight.originalPrice! - flight.price).toLocaleString()} on this flight!
+   260→              </span>
+   261→            </motion.div>
+   262→          )}
+   263→
+   264→          {/* Price and CTA */}
+   265→          <div className="flex items-end justify-between pt-1">
+   266→            <div>
+   267→              {flight.originalPrice && (
+   268→                <span className="text-xs text-gray-500 line-through block">
+   269→                  ₹{flight.originalPrice.toLocaleString()}
+   270→                </span>
+   271→              )}
+   272→              <div className="flex items-baseline gap-1">
+   273→                <span className="text-2xl sm:text-3xl font-extrabold gradient-text-gold">
+   274→                  ₹{flight.price.toLocaleString()}
+   275→                </span>
+   276→                <span className="text-[10px] text-gray-500 font-medium">/person</span>
+   277→              </div>
+   278→            </div>
+   279→            <Button
+   280→              size="sm"
+   281→              className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-xl font-bold shadow-lg shadow-teal-500/20 hover:shadow-teal-500/40 transition-all duration-300 px-4 py-2.5 text-sm animate-glow-pulse"
+   282→            >
+   283→              Book Flight
+   284→              <ArrowRight className="ml-1.5 h-4 w-4" />
+   285→            </Button>
+   286→          </div>
+   287→        </div>
+   288→      </div>
+   289→    </motion.div>
+   290→  );
+   291→}
+   292→
+   293→function FlightsContent() {
+   294→  const searchParams = useSearchParams();
+   295→  const [flights, setFlights] = useState<FlightDeal[]>([]);
+   296→  const [loading, setLoading] = useState(true);
+   297→  const [typeFilter, setTypeFilter] = useState('All');
+   298→  const [page, setPage] = useState(1);
+   299→  const [isVisible, setIsVisible] = useState(false);
+   300→  const [searchQuery, setSearchQuery] = useState('');
+   301→  const [featuredOnly, setFeaturedOnly] = useState(false);
+   302→  const sectionRef = useRef<HTMLDivElement>(null);
+   303→
+   304→  useEffect(() => {
+   305→    const typeParam = searchParams.get('type');
+   306→    if (typeParam && flightTypes.includes(typeParam)) {
+   307→      queueMicrotask(() => setTypeFilter(typeParam));
+   308→    }
+   309→  }, [searchParams]);
+   310→
+   311→  useEffect(() => {
+   312→    queueMicrotask(() => setLoading(true));
+   313→    fetch('/api/flights')
+   314→      .then((res) => res.json())
+   315→      .then((data) => {
+   316→        setFlights(data);
+   317→        setLoading(false);
+   318→      })
+   319→      .catch((err) => {
+   320→        console.error(err);
+   321→        setLoading(false);
+   322→      });
+   323→  }, []);
+   324→
+   325→  useEffect(() => {
+   326→    const observer = new IntersectionObserver(
+   327→      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
+   328→      { threshold: 0.02 }
+   329→    );
+   330→    if (sectionRef.current) observer.observe(sectionRef.current);
+   331→    return () => observer.disconnect();
+   332→  }, []);
+   333→
+   334→  const filtered = useMemo(() => {
+   335→    let result = flights;
+   336→    if (typeFilter !== 'All') {
+   337→      result = result.filter((f) => {
+   338→        const type = f.type?.toLowerCase() || '';
+   339→        if (typeFilter === 'Round Trip') return type.includes('round');
+   340→        if (typeFilter === 'One Way') return type.includes('one') || type.includes('single');
+   341→        return true;
+   342→      });
+   343→    }
+   344→    if (searchQuery.trim()) {
+   345→      const q = searchQuery.toLowerCase().trim();
+   346→      result = result.filter(
+   347→        (f) =>
+   348→          f.to.toLowerCase().includes(q) ||
+   349→          f.from.toLowerCase().includes(q) ||
+   350→          f.airline.toLowerCase().includes(q) ||
+   351→          f.description.toLowerCase().includes(q)
+   352→      );
+   353→    }
+   354→    if (featuredOnly) {
+   355→      result = result.filter((f) => f.featured);
+   356→    }
+   357→    return result;
+   358→  }, [flights, typeFilter, searchQuery, featuredOnly]);
+   359→
+   360→  useEffect(() => { queueMicrotask(() => setPage(1)); }, [typeFilter, searchQuery, featuredOnly]);
+   361→
+   362→  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+   363→  const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+   364→
+   365→  const getDiscount = useCallback((flight: FlightDeal) => {
+   366→    if (!flight.originalPrice) return 0;
+   367→    return Math.round(((flight.originalPrice - flight.price) / flight.originalPrice) * 100);
+   368→  }, []);
+   369→
+   370→  // Determine which flight has the best deal (highest discount)
+   371→  const bestDealId = useMemo(() => {
+   372→    let bestId = '';
+   373→    let bestDiscount = 0;
+   374→    flights.forEach((f) => {
+   375→      const d = getDiscount(f);
+   376→      if (d > bestDiscount) {
+   377→        bestDiscount = d;
+   378→        bestId = f.id;
+   379→      }
+   380→    });
+   381→    return bestId;
+   382→  }, [flights, getDiscount]);
+   383→
+   384→  // Popular routes: top 3 featured flights by discount
+   385→  const popularRoutes = useMemo(() => {
+   386→    return flights
+   387→      .filter((f) => f.featured)
+   388→      .sort((a, b) => getDiscount(b) - getDiscount(a))
+   389→      .slice(0, 3);
+   390→  }, [flights, getDiscount]);
+   391→
+   392→  return (
+   393→    <PageTransition>
+   394→      <div className="bg-gray-950 min-h-screen">
+   395→        <PageHero
+   396→          badge="Flight Deals"
+   397→          badgeIcon={PlaneIcon}
+   398→          title="Best Flight Deals"
+   399→          subtitle="Affordable round-trip flights from major Indian cities to top destinations worldwide"
+   400→          backgroundImage="/images/flights-hero.png"
+   401→        />
+   402→
+   403→        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   404→          <Breadcrumbs items={[{ label: 'Flights' }]} />
+   405→
+   406→          {/* Popular Routes Highlight Section */}
+   407→          {!loading && popularRoutes.length > 0 && (
+   408→            <motion.div
+   409→              initial={{ opacity: 0, y: 20 }}
+   410→              animate={{ opacity: 1, y: 0 }}
+   411→              transition={{ duration: 0.6 }}
+   412→              className="mb-8"
+   413→            >
+   414→              <div className="flex items-center gap-2 mb-4">
+   415→                <div className="flex items-center gap-2">
+   416→                  <span className="text-xl">✈️</span>
+   417→                  <h2 className="text-lg font-bold text-white">Popular Routes</h2>
+   418→                </div>
+   419→                <div className="flex-1 h-px bg-gradient-to-r from-teal-500/30 to-transparent ml-3" />
+   420→                <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-[10px]">
+   421→                  <Flame className="h-2.5 w-2.5 mr-0.5" />
+   422→                  Trending
+   423→                </Badge>
+   424→              </div>
+   425→              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+   426→                {popularRoutes.map((flight) => (
+   427→                  <PopularRouteCard
+   428→                    key={flight.id}
+   429→                    from={flight.from}
+   430→                    to={flight.to}
+   431→                    price={flight.price}
+   432→                    airline={flight.airline}
+   433→                    discount={getDiscount(flight)}
+   434→                  />
+   435→                ))}
+   436→              </div>
+   437→            </motion.div>
+   438→          )}
+   439→
+   440→          {/* Filter Section - Redesigned */}
+   441→          <div className="mb-8 glass rounded-2xl p-4 sm:p-6">
+   442→            <div className="flex items-center gap-2 mb-4">
+   443→              <Filter className="h-4 w-4 text-teal-400" />
+   444→              <span className="text-sm font-semibold text-gray-300">Filter Flights</span>
+   445→              <div className="flex-1 h-px bg-white/5 ml-2" />
+   446→            </div>
+   447→
+   448→            {/* Search bar */}
+   449→            <div className="relative mb-4">
+   450→              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+   451→              <Input
+   452→                type="text"
+   453→                placeholder="Search destinations, airlines..."
+   454→                value={searchQuery}
+   455→                onChange={(e) => setSearchQuery(e.target.value)}
+   456→                className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-500 rounded-xl h-10 focus-visible:border-teal-500/50 focus-visible:ring-teal-500/20"
+   457→              />
+   458→              {searchQuery && (
+   459→                <button
+   460→                  onClick={() => setSearchQuery('')}
+   461→                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs"
+   462→                >
+   463→                  Clear
+   464→                </button>
+   465→              )}
+   466→            </div>
+   467→
+   468→            {/* Flight type tabs with plane icons */}
+   469→            <div className="flex flex-wrap items-center gap-2 mb-4">
+   470→              {flightTypes.map((type) => (
+   471→                <button
+   472→                  key={type}
+   473→                  onClick={() => setTypeFilter(type)}
+   474→                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+   475→                    typeFilter === type
+   476→                      ? 'bg-gradient-to-r from-teal-500 to-emerald-600 text-white glow-teal shadow-lg shadow-teal-500/20'
+   477→                      : 'glass text-gray-400 hover:text-teal-400 hover:bg-white/5'
+   478→                  }`}
+   479→                >
+   480→                  <Plane className={`h-3.5 w-3.5 ${typeFilter === type ? 'text-white' : 'text-gray-500'}`} />
+   481→                  {type === 'All' ? 'All Flights' : type}
+   482→                </button>
+   483→              ))}
+   484→            </div>
+   485→
+   486→            {/* Featured Only toggle */}
+   487→            <div className="flex items-center gap-3">
+   488→              <div className="flex items-center gap-2">
+   489→                <Switch
+   490→                  checked={featuredOnly}
+   491→                  onCheckedChange={setFeaturedOnly}
+   492→                  className="data-[state=checked]:bg-teal-500"
+   493→                />
+   494→                <span className="text-sm text-gray-400 flex items-center gap-1.5">
+   495→                  <Star className="h-3.5 w-3.5 text-amber-400" />
+   496→                  Featured Only
+   497→                </span>
+   498→              </div>
+   499→            </div>
+   500→          </div>
+   501→
+   502→          {/* Section header with decoration */}
+   503→          <div className="mb-6 flex items-center justify-between">
+   504→            <div className="flex items-center gap-2">
+   505→              <span className="text-lg">✈️</span>
+   506→              <p className="text-sm text-gray-400">
+   507→                Showing <span className="text-teal-400 font-semibold">{paginated.length}</span> of{' '}
+   508→                <span className="text-teal-400 font-semibold">{filtered.length}</span> flight deals
+   509→              </p>
+   510→            </div>
+   511→            {(searchQuery || featuredOnly || typeFilter !== 'All') && (
+   512→              <button
+   513→                onClick={() => {
+   514→                  setSearchQuery('');
+   515→                  setFeaturedOnly(false);
+   516→                  setTypeFilter('All');
+   517→                }}
+   518→                className="text-xs text-teal-400 hover:text-teal-300 transition-colors flex items-center gap-1"
+   519→              >
+   520→                Clear all filters
+   521→                <ChevronRight className="h-3 w-3" />
+   522→              </button>
+   523→            )}
+   524→          </div>
+   525→
+   526→          {/* Loading state */}
+   527→          {loading ? (
+   528→            <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+   529→              {Array.from({ length: 6 }).map((_, i) => (
+   530→                <div key={i} className="glass rounded-2xl overflow-hidden animate-pulse">
+   531→                  <div className="h-44 bg-white/5" />
+   532→                  <div className="p-5 space-y-3">
+   533→                    <div className="flex items-center gap-2">
+   534→                      <div className="h-8 w-8 rounded-full bg-white/5" />
+   535→                      <div className="h-4 bg-white/5 rounded w-1/3" />
+   536→                    </div>
+   537→                    <div className="h-3 bg-white/5 rounded w-3/4" />
+   538→                    <div className="flex justify-between items-end">
+   539→                      <div className="space-y-1">
+   540→                        <div className="h-3 bg-white/5 rounded w-1/4" />
+   541→                        <div className="h-7 bg-white/5 rounded w-1/2" />
+   542→                      </div>
+   543→                      <div className="h-9 w-24 bg-white/5 rounded-xl" />
+   544→                    </div>
+   545→                  </div>
+   546→                </div>
+   547→              ))}
+   548→            </div>
+   549→          ) : paginated.length === 0 ? (
+   550→            <div className="text-center py-20">
+   551→              <div className="w-20 h-20 rounded-full glass mx-auto mb-6 flex items-center justify-center">
+   552→                <Plane className="h-8 w-8 text-gray-600" />
+   553→              </div>
+   554→              <h3 className="text-lg font-semibold text-gray-300 mb-2">No flights found</h3>
+   555→              <p className="text-gray-500 mb-6 text-sm">
+   556→                {searchQuery
+   557→                  ? `No results for "${searchQuery}". Try a different search.`
+   558→                  : 'Try adjusting your filters'}
+   559→              </p>
+   560→              <Button
+   561→                variant="outline"
+   562→                onClick={() => {
+   563→                  setSearchQuery('');
+   564→                  setFeaturedOnly(false);
+   565→                  setTypeFilter('All');
+   566→                }}
+   567→                className="border-white/10 text-teal-400 hover:bg-white/5 hover:text-teal-300 rounded-xl"
+   568→              >
+   569→                Show All Flights
+   570→              </Button>
+   571→            </div>
+   572→          ) : (
+   573→            <>
+   574→              {/* Flight Cards Grid */}
+   575→              <div ref={sectionRef} className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+   576→                {paginated.map((flight, i) => (
+   577→                  <FlightCard
+   578→                    key={flight.id}
+   579→                    flight={flight}
+   580→                    index={i}
+   581→                    isVisible={isVisible}
+   582→                    isBestDeal={flight.id === bestDealId}
+   583→                  />
+   584→                ))}
+   585→              </div>
+   586→
+   587→              {/* Pagination */}
+   588→              <AnimatePresence>
+   589→                {totalPages > 1 && (
+   590→                  <motion.div
+   591→                    initial={{ opacity: 0, y: 20 }}
+   592→                    animate={{ opacity: 1, y: 0 }}
+   593→                    transition={{ duration: 0.4, delay: 0.2 }}
+   594→                    className="mt-10 flex items-center justify-center gap-2"
+   595→                  >
+   596→                    <Button
+   597→                      variant="outline"
+   598→                      size="sm"
+   599→                      disabled={page === 1}
+   600→                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+   601→                      className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-teal-400 rounded-xl disabled:opacity-40"
+   602→                    >
+   603→                      Previous
+   604→                    </Button>
+   605→
+   606→                    <div className="flex items-center gap-1">
+   607→                      {Array.from({ length: totalPages }).map((_, idx) => (
+   608→                        <Button
+   609→                          key={idx}
+   610→                          variant={page === idx + 1 ? 'default' : 'outline'}
+   611→                          size="sm"
+   612→                          onClick={() => setPage(idx + 1)}
+   613→                          className={
+   614→                            page === idx + 1
+   615→                              ? 'bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-xl shadow-lg shadow-teal-500/20 min-w-[36px]'
+   616→                              : 'border-white/10 text-gray-300 hover:bg-white/5 hover:text-teal-400 rounded-xl min-w-[36px]'
+   617→                          }
+   618→                        >
+   619→                          {idx + 1}
+   620→                        </Button>
+   621→                      ))}
+   622→                    </div>
+   623→
+   624→                    <Button
+   625→                      variant="outline"
+   626→                      size="sm"
+   627→                      disabled={page === totalPages}
+   628→                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+   629→                      className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-teal-400 rounded-xl disabled:opacity-40"
+   630→                    >
+   631→                      Next
+   632→                    </Button>
+   633→                  </motion.div>
+   634→                )}
+   635→              </AnimatePresence>
+   636→            </>
+   637→          )}
+   638→        </div>
+   639→
+   640→        {/* Bottom spacer */}
+   641→        <div className="h-20" />
+   642→      </div>
+   643→    </PageTransition>
+   644→  );
+   645→}
+   646→
+   647→export default function FlightsPage() {
+   648→  return (
+   649→    <Suspense fallback={
+   650→      <div className="bg-gray-950 min-h-screen flex items-center justify-center">
+   651→        <div className="flex flex-col items-center gap-4">
+   652→          <div className="relative">
+   653→            <div className="animate-spin h-10 w-10 border-2 border-teal-500 border-t-transparent rounded-full" />
+   654→            <Plane className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4 text-teal-400" />
+   655→          </div>
+   656→          <p className="text-sm text-gray-500">Loading flights...</p>
+   657→        </div>
+   658→      </div>
+   659→    }>
+   660→      <FlightsContent />
+   661→    </Suspense>
+   662→  );
+   663→}
+   664→

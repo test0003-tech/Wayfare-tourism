@@ -1,7 +1,34 @@
-export const runtime = 'edge';
-
+import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
-import { getBlogPostBySlug, getRelatedPosts } from '@/lib/blog-data';
+
+function transformBlogPost(post: any) {
+  let tags: string[] = [];
+  try {
+    const parsed = JSON.parse(post.tags);
+    tags = Array.isArray(parsed) ? parsed : [];
+  } catch {
+    tags = [];
+  }
+
+  return {
+    id: post.id,
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt,
+    content: post.content,
+    author: {
+      name: post.authorName,
+      avatar: post.authorAvatar,
+      bio: post.authorBio,
+    },
+    date: post.date,
+    category: post.category,
+    image: post.image,
+    readingTime: post.readingTime,
+    tags,
+    featured: post.featured,
+  };
+}
 
 export async function GET(
   request: Request,
@@ -9,15 +36,31 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const post = getBlogPostBySlug(slug);
+    const post = await db.blogPost.findUnique({
+      where: { slug },
+    });
 
-    if (!post) {
+    if (!post || post.status !== 'active') {
       return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
     }
 
-    const relatedPosts = getRelatedPosts(slug, 3);
+    // Get related posts (same category, different slug)
+    const relatedPostsRaw = await db.blogPost.findMany({
+      where: {
+        category: post.category,
+        status: 'active',
+        slug: { not: slug },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+    });
 
-    return NextResponse.json({ ...post, relatedPosts });
+    const result = {
+      ...transformBlogPost(post),
+      relatedPosts: relatedPostsRaw.map(transformBlogPost),
+    };
+
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching blog post:', error);
     return NextResponse.json({ error: 'Failed to fetch blog post' }, { status: 500 });
