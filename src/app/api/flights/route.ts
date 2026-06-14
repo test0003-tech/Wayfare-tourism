@@ -1,5 +1,7 @@
-import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
+import { getAllEdgeFlights, enrichFlight } from '@/lib/edge-data';
+
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   try {
@@ -8,38 +10,33 @@ export async function GET(request: Request) {
     const type = searchParams.get('type');
     const search = searchParams.get('search');
 
-    const where: any = { status: 'active' };
+    let flights = getAllEdgeFlights().map(enrichFlight);
 
-    if (featured === 'true') where.featured = true;
-    if (type) where.type = type;
-
-    if (search) {
-      where.OR = [
-        { from: { contains: search } },
-        { to: { contains: search } },
-        { airline: { contains: search } },
-      ];
+    // Filter by featured
+    if (featured === 'true') {
+      flights = flights.filter((f) => f.featured);
     }
 
-    const flights = await db.flightDeal.findMany({
-      where,
-      orderBy: { price: 'asc' },
-    });
+    // Filter by type
+    if (type) {
+      flights = flights.filter((f) => f.type === type);
+    }
 
-    const result = flights.map((f) => ({
-      id: f.id,
-      from: f.from,
-      to: f.to,
-      airline: f.airline,
-      price: f.price,
-      originalPrice: f.originalPrice,
-      type: f.type,
-      image: f.image,
-      description: f.description,
-      featured: f.featured,
-    }));
+    // Search filter
+    if (search) {
+      const q = search.toLowerCase();
+      flights = flights.filter(
+        (f) =>
+          f.from.toLowerCase().includes(q) ||
+          f.to.toLowerCase().includes(q) ||
+          f.airline.toLowerCase().includes(q)
+      );
+    }
 
-    return NextResponse.json(result);
+    // Sort by price ascending
+    flights.sort((a, b) => a.price - b.price);
+
+    return NextResponse.json(flights);
   } catch (error) {
     console.error('Error fetching flights:', error);
     return NextResponse.json({ error: 'Failed to fetch flights' }, { status: 500 });

@@ -1,34 +1,7 @@
-import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
+import { blogPosts, type BlogPost } from '@/lib/blog-data';
 
-function transformBlogPost(post: any) {
-  let tags: string[] = [];
-  try {
-    const parsed = JSON.parse(post.tags);
-    tags = Array.isArray(parsed) ? parsed : [];
-  } catch {
-    tags = [];
-  }
-
-  return {
-    id: post.id,
-    slug: post.slug,
-    title: post.title,
-    excerpt: post.excerpt,
-    content: post.content,
-    author: {
-      name: post.authorName,
-      avatar: post.authorAvatar,
-      bio: post.authorBio,
-    },
-    date: post.date,
-    category: post.category,
-    image: post.image,
-    readingTime: post.readingTime,
-    tags,
-    featured: post.featured,
-  };
-}
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   try {
@@ -37,25 +10,46 @@ export async function GET(request: Request) {
     const search = searchParams.get('search');
     const featured = searchParams.get('featured');
 
-    const where: any = { status: 'active' };
+    let posts = [...blogPosts];
 
-    if (category && category !== 'All') where.category = category;
-    if (featured === 'true') where.featured = true;
-
-    if (search) {
-      where.OR = [
-        { title: { contains: search } },
-        { excerpt: { contains: search } },
-        { content: { contains: search } },
-      ];
+    // Filter by category
+    if (category && category !== 'All') {
+      posts = posts.filter((p) => p.category === category);
     }
 
-    const posts = await db.blogPost.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-    });
+    // Filter by featured
+    if (featured === 'true') {
+      posts = posts.filter((p) => p.featured);
+    }
 
-    return NextResponse.json(posts.map(transformBlogPost));
+    // Search filter
+    if (search) {
+      const q = search.toLowerCase();
+      posts = posts.filter(
+        (p) =>
+          p.title.toLowerCase().includes(q) ||
+          p.excerpt.toLowerCase().includes(q) ||
+          p.content.toLowerCase().includes(q)
+      );
+    }
+
+    // Format response to match the expected shape (add id field)
+    const result = posts.map((p) => ({
+      id: p.slug,
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      content: p.content,
+      author: p.author,
+      date: p.date,
+      category: p.category,
+      image: p.image,
+      readingTime: p.readingTime,
+      tags: p.tags,
+      featured: p.featured,
+    }));
+
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return NextResponse.json({ error: 'Failed to fetch blog posts' }, { status: 500 });

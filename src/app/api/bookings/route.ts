@@ -1,5 +1,30 @@
-import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
+
+export const runtime = 'edge';
+
+interface Booking {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  age: number | null;
+  packageId: string | null;
+  travelers: number;
+  adults: number;
+  children: number;
+  departureDate: string;
+  returnDate: string;
+  roomType: string;
+  specialRequests: string | null;
+  addOns: string | null;
+  totalPrice: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// In-memory bookings store (edge-compatible — no Prisma)
+const bookings: Booking[] = [];
 
 interface CreateBookingBody {
   name: string;
@@ -70,26 +95,31 @@ export async function POST(request: Request) {
     }
 
     const travelers = adults + children;
+    const now = new Date().toISOString();
+    const id = `booking-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
-    const booking = await db.booking.create({
-      data: {
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        phone: phone.trim(),
-        age: age || null,
-        packageId: packageId || null,
-        travelers,
-        adults,
-        children,
-        departureDate,
-        returnDate,
-        roomType: roomType || 'standard',
-        specialRequests: specialRequests?.trim() || null,
-        addOns: addOns && addOns.length > 0 ? JSON.stringify(addOns) : null,
-        totalPrice,
-        status: 'pending',
-      },
-    });
+    const booking: Booking = {
+      id,
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
+      age: age || null,
+      packageId: packageId || null,
+      travelers,
+      adults,
+      children,
+      departureDate,
+      returnDate,
+      roomType: roomType || 'standard',
+      specialRequests: specialRequests?.trim() || null,
+      addOns: addOns && addOns.length > 0 ? JSON.stringify(addOns) : null,
+      totalPrice,
+      status: 'pending',
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    bookings.push(booking);
 
     return NextResponse.json({
       success: true,
@@ -110,7 +140,7 @@ export async function POST(request: Request) {
         addOns: booking.addOns,
         totalPrice: booking.totalPrice,
         status: booking.status,
-        createdAt: booking.createdAt.toISOString(),
+        createdAt: booking.createdAt,
       },
     }, { status: 201 });
   } catch (error) {
@@ -121,17 +151,12 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const bookings = await db.booking.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 50,
-      include: {
-        package: {
-          select: { name: true, slug: true, image: true },
-        },
-      },
-    });
+    // Return recent bookings (in-memory, newest first)
+    const sorted = [...bookings].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
 
-    const result = bookings.map((b) => ({
+    const result = sorted.slice(0, 50).map((b) => ({
       id: b.id,
       name: b.name,
       email: b.email,
@@ -148,9 +173,9 @@ export async function GET() {
       addOns: b.addOns,
       totalPrice: b.totalPrice,
       status: b.status,
-      createdAt: b.createdAt.toISOString(),
-      updatedAt: b.updatedAt.toISOString(),
-      package: b.package ? { name: b.package.name, slug: b.package.slug, image: b.package.image } : null,
+      createdAt: b.createdAt,
+      updatedAt: b.updatedAt,
+      package: null,
     }));
 
     return NextResponse.json({ success: true, bookings: result });

@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import HeroEnhanced from '@/components/wayfare/HeroEnhanced';
@@ -19,7 +20,7 @@ const AITravelPlanner = dynamic(() => import('@/components/wayfare/AITravelPlann
 // Lazy load dashboard (huge component)
 const DashboardPage = dynamic(() => import('@/app/dashboard/page'), { ssr: false });
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const showDashboard = searchParams.get('view') === 'dashboard';
 
@@ -41,5 +42,13 @@ export default function Home() {
       <AITravelPlanner />
       <SocialProof />
     </>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense>
+      <HomeContent />
+    </Suspense>
   );
 }

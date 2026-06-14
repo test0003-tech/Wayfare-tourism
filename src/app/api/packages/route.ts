@@ -1,66 +1,7 @@
-import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
+import { getAllEdgePackages, enrichPackage } from '@/lib/edge-data';
 
-function transformPackage(pkg: any) {
-  let highlights = '';
-  try {
-    const parsed = JSON.parse(pkg.highlights);
-    highlights = Array.isArray(parsed) ? parsed.join(',') : pkg.highlights;
-  } catch {
-    highlights = pkg.highlights;
-  }
-
-  let included = '';
-  try {
-    const parsed = JSON.parse(pkg.included);
-    included = Array.isArray(parsed) ? parsed.join(',') : pkg.included;
-  } catch {
-    included = pkg.included;
-  }
-
-  let itinerary = '[]';
-  try {
-    const parsed = JSON.parse(pkg.itinerary);
-    if (Array.isArray(parsed)) {
-      itinerary = JSON.stringify(
-        parsed.map((d: any) => ({
-          day: d.day,
-          title: d.title,
-          desc: d.desc || d.description || '',
-        }))
-      );
-    }
-  } catch {
-    itinerary = pkg.itinerary;
-  }
-
-  return {
-    id: pkg.id,
-    name: pkg.name,
-    slug: pkg.slug,
-    destinationId: pkg.destinationId,
-    destination: {
-      name: pkg.destination.name,
-      country: pkg.destination.country,
-      region: pkg.destination.region,
-      image: pkg.destination.image,
-    },
-    category: pkg.category,
-    duration: pkg.duration,
-    nights: pkg.nights,
-    days: pkg.days,
-    price: pkg.price,
-    originalPrice: pkg.originalPrice,
-    image: pkg.image,
-    description: pkg.description,
-    highlights,
-    included,
-    itinerary,
-    rating: pkg.rating,
-    reviewCount: pkg.reviewCount,
-    featured: pkg.featured,
-  };
-}
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   try {
@@ -72,31 +13,47 @@ export async function GET(request: Request) {
     const duration = searchParams.get('duration');
     const search = searchParams.get('search');
 
-    const where: any = { status: 'active' };
+    let packages = getAllEdgePackages().map(enrichPackage);
 
-    if (category) where.category = category;
-    if (destinationId) where.destinationId = destinationId;
-    if (featured === 'true') where.featured = true;
-    if (duration) where.duration = duration;
-
+    // Filter by region
     if (region) {
-      where.destination = { region };
+      packages = packages.filter((p) => p.destination.region === region);
     }
 
+    // Filter by category
+    if (category) {
+      packages = packages.filter((p) => p.category === category);
+    }
+
+    // Filter by destinationId (slug)
+    if (destinationId) {
+      packages = packages.filter((p) => p.destinationId === destinationId);
+    }
+
+    // Filter by featured
+    if (featured === 'true') {
+      packages = packages.filter((p) => p.featured);
+    }
+
+    // Filter by duration
+    if (duration) {
+      packages = packages.filter((p) => p.duration === duration);
+    }
+
+    // Search filter
     if (search) {
-      where.OR = [
-        { name: { contains: search } },
-        { description: { contains: search } },
-      ];
+      const q = search.toLowerCase();
+      packages = packages.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q)
+      );
     }
 
-    const packages = await db.package.findMany({
-      where,
-      include: { destination: true },
-      orderBy: { rating: 'desc' },
-    });
+    // Sort by rating descending
+    packages.sort((a, b) => b.rating - a.rating);
 
-    return NextResponse.json(packages.map(transformPackage));
+    return NextResponse.json(packages);
   } catch (error) {
     console.error('Error fetching packages:', error);
     return NextResponse.json({ error: 'Failed to fetch packages' }, { status: 500 });

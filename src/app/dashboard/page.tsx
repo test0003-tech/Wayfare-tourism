@@ -185,6 +185,7 @@ export default function DashboardPage() {
     setLoading(prev => ({ ...prev, [section]: true }));
     try {
       const base = '/api/dashboard';
+      const portParam = 'XTransformPort=3002';
       let url = '';
       switch (section) {
         case 'overview': url = `${base}/stats`; break;
@@ -211,6 +212,8 @@ export default function DashboardPage() {
       if (filterStatus !== 'all' && section !== 'overview' && section !== 'settings' && section !== 'deploy') {
         url += `${url.includes('?') ? '&' : '?'}status=${filterStatus}`;
       }
+      // Add port param for mini-service
+      url += `${url.includes('?') ? '&' : '?'}${portParam}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error('Failed to fetch');
       const rawData = await res.json();
@@ -260,7 +263,7 @@ export default function DashboardPage() {
   // Also fetch destinations for dropdowns
   const [allDestinations, setAllDestinations] = useState<Destination[]>([]);
   useEffect(() => {
-    fetch('/api/dashboard/destinations').then(r => r.json()).then(d => {
+    fetch('/api/dashboard/destinations?XTransformPort=3002').then(r => r.json()).then(d => {
       const data = d && d.success && d.data !== undefined ? d.data : d;
       setAllDestinations(Array.isArray(data) ? data : []);
     }).catch(() => {});
@@ -281,8 +284,8 @@ export default function DashboardPage() {
 
       const isEdit = !!editingItem;
       const url = isEdit
-        ? `/api/dashboard/${endpoint}/${(editingItem as { id: string }).id}`
-        : `/api/dashboard/${endpoint}`;
+        ? `/api/dashboard/${endpoint}/${(editingItem as { id: string }).id}?XTransformPort=3002`
+        : `/api/dashboard/${endpoint}?XTransformPort=3002`;
       const method = isEdit ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -308,7 +311,7 @@ export default function DashboardPage() {
     if (!deletingItem) return;
     setSaving(true);
     try {
-      const res = await fetch(`/api/dashboard/${deletingItem.type}/${deletingItem.id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/dashboard/${deletingItem.type}/${deletingItem.id}?XTransformPort=3002`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete');
       toast.success('Deleted successfully!');
       setDeleteDialogOpen(false);
@@ -347,7 +350,7 @@ export default function DashboardPage() {
 
   const updateStatus = async (endpoint: string, id: string, status: string) => {
     try {
-      const res = await fetch(`/api/dashboard/${endpoint}/${id}`, {
+      const res = await fetch(`/api/dashboard/${endpoint}/${id}?XTransformPort=3002`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -362,7 +365,7 @@ export default function DashboardPage() {
 
   const toggleFeatured = async (endpoint: string, id: string, current: boolean) => {
     try {
-      const res = await fetch(`/api/dashboard/${endpoint}/${id}`, {
+      const res = await fetch(`/api/dashboard/${endpoint}/${id}?XTransformPort=3002`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ featured: !current }),
@@ -381,7 +384,7 @@ export default function DashboardPage() {
     setSaving(true);
     try {
       const updates = settings.map(s => ({ key: s.key, value: s.value }));
-      const res = await fetch('/api/dashboard/settings', {
+      const res = await fetch('/api/dashboard/settings?XTransformPort=3002', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
@@ -400,7 +403,7 @@ export default function DashboardPage() {
   const handleDeploy = async () => {
     setDeploying(true);
     try {
-      const res = await fetch('/api/dashboard/deploy', {
+      const res = await fetch('/api/dashboard/deploy?XTransformPort=3002', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'deploy', details: 'Manual deploy from dashboard' }),

@@ -1,0 +1,9 @@
+{
+  "name": "wayfare-dashboard-api",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "bun index.ts",
+    "start": "bun index.ts"
+  },
+  "dependencies": {}
+}

@@ -11,6 +11,10 @@ export type EdgePackage = {
   category: string;
   image: string;
   destination: { name: string; country: string };
+  featured?: boolean;
+  originalPrice?: number | null;
+  rating?: number;
+  reviewCount?: number;
 };
 
 export type EdgeDestination = {
@@ -20,6 +24,7 @@ export type EdgeDestination = {
   description: string;
   country: string;
   image: string;
+  featured?: boolean;
 };
 
 export type EdgeHotel = {
@@ -31,6 +36,10 @@ export type EdgeHotel = {
   category: string;
   image: string;
   destination: { name: string; country: string };
+  featured?: boolean;
+  originalPrice?: number | null;
+  rating?: number;
+  reviewCount?: number;
 };
 
 export type EdgeFlight = {
@@ -135,6 +144,36 @@ const hotelAmenitiesByCategory: Record<string, string> = {
   budget: 'Wi-Fi,Parking,AC,Room Service',
   homestay: 'Wi-Fi,Home Cooked Meals,Parking,AC,Local Experience',
 };
+
+// Featured slugs — sourced from seed data, used when edge-data.json lacks featured field
+const featuredPackageSlugs = new Set([
+  'kerala-backwaters-5n6d',
+  'kashmir-valley-5n6d',
+  'goa-beach-4n5d',
+  'dubai-luxury-4n5d',
+  'maldives-paradise-4n5d',
+  'thailand-explorer-5n6d',
+]);
+
+const featuredDestinationSlugs = new Set([
+  'kerala',
+  'kashmir',
+  'goa',
+  'andaman',
+  'manali',
+  'dubai',
+  'maldives',
+  'thailand',
+  'bali',
+]);
+
+const featuredHotelSlugs = new Set([
+  'taj-malabar-kerala',
+  'lalit-grand-kashmir',
+  'burj-al-arab-dubai',
+  'soneva-fushi-maldives',
+  'marina-bay-sands',
+]);
 
 function generateItinerary(pkg: EdgePackage): string {
   const { days } = parseDuration(pkg.duration);
@@ -286,15 +325,15 @@ export function enrichPackage(pkg: EdgePackage): EnrichedPackage {
     nights,
     days,
     price: pkg.price,
-    originalPrice: null,
+    originalPrice: pkg.originalPrice !== undefined ? pkg.originalPrice : Math.round(pkg.price * 1.3),
     image: pkg.image,
     description: pkg.description,
     highlights: categoryHighlights[pkg.category] || 'Sightseeing,Transfers,Accommodation,Breakfast',
     included: categoryIncluded[pkg.category] || 'Accommodation,Breakfast,Transfers,Sightseeing',
     itinerary: generateItinerary(pkg),
-    rating: 4.5,
-    reviewCount: 0,
-    featured: false,
+    rating: pkg.rating ?? 4.5,
+    reviewCount: pkg.reviewCount ?? 0,
+    featured: pkg.featured !== undefined ? pkg.featured : featuredPackageSlugs.has(pkg.slug),
   };
 }
 
@@ -316,7 +355,7 @@ export function enrichDestination(dest: EdgeDestination): EnrichedDestination {
     image: dest.image,
     description: dest.description,
     tagline: dest.tagline,
-    featured: false,
+    featured: dest.featured !== undefined ? dest.featured : featuredDestinationSlugs.has(dest.slug),
     _count: {
       packages: packagesCount,
       hotels: hotelsCount,
@@ -341,13 +380,13 @@ export function enrichHotel(hotel: EdgeHotel): EnrichedHotel {
     category: hotel.category,
     stars: hotel.stars,
     pricePerNight: hotel.pricePerNight,
-    originalPrice: null,
+    originalPrice: hotel.originalPrice !== undefined ? hotel.originalPrice : Math.round(hotel.pricePerNight * 1.25),
     image: hotel.image,
     description: hotel.description,
     amenities: hotelAmenitiesByCategory[hotel.category] || 'Wi-Fi,Parking,AC,Room Service',
-    rating: 4.0 + (hotel.stars * 0.1),
-    reviewCount: 0,
-    featured: false,
+    rating: hotel.rating ?? (4.0 + (hotel.stars * 0.1)),
+    reviewCount: hotel.reviewCount ?? 0,
+    featured: hotel.featured !== undefined ? hotel.featured : featuredHotelSlugs.has(hotel.slug),
   };
 }
 

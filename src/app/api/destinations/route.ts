@@ -1,5 +1,7 @@
-import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
+import { getAllEdgeDestinations, enrichDestination } from '@/lib/edge-data';
+
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   try {
@@ -8,44 +10,33 @@ export async function GET(request: Request) {
     const featured = searchParams.get('featured');
     const search = searchParams.get('search');
 
-    const where: any = { status: 'active' };
+    let destinations = getAllEdgeDestinations().map(enrichDestination);
 
-    if (region) where.region = region;
-    if (featured === 'true') where.featured = true;
-
-    if (search) {
-      where.OR = [
-        { name: { contains: search } },
-        { country: { contains: search } },
-        { description: { contains: search } },
-      ];
+    // Filter by region
+    if (region) {
+      destinations = destinations.filter((d) => d.region === region);
     }
 
-    const destinations = await db.destination.findMany({
-      where,
-      include: {
-        _count: { select: { packages: true, hotels: true } },
-      },
-      orderBy: { name: 'asc' },
-    });
+    // Filter by featured
+    if (featured === 'true') {
+      destinations = destinations.filter((d) => d.featured);
+    }
 
-    const result = destinations.map((d) => ({
-      id: d.id,
-      name: d.name,
-      slug: d.slug,
-      country: d.country,
-      region: d.region,
-      image: d.image,
-      description: d.description,
-      tagline: d.tagline,
-      featured: d.featured,
-      _count: {
-        packages: d._count.packages,
-        hotels: d._count.hotels,
-      },
-    }));
+    // Search filter
+    if (search) {
+      const q = search.toLowerCase();
+      destinations = destinations.filter(
+        (d) =>
+          d.name.toLowerCase().includes(q) ||
+          d.country.toLowerCase().includes(q) ||
+          d.description.toLowerCase().includes(q)
+      );
+    }
 
-    return NextResponse.json(result);
+    // Sort by name ascending
+    destinations.sort((a, b) => a.name.localeCompare(b.name));
+
+    return NextResponse.json(destinations);
   } catch (error) {
     console.error('Error fetching destinations:', error);
     return NextResponse.json({ error: 'Failed to fetch destinations' }, { status: 500 });
