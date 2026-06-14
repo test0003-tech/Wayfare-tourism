@@ -1,16 +1,7 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { blogPosts, type BlogPost } from '@/lib/blog-data';
 
-function parseJsonTags(value: string | null): string[] {
-  if (!value) return [];
-  try {
-    const parsed = JSON.parse(value);
-    if (Array.isArray(parsed)) return parsed;
-    return [];
-  } catch {
-    return [];
-  }
-}
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   try {
@@ -19,45 +10,30 @@ export async function GET(request: Request) {
     const search = searchParams.get('search');
     const featured = searchParams.get('featured');
 
-    const where: Record<string, unknown> = { status: 'active' };
+    let posts: BlogPost[] = [...blogPosts];
 
-    if (category && category !== 'All') where.category = category;
-    if (featured === 'true') where.featured = true;
-
-    if (search) {
-      const q = search.toLowerCase();
-      where.OR = [
-        { title: { contains: q } },
-        { excerpt: { contains: q } },
-        { content: { contains: q } },
-      ];
+    // Filter by category
+    if (category && category !== 'All') {
+      posts = posts.filter((p) => p.category === category);
     }
 
-    const posts = await db.blogPost.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-    });
+    // Filter by featured
+    if (featured === 'true') {
+      posts = posts.filter((p) => p.featured);
+    }
 
-    const result = posts.map((post) => ({
-      id: post.id,
-      slug: post.slug,
-      title: post.title,
-      excerpt: post.excerpt,
-      content: post.content,
-      author: {
-        name: post.authorName,
-        avatar: post.authorAvatar,
-        bio: post.authorBio,
-      },
-      date: post.date,
-      category: post.category,
-      image: post.image,
-      readingTime: post.readingTime,
-      tags: parseJsonTags(post.tags),
-      featured: post.featured,
-    }));
+    // Search by title, excerpt, or content
+    if (search) {
+      const q = search.toLowerCase();
+      posts = posts.filter(
+        (p) =>
+          p.title.toLowerCase().includes(q) ||
+          p.excerpt.toLowerCase().includes(q) ||
+          p.content.toLowerCase().includes(q)
+      );
+    }
 
-    return NextResponse.json(result);
+    return NextResponse.json(posts);
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return NextResponse.json({ error: 'Failed to fetch blog posts' }, { status: 500 });

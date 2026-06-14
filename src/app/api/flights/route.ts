@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { getAllEdgeFlights, enrichFlight } from '@/lib/edge-data';
+
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   try {
@@ -8,39 +10,33 @@ export async function GET(request: Request) {
     const type = searchParams.get('type');
     const search = searchParams.get('search');
 
-    const where: Record<string, unknown> = { status: 'active' };
+    let flights = getAllEdgeFlights().map(enrichFlight);
 
-    if (featured === 'true') where.featured = true;
-    if (type) where.type = type;
-
-    if (search) {
-      const q = search.toLowerCase();
-      where.OR = [
-        { from: { contains: q } },
-        { to: { contains: q } },
-        { airline: { contains: q } },
-      ];
+    // Filter by featured
+    if (featured === 'true') {
+      flights = flights.filter((f) => f.featured);
     }
 
-    const flights = await db.flightDeal.findMany({
-      where,
-      orderBy: { price: 'asc' },
-    });
+    // Filter by type
+    if (type) {
+      flights = flights.filter((f) => f.type === type);
+    }
 
-    const result = flights.map((flight) => ({
-      id: flight.id,
-      from: flight.from,
-      to: flight.to,
-      airline: flight.airline,
-      price: flight.price,
-      originalPrice: flight.originalPrice,
-      type: flight.type,
-      image: flight.image,
-      description: flight.description,
-      featured: flight.featured,
-    }));
+    // Search by from, to, or airline
+    if (search) {
+      const q = search.toLowerCase();
+      flights = flights.filter(
+        (f) =>
+          f.from.toLowerCase().includes(q) ||
+          f.to.toLowerCase().includes(q) ||
+          f.airline.toLowerCase().includes(q)
+      );
+    }
 
-    return NextResponse.json(result);
+    // Sort by price ascending
+    flights.sort((a, b) => a.price - b.price);
+
+    return NextResponse.json(flights);
   } catch (error) {
     console.error('Error fetching flights:', error);
     return NextResponse.json({ error: 'Failed to fetch flights' }, { status: 500 });

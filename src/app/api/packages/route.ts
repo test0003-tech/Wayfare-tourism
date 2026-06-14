@@ -1,20 +1,7 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { getAllEdgePackages, enrichPackage } from '@/lib/edge-data';
 
-function parseJsonField(value: string | null, fallback: string = ''): string {
-  if (!value) return fallback;
-  try {
-    const parsed = JSON.parse(value);
-    if (Array.isArray(parsed)) return parsed.join(',');
-    return value;
-  } catch {
-    return value;
-  }
-}
-
-function getRegion(country: string): 'domestic' | 'international' {
-  return country === 'India' ? 'domestic' : 'international';
-}
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   try {
@@ -26,63 +13,47 @@ export async function GET(request: Request) {
     const duration = searchParams.get('duration');
     const search = searchParams.get('search');
 
-    const where: Record<string, unknown> = { status: 'active' };
+    let packages = getAllEdgePackages().map(enrichPackage);
 
-    if (category) where.category = category;
-    if (destinationId) where.destinationId = destinationId;
-    if (featured === 'true') where.featured = true;
-    if (duration) where.duration = duration;
-
+    // Filter by region
     if (region) {
-      where.destination = {
-        country: region === 'domestic' ? 'India' : { not: 'India' },
-      };
+      packages = packages.filter((p) =>
+        region === 'domestic' ? p.destination.region === 'domestic' : p.destination.region === 'international'
+      );
     }
 
+    // Filter by category
+    if (category) {
+      packages = packages.filter((p) => p.category === category);
+    }
+
+    // Filter by destinationId (slug)
+    if (destinationId) {
+      packages = packages.filter((p) => p.destinationId === destinationId);
+    }
+
+    // Filter by featured
+    if (featured === 'true') {
+      packages = packages.filter((p) => p.featured);
+    }
+
+    // Filter by duration
+    if (duration) {
+      packages = packages.filter((p) => p.duration === duration);
+    }
+
+    // Search by name or description
     if (search) {
       const q = search.toLowerCase();
-      where.OR = [
-        { name: { contains: q } },
-        { description: { contains: q } },
-      ];
+      packages = packages.filter(
+        (p) => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)
+      );
     }
 
-    const packages = await db.package.findMany({
-      where,
-      include: {
-        destination: { select: { name: true, country: true, image: true, slug: true } },
-      },
-      orderBy: { rating: 'desc' },
-    });
+    // Sort by rating descending
+    packages.sort((a, b) => b.rating - a.rating);
 
-    const result = packages.map((pkg) => ({
-      id: pkg.id,
-      name: pkg.name,
-      slug: pkg.slug,
-      destinationId: pkg.destinationId,
-      destination: {
-        name: pkg.destination.name,
-        country: pkg.destination.country,
-        region: getRegion(pkg.destination.country),
-        image: pkg.destination.image,
-      },
-      category: pkg.category,
-      duration: pkg.duration,
-      nights: pkg.nights,
-      days: pkg.days,
-      price: pkg.price,
-      originalPrice: pkg.originalPrice,
-      image: pkg.image,
-      description: pkg.description,
-      highlights: parseJsonField(pkg.highlights),
-      included: parseJsonField(pkg.included),
-      itinerary: pkg.itinerary,
-      rating: pkg.rating,
-      reviewCount: pkg.reviewCount,
-      featured: pkg.featured,
-    }));
-
-    return NextResponse.json(result);
+    return NextResponse.json(packages);
   } catch (error) {
     console.error('Error fetching packages:', error);
     return NextResponse.json({ error: 'Failed to fetch packages' }, { status: 500 });

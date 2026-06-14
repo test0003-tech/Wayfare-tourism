@@ -1,20 +1,7 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { getAllEdgeHotels, enrichHotel } from '@/lib/edge-data';
 
-function parseJsonField(value: string | null, fallback: string = ''): string {
-  if (!value) return fallback;
-  try {
-    const parsed = JSON.parse(value);
-    if (Array.isArray(parsed)) return parsed.join(',');
-    return value;
-  } catch {
-    return value;
-  }
-}
-
-function getRegion(country: string): 'domestic' | 'international' {
-  return country === 'India' ? 'domestic' : 'international';
-}
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   try {
@@ -25,57 +12,42 @@ export async function GET(request: Request) {
     const featured = searchParams.get('featured');
     const search = searchParams.get('search');
 
-    const where: Record<string, unknown> = { status: 'active' };
+    let hotels = getAllEdgeHotels().map(enrichHotel);
 
-    if (category) where.category = category;
-    if (destinationId) where.destinationId = destinationId;
-    if (featured === 'true') where.featured = true;
-
+    // Filter by region
     if (region) {
-      where.destination = {
-        country: region === 'domestic' ? 'India' : { not: 'India' },
-      };
+      hotels = hotels.filter((h) =>
+        region === 'domestic' ? h.destination.region === 'domestic' : h.destination.region === 'international'
+      );
     }
 
+    // Filter by category
+    if (category) {
+      hotels = hotels.filter((h) => h.category === category);
+    }
+
+    // Filter by destinationId (slug)
+    if (destinationId) {
+      hotels = hotels.filter((h) => h.destinationId === destinationId);
+    }
+
+    // Filter by featured
+    if (featured === 'true') {
+      hotels = hotels.filter((h) => h.featured);
+    }
+
+    // Search by name or description
     if (search) {
       const q = search.toLowerCase();
-      where.OR = [
-        { name: { contains: q } },
-        { description: { contains: q } },
-      ];
+      hotels = hotels.filter(
+        (h) => h.name.toLowerCase().includes(q) || h.description.toLowerCase().includes(q)
+      );
     }
 
-    const hotels = await db.hotel.findMany({
-      where,
-      include: {
-        destination: { select: { name: true, country: true } },
-      },
-      orderBy: { rating: 'desc' },
-    });
+    // Sort by rating descending
+    hotels.sort((a, b) => b.rating - a.rating);
 
-    const result = hotels.map((hotel) => ({
-      id: hotel.id,
-      name: hotel.name,
-      slug: hotel.slug,
-      destinationId: hotel.destinationId,
-      destination: {
-        name: hotel.destination.name,
-        country: hotel.destination.country,
-        region: getRegion(hotel.destination.country),
-      },
-      category: hotel.category,
-      stars: hotel.stars,
-      pricePerNight: hotel.pricePerNight,
-      originalPrice: hotel.originalPrice,
-      image: hotel.image,
-      description: hotel.description,
-      amenities: parseJsonField(hotel.amenities),
-      rating: hotel.rating,
-      reviewCount: hotel.reviewCount,
-      featured: hotel.featured,
-    }));
-
-    return NextResponse.json(result);
+    return NextResponse.json(hotels);
   } catch (error) {
     console.error('Error fetching hotels:', error);
     return NextResponse.json({ error: 'Failed to fetch hotels' }, { status: 500 });

@@ -1175,6 +1175,105 @@ async function handleGetDeployLogs(): Promise<Response> {
   }
 }
 
+// ============================================
+// AUTO-SYNC: Regenerate edge-data.json after every DB change
+// This ensures the website reflects dashboard changes immediately
+// ============================================
+
+let syncInProgress = false;
+
+async function syncEdgeData(): Promise<void> {
+  if (syncInProgress) return; // Prevent concurrent syncs
+  syncInProgress = true;
+  try {
+    const [packages, destinations, hotels, flights, reviews, testimonials, videos, gallery, blogs, settings] = await Promise.all([
+      db.package.findMany({ where: { status: 'active' }, include: { destination: { select: { name: true, country: true } } }, orderBy: { createdAt: 'desc' } }),
+      db.destination.findMany({ where: { status: 'active' }, orderBy: { createdAt: 'desc' } }),
+      db.hotel.findMany({ where: { status: 'active' }, include: { destination: { select: { name: true, country: true } } }, orderBy: { createdAt: 'desc' } }),
+      db.flightDeal.findMany({ where: { status: 'active' }, orderBy: { createdAt: 'desc' } }),
+      db.review.findMany({ where: { status: 'active' }, include: { package: { select: { name: true } }, destination: { select: { name: true } } }, orderBy: { createdAt: 'desc' } }),
+      db.testimonial.findMany({ where: { status: 'active' }, orderBy: { createdAt: 'desc' } }),
+      db.video.findMany({ where: { status: 'active' }, orderBy: { createdAt: 'desc' } }),
+      db.galleryImage.findMany({ where: { status: 'active' }, orderBy: { createdAt: 'desc' } }),
+      db.blogPost.findMany({ where: { status: 'active' }, orderBy: { createdAt: 'desc' } }),
+      db.siteSetting.findMany(),
+    ]);
+
+    const edgeData: Record<string, unknown> = {
+      packages: packages.map(p => ({
+        slug: p.slug, name: p.name, description: p.description,
+        price: p.price, originalPrice: p.originalPrice, duration: p.duration,
+        category: p.category, image: p.image,
+        gallery: JSON.parse(p.gallery || '[]'),
+        highlights: JSON.parse(p.highlights || '[]'),
+        included: JSON.parse(p.included || '[]'),
+        itinerary: JSON.parse(p.itinerary || '[]'),
+        rating: p.rating, reviewCount: p.reviewCount, featured: p.featured,
+        destination: p.destination ? { name: p.destination.name, country: p.destination.country } : null,
+      })),
+      destinations: destinations.map(d => ({
+        slug: d.slug, name: d.name, tagline: d.tagline,
+        description: d.description, country: d.country, region: d.region,
+        image: d.image, featured: d.featured,
+      })),
+      hotels: hotels.map(h => ({
+        slug: h.slug, name: h.name, description: h.description,
+        pricePerNight: h.pricePerNight, originalPrice: h.originalPrice,
+        stars: h.stars, category: h.category, image: h.image,
+        gallery: JSON.parse(h.gallery || '[]'),
+        amenities: JSON.parse(h.amenities || '[]'),
+        rating: h.rating, reviewCount: h.reviewCount, featured: h.featured,
+        destination: h.destination ? { name: h.destination.name, country: h.destination.country } : null,
+      })),
+      flights: flights.map(f => ({
+        id: f.id, from: f.from, to: f.to, airline: f.airline,
+        price: f.price, originalPrice: f.originalPrice, type: f.type,
+        image: f.image, description: f.description, featured: f.featured,
+      })),
+      reviews: reviews.map(r => ({
+        id: r.id, name: r.name, avatar: r.avatar, location: r.location,
+        rating: r.rating, title: r.title, text: r.text, date: r.date,
+        verified: r.verified, category: r.category,
+        package: r.package ? { name: r.package.name } : null,
+        destination: r.destination ? { name: r.destination.name } : null,
+      })),
+      testimonials: testimonials.map(t => ({
+        id: t.id, name: t.name, location: t.location, trip: t.trip,
+        rating: t.rating, text: t.text, avatar: t.avatar,
+        happyNote: t.happyNote, verified: t.verified, featured: t.featured,
+      })),
+      videos: videos.map(v => ({
+        id: v.id, title: v.title, url: v.url, thumbnail: v.thumbnail,
+        description: v.description, category: v.category, featured: v.featured,
+      })),
+      gallery: gallery.map(g => ({
+        id: g.id, title: g.title, image: g.image, caption: g.caption,
+        category: g.category, featured: g.featured,
+      })),
+      blogs: blogs.map(b => ({
+        id: b.id, slug: b.slug, title: b.title, excerpt: b.excerpt,
+        content: b.content, authorName: b.authorName, authorAvatar: b.authorAvatar,
+        authorBio: b.authorBio, date: b.date, category: b.category,
+        image: b.image, readingTime: b.readingTime,
+        tags: JSON.parse(b.tags || '[]'), featured: b.featured,
+      })),
+      settings: settings.reduce((acc: Record<string, string>, s) => {
+        acc[s.key] = s.value;
+        return acc;
+      }, {}),
+    };
+
+    // Write edge-data.json (used by Next.js API routes locally)
+    const edgeDataPath = join(PROJECT_ROOT, 'src/lib/edge-data.json');
+    writeFileSync(edgeDataPath, JSON.stringify(edgeData, null, 2), 'utf-8');
+    console.log(`✅ Auto-synced edge-data.json: ${packages.length} packages, ${destinations.length} destinations, ${hotels.length} hotels, ${flights.length} flights`);
+  } catch (err) {
+    console.error('⚠️ Auto-sync failed:', err);
+  } finally {
+    syncInProgress = false;
+  }
+}
+
 async function handleDeploy(body: Record<string, unknown>): Promise<Response> {
   try {
     const triggeredBy = (body?.triggeredBy as string) || 'admin';
@@ -1494,6 +1593,22 @@ const server = Bun.serve({
     }
   },
 });
+
+// Patch: wrap the fetch handler to auto-sync edge-data.json after mutations
+const originalFetch = server.fetch;
+(server as any).fetch = async function(request: Request): Promise<Response> {
+  const response = await originalFetch.call(server, request);
+  // Auto-sync after any successful mutation (POST, PUT, DELETE) on dashboard routes
+  const method = request.method;
+  const url = new URL(request.url);
+  if (['POST', 'PUT', 'DELETE'].includes(method) && 
+      url.pathname.startsWith('/api/dashboard/') && 
+      response.status >= 200 && response.status < 300) {
+    // Fire and forget - don't block the response
+    syncEdgeData().catch(err => console.error('Background sync failed:', err));
+  }
+  return response;
+};
 
 console.log(`🚀 Wayfare Dashboard API running on port ${PORT}`);
 

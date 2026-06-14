@@ -1,5 +1,27 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+
+export const runtime = 'edge';
+
+// In-memory bookings store for edge runtime (no database access)
+const bookings: Array<{
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  age: number | null;
+  packageId: string | null;
+  travelers: number;
+  adults: number;
+  children: number;
+  departureDate: string;
+  returnDate: string;
+  roomType: string;
+  specialRequests: string | null;
+  addOns: string | null;
+  totalPrice: number;
+  status: string;
+  createdAt: string;
+}> = [];
 
 interface CreateBookingBody {
   name: string;
@@ -70,48 +92,33 @@ export async function POST(request: Request) {
     }
 
     const travelers = adults + children;
+    const bookingId = `BK-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
 
-    const booking = await db.booking.create({
-      data: {
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        phone: phone.trim(),
-        age: age || null,
-        packageId: packageId || null,
-        travelers,
-        adults,
-        children,
-        departureDate,
-        returnDate,
-        roomType: roomType || 'standard',
-        specialRequests: specialRequests?.trim() || null,
-        addOns: addOns && addOns.length > 0 ? JSON.stringify(addOns) : null,
-        totalPrice,
-        status: 'pending',
-      },
-    });
+    const booking = {
+      id: bookingId,
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
+      age: age || null,
+      packageId: packageId || null,
+      travelers,
+      adults,
+      children,
+      departureDate,
+      returnDate,
+      roomType: roomType || 'standard',
+      specialRequests: specialRequests?.trim() || null,
+      addOns: addOns && addOns.length > 0 ? JSON.stringify(addOns) : null,
+      totalPrice,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+    };
+
+    bookings.push(booking);
 
     return NextResponse.json({
       success: true,
-      booking: {
-        id: booking.id,
-        name: booking.name,
-        email: booking.email,
-        phone: booking.phone,
-        age: booking.age,
-        packageId: booking.packageId,
-        travelers: booking.travelers,
-        adults: booking.adults,
-        children: booking.children,
-        departureDate: booking.departureDate,
-        returnDate: booking.returnDate,
-        roomType: booking.roomType,
-        specialRequests: booking.specialRequests,
-        addOns: booking.addOns,
-        totalPrice: booking.totalPrice,
-        status: booking.status,
-        createdAt: booking.createdAt,
-      },
+      booking,
     }, { status: 201 });
   } catch (error) {
     console.error('Booking creation error:', error);
@@ -121,37 +128,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const bookings = await db.booking.findMany({
-      take: 50,
-      orderBy: { createdAt: 'desc' },
-      include: {
-        package: { select: { name: true, slug: true } },
-      },
-    });
-
-    const result = bookings.map((b) => ({
-      id: b.id,
-      name: b.name,
-      email: b.email,
-      phone: b.phone,
-      age: b.age,
-      packageId: b.packageId,
-      travelers: b.travelers,
-      adults: b.adults,
-      children: b.children,
-      departureDate: b.departureDate,
-      returnDate: b.returnDate,
-      roomType: b.roomType,
-      specialRequests: b.specialRequests,
-      addOns: b.addOns,
-      totalPrice: b.totalPrice,
-      status: b.status,
-      createdAt: b.createdAt,
-      updatedAt: b.updatedAt,
-      package: b.package ? { name: b.package.name, slug: b.package.slug } : null,
-    }));
-
-    return NextResponse.json({ success: true, bookings: result });
+    return NextResponse.json({ success: true, bookings });
   } catch (error) {
     console.error('Bookings fetch error:', error);
     return NextResponse.json({ error: 'Failed to fetch bookings' }, { status: 500 });

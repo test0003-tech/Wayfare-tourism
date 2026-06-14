@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { getAllEdgeDestinations, enrichDestination } from '@/lib/edge-data';
 
-function getRegion(country: string): 'domestic' | 'international' {
-  return country === 'India' ? 'domestic' : 'international';
-}
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   try {
@@ -12,48 +10,35 @@ export async function GET(request: Request) {
     const featured = searchParams.get('featured');
     const search = searchParams.get('search');
 
-    const where: Record<string, unknown> = { status: 'active' };
+    let destinations = getAllEdgeDestinations().map(enrichDestination);
 
-    if (featured === 'true') where.featured = true;
-
+    // Filter by region
     if (region) {
-      where.country = region === 'domestic' ? 'India' : { not: 'India' };
+      destinations = destinations.filter((d) =>
+        region === 'domestic' ? d.region === 'domestic' : d.region === 'international'
+      );
     }
 
+    // Filter by featured
+    if (featured === 'true') {
+      destinations = destinations.filter((d) => d.featured);
+    }
+
+    // Search by name, country, or description
     if (search) {
       const q = search.toLowerCase();
-      where.OR = [
-        { name: { contains: q } },
-        { country: { contains: q } },
-        { description: { contains: q } },
-      ];
+      destinations = destinations.filter(
+        (d) =>
+          d.name.toLowerCase().includes(q) ||
+          d.country.toLowerCase().includes(q) ||
+          d.description.toLowerCase().includes(q)
+      );
     }
 
-    const destinations = await db.destination.findMany({
-      where,
-      include: {
-        _count: { select: { packages: true, hotels: true } },
-      },
-      orderBy: { name: 'asc' },
-    });
+    // Sort by name ascending
+    destinations.sort((a, b) => a.name.localeCompare(b.name));
 
-    const result = destinations.map((dest) => ({
-      id: dest.id,
-      name: dest.name,
-      slug: dest.slug,
-      country: dest.country,
-      region: getRegion(dest.country),
-      image: dest.image,
-      description: dest.description,
-      tagline: dest.tagline,
-      featured: dest.featured,
-      _count: {
-        packages: dest._count.packages,
-        hotels: dest._count.hotels,
-      },
-    }));
-
-    return NextResponse.json(result);
+    return NextResponse.json(destinations);
   } catch (error) {
     console.error('Error fetching destinations:', error);
     return NextResponse.json({ error: 'Failed to fetch destinations' }, { status: 500 });

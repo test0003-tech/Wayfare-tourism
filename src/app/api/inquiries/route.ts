@@ -1,5 +1,18 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+
+export const runtime = 'edge';
+
+// In-memory inquiries store for edge runtime (no database access)
+const inquiries: Array<{
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  type: string;
+  message: string;
+  status: string;
+  createdAt: string;
+}> = [];
 
 export async function POST(request: Request) {
   try {
@@ -13,16 +26,20 @@ export async function POST(request: Request) {
       );
     }
 
-    const inquiry = await db.inquiry.create({
-      data: {
-        name: typeof name === 'string' ? name.trim() : name,
-        email: typeof email === 'string' ? email.trim().toLowerCase() : email,
-        phone: phone || null,
-        type: type || 'custom',
-        message: typeof message === 'string' ? message.trim() : message,
-        status: 'new',
-      },
-    });
+    const inquiryId = `INQ-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+
+    const inquiry = {
+      id: inquiryId,
+      name: typeof name === 'string' ? name.trim() : name,
+      email: typeof email === 'string' ? email.trim().toLowerCase() : email,
+      phone: phone || null,
+      type: type || 'custom',
+      message: typeof message === 'string' ? message.trim() : message,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    };
+
+    inquiries.push(inquiry);
 
     return NextResponse.json(
       { success: true, inquiry: { id: inquiry.id, status: inquiry.status } },
