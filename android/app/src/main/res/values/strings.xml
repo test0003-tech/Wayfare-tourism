@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Wayfare Travel</string>
+    <string name="title_activity_main">Wayfare Travel</string>
+    <string name="package_name">com.wayfare.travel</string>
+    <string name="custom_url_scheme">com.wayfare.travel</string>
+</resources>
