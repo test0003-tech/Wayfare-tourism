@@ -1,7 +1,20 @@
 import { NextResponse } from 'next/server';
-import { getEdgeHotel, enrichHotel, getEdgeDestination } from '@/lib/edge-data';
+import { db } from '@/lib/db';
 
-export const runtime = 'edge';
+function parseJsonField(value: string | null, fallback: string = ''): string {
+  if (!value) return fallback;
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed.join(',');
+    return value;
+  } catch {
+    return value;
+  }
+}
+
+function getRegion(country: string): 'domestic' | 'international' {
+  return country === 'India' ? 'domestic' : 'international';
+}
 
 export async function GET(
   request: Request,
@@ -9,23 +22,40 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const edgeHotel = getEdgeHotel(slug);
 
-    if (!edgeHotel) {
+    const hotel = await db.hotel.findUnique({
+      where: { slug, status: 'active' },
+      include: {
+        destination: { select: { name: true, country: true, image: true, slug: true } },
+      },
+    });
+
+    if (!hotel) {
       return NextResponse.json({ error: 'Hotel not found' }, { status: 404 });
     }
 
-    const hotel = enrichHotel(edgeHotel);
-
-    // Add destination.image and destination.slug for detail view compatibility
-    const edgeDest = getEdgeDestination(hotel.destinationId);
     const result = {
-      ...hotel,
+      id: hotel.id,
+      name: hotel.name,
+      slug: hotel.slug,
+      destinationId: hotel.destinationId,
       destination: {
-        ...hotel.destination,
-        image: edgeDest?.image || '',
-        slug: hotel.destinationId,
+        name: hotel.destination.name,
+        country: hotel.destination.country,
+        region: getRegion(hotel.destination.country),
+        image: hotel.destination.image,
+        slug: hotel.destination.slug,
       },
+      category: hotel.category,
+      stars: hotel.stars,
+      pricePerNight: hotel.pricePerNight,
+      originalPrice: hotel.originalPrice,
+      image: hotel.image,
+      description: hotel.description,
+      amenities: parseJsonField(hotel.amenities),
+      rating: hotel.rating,
+      reviewCount: hotel.reviewCount,
+      featured: hotel.featured,
     };
 
     return NextResponse.json(result);

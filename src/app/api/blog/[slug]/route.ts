@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
-import { blogPosts, type BlogPost } from '@/lib/blog-data';
+import { db } from '@/lib/db';
 
-export const runtime = 'edge';
+function parseJsonTags(value: string | null): string[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed;
+    return [];
+  } catch {
+    return [];
+  }
+}
 
 export async function GET(
   request: Request,
@@ -9,43 +18,61 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const post = blogPosts.find((p) => p.slug === slug);
+
+    const post = await db.blogPost.findUnique({
+      where: { slug, status: 'active' },
+    });
 
     if (!post) {
       return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
     }
 
     // Get related posts (same category, different slug)
-    const relatedPosts = blogPosts
-      .filter((p) => p.category === post.category && p.slug !== slug)
-      .slice(0, 3)
-      .map((p) => ({
-        id: p.slug,
-        slug: p.slug,
-        title: p.title,
-        excerpt: p.excerpt,
-        content: p.content,
-        author: p.author,
-        date: p.date,
-        category: p.category,
-        image: p.image,
-        readingTime: p.readingTime,
-        tags: p.tags,
-        featured: p.featured,
-      }));
+    const relatedPostsRaw = await db.blogPost.findMany({
+      where: {
+        category: post.category,
+        slug: { not: slug },
+        status: 'active',
+      },
+      take: 3,
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const relatedPosts = relatedPostsRaw.map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      content: p.content,
+      author: {
+        name: p.authorName,
+        avatar: p.authorAvatar,
+        bio: p.authorBio,
+      },
+      date: p.date,
+      category: p.category,
+      image: p.image,
+      readingTime: p.readingTime,
+      tags: parseJsonTags(p.tags),
+      featured: p.featured,
+    }));
 
     const result = {
-      id: post.slug,
+      id: post.id,
       slug: post.slug,
       title: post.title,
       excerpt: post.excerpt,
       content: post.content,
-      author: post.author,
+      author: {
+        name: post.authorName,
+        avatar: post.authorAvatar,
+        bio: post.authorBio,
+      },
       date: post.date,
       category: post.category,
       image: post.image,
       readingTime: post.readingTime,
-      tags: post.tags,
+      tags: parseJsonTags(post.tags),
       featured: post.featured,
       relatedPosts,
     };

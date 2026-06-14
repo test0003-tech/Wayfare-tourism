@@ -1,14 +1,20 @@
 import { NextResponse } from 'next/server';
-import {
-  getEdgeDestination,
-  enrichDestination,
-  getAllEdgePackages,
-  enrichPackage,
-  getAllEdgeHotels,
-  enrichHotel,
-} from '@/lib/edge-data';
+import { db } from '@/lib/db';
 
-export const runtime = 'edge';
+function parseJsonField(value: string | null, fallback: string = ''): string {
+  if (!value) return fallback;
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed.join(',');
+    return value;
+  } catch {
+    return value;
+  }
+}
+
+function getRegion(country: string): 'domestic' | 'international' {
+  return country === 'India' ? 'domestic' : 'international';
+}
 
 export async function GET(
   request: Request,
@@ -16,30 +22,80 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const edgeDest = getEdgeDestination(slug);
 
-    if (!edgeDest) {
+    const destination = await db.destination.findUnique({
+      where: { slug, status: 'active' },
+      include: {
+        packages: { where: { status: 'active' }, orderBy: { rating: 'desc' } },
+        hotels: { where: { status: 'active' }, orderBy: { rating: 'desc' } },
+      },
+    });
+
+    if (!destination) {
       return NextResponse.json({ error: 'Destination not found' }, { status: 404 });
     }
 
-    const destination = enrichDestination(edgeDest);
-
-    // Get packages and hotels for this destination
-    const allPackages = getAllEdgePackages().map(enrichPackage);
-    const allHotels = getAllEdgeHotels().map(enrichHotel);
-
-    const destPackages = allPackages.filter(
-      (p) => p.destination.name === edgeDest.name
-    );
-
-    const destHotels = allHotels.filter(
-      (h) => h.destination.name === edgeDest.name
-    );
-
     const result = {
-      ...destination,
-      packages: destPackages,
-      hotels: destHotels,
+      id: destination.id,
+      name: destination.name,
+      slug: destination.slug,
+      country: destination.country,
+      region: getRegion(destination.country),
+      image: destination.image,
+      description: destination.description,
+      tagline: destination.tagline,
+      featured: destination.featured,
+      _count: {
+        packages: destination.packages.length,
+        hotels: destination.hotels.length,
+      },
+      packages: destination.packages.map((pkg) => ({
+        id: pkg.id,
+        name: pkg.name,
+        slug: pkg.slug,
+        destinationId: pkg.destinationId,
+        destination: {
+          name: destination.name,
+          country: destination.country,
+          region: getRegion(destination.country),
+          image: destination.image,
+        },
+        category: pkg.category,
+        duration: pkg.duration,
+        nights: pkg.nights,
+        days: pkg.days,
+        price: pkg.price,
+        originalPrice: pkg.originalPrice,
+        image: pkg.image,
+        description: pkg.description,
+        highlights: parseJsonField(pkg.highlights),
+        included: parseJsonField(pkg.included),
+        itinerary: pkg.itinerary,
+        rating: pkg.rating,
+        reviewCount: pkg.reviewCount,
+        featured: pkg.featured,
+      })),
+      hotels: destination.hotels.map((hotel) => ({
+        id: hotel.id,
+        name: hotel.name,
+        slug: hotel.slug,
+        destinationId: hotel.destinationId,
+        destination: {
+          name: destination.name,
+          country: destination.country,
+          region: getRegion(destination.country),
+        },
+        category: hotel.category,
+        stars: hotel.stars,
+        pricePerNight: hotel.pricePerNight,
+        originalPrice: hotel.originalPrice,
+        image: hotel.image,
+        description: hotel.description,
+        amenities: parseJsonField(hotel.amenities),
+        rating: hotel.rating,
+        reviewCount: hotel.reviewCount,
+        featured: hotel.featured,
+      })),
     };
 
     return NextResponse.json(result);

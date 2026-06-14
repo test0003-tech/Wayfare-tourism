@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
-import { blogPosts, type BlogPost } from '@/lib/blog-data';
+import { db } from '@/lib/db';
 
-export const runtime = 'edge';
+function parseJsonTags(value: string | null): string[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed;
+    return [];
+  } catch {
+    return [];
+  }
+}
 
 export async function GET(request: Request) {
   try {
@@ -10,43 +19,42 @@ export async function GET(request: Request) {
     const search = searchParams.get('search');
     const featured = searchParams.get('featured');
 
-    let posts = [...blogPosts];
+    const where: Record<string, unknown> = { status: 'active' };
 
-    // Filter by category
-    if (category && category !== 'All') {
-      posts = posts.filter((p) => p.category === category);
-    }
+    if (category && category !== 'All') where.category = category;
+    if (featured === 'true') where.featured = true;
 
-    // Filter by featured
-    if (featured === 'true') {
-      posts = posts.filter((p) => p.featured);
-    }
-
-    // Search filter
     if (search) {
       const q = search.toLowerCase();
-      posts = posts.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.excerpt.toLowerCase().includes(q) ||
-          p.content.toLowerCase().includes(q)
-      );
+      where.OR = [
+        { title: { contains: q } },
+        { excerpt: { contains: q } },
+        { content: { contains: q } },
+      ];
     }
 
-    // Format response to match the expected shape (add id field)
-    const result = posts.map((p) => ({
-      id: p.slug,
-      slug: p.slug,
-      title: p.title,
-      excerpt: p.excerpt,
-      content: p.content,
-      author: p.author,
-      date: p.date,
-      category: p.category,
-      image: p.image,
-      readingTime: p.readingTime,
-      tags: p.tags,
-      featured: p.featured,
+    const posts = await db.blogPost.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const result = posts.map((post) => ({
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      author: {
+        name: post.authorName,
+        avatar: post.authorAvatar,
+        bio: post.authorBio,
+      },
+      date: post.date,
+      category: post.category,
+      image: post.image,
+      readingTime: post.readingTime,
+      tags: parseJsonTags(post.tags),
+      featured: post.featured,
     }));
 
     return NextResponse.json(result);

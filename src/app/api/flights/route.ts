@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAllEdgeFlights, enrichFlight } from '@/lib/edge-data';
-
-export const runtime = 'edge';
+import { db } from '@/lib/db';
 
 export async function GET(request: Request) {
   try {
@@ -10,33 +8,39 @@ export async function GET(request: Request) {
     const type = searchParams.get('type');
     const search = searchParams.get('search');
 
-    let flights = getAllEdgeFlights().map(enrichFlight);
+    const where: Record<string, unknown> = { status: 'active' };
 
-    // Filter by featured
-    if (featured === 'true') {
-      flights = flights.filter((f) => f.featured);
-    }
+    if (featured === 'true') where.featured = true;
+    if (type) where.type = type;
 
-    // Filter by type
-    if (type) {
-      flights = flights.filter((f) => f.type === type);
-    }
-
-    // Search filter
     if (search) {
       const q = search.toLowerCase();
-      flights = flights.filter(
-        (f) =>
-          f.from.toLowerCase().includes(q) ||
-          f.to.toLowerCase().includes(q) ||
-          f.airline.toLowerCase().includes(q)
-      );
+      where.OR = [
+        { from: { contains: q } },
+        { to: { contains: q } },
+        { airline: { contains: q } },
+      ];
     }
 
-    // Sort by price ascending
-    flights.sort((a, b) => a.price - b.price);
+    const flights = await db.flightDeal.findMany({
+      where,
+      orderBy: { price: 'asc' },
+    });
 
-    return NextResponse.json(flights);
+    const result = flights.map((flight) => ({
+      id: flight.id,
+      from: flight.from,
+      to: flight.to,
+      airline: flight.airline,
+      price: flight.price,
+      originalPrice: flight.originalPrice,
+      type: flight.type,
+      image: flight.image,
+      description: flight.description,
+      featured: flight.featured,
+    }));
+
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching flights:', error);
     return NextResponse.json({ error: 'Failed to fetch flights' }, { status: 500 });
