@@ -51,6 +51,15 @@ function successResponse(data: unknown, status = 200): Response {
   return jsonResponse({ success: true, data }, status);
 }
 
+// Call this after Create/Update/Delete operations to auto-sync edge-data.json
+function successResponseAndSync(data: unknown, status = 200): Response {
+  // Defer sync with a delay to avoid resource contention with the main request
+  setTimeout(() => {
+    syncEdgeData().catch(err => console.error('Background sync failed:', err));
+  }, 100);
+  return jsonResponse({ success: true, data }, status);
+}
+
 function errorResponse(error: string, status = 500): Response {
   return jsonResponse({ success: false, error }, status);
 }
@@ -187,7 +196,7 @@ async function handleCreateDestination(body: Record<string, unknown>): Promise<R
     const destination = await db.destination.create({
       data: { name: name as string, slug: finalSlug, country: country as string, region: region as string, image: image as string, description: description as string, tagline: tagline as string, featured: (featured as boolean) ?? false, status: (status as string) ?? 'active' },
     });
-    return successResponse(destination, 201);
+    return successResponseAndSync(destination, 201);
   } catch (error) {
     console.error('Error creating destination:', error);
     return errorResponse('Failed to create destination');
@@ -198,7 +207,7 @@ async function handleGetDestination(id: string): Promise<Response> {
   try {
     const destination = await db.destination.findUnique({ where: { id }, include: { packages: true, hotels: true } });
     if (!destination) return errorResponse('Destination not found', 404);
-    return successResponse(destination);
+    return successResponseAndSync(destination);
   } catch (error) {
     console.error('Error fetching destination:', error);
     return errorResponse('Failed to fetch destination');
@@ -216,7 +225,7 @@ async function handleUpdateDestination(id: string, body: Record<string, unknown>
     }
 
     const destination = await db.destination.update({ where: { id }, data: body });
-    return successResponse(destination);
+    return successResponseAndSync(destination);
   } catch (error) {
     console.error('Error updating destination:', error);
     return errorResponse('Failed to update destination');
@@ -228,7 +237,7 @@ async function handleDeleteDestination(id: string): Promise<Response> {
     const existing = await db.destination.findUnique({ where: { id } });
     if (!existing) return errorResponse('Destination not found', 404);
     await db.destination.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting destination:', error);
     return errorResponse('Failed to delete destination');
@@ -288,7 +297,7 @@ async function handleCreatePackage(body: Record<string, unknown>): Promise<Respo
       },
       include: { destination: { select: { id: true, name: true, country: true } } },
     });
-    return successResponse(pkg, 201);
+    return successResponseAndSync(pkg, 201);
   } catch (error) {
     console.error('Error creating package:', error);
     return errorResponse('Failed to create package');
@@ -299,7 +308,7 @@ async function handleGetPackage(id: string): Promise<Response> {
   try {
     const pkg = await db.package.findUnique({ where: { id }, include: { destination: true } });
     if (!pkg) return errorResponse('Package not found', 404);
-    return successResponse(pkg);
+    return successResponseAndSync(pkg);
   } catch (error) {
     console.error('Error fetching package:', error);
     return errorResponse('Failed to fetch package');
@@ -329,7 +338,7 @@ async function handleUpdatePackage(id: string, body: Record<string, unknown>): P
       where: { id }, data: body,
       include: { destination: { select: { id: true, name: true, country: true } } },
     });
-    return successResponse(pkg);
+    return successResponseAndSync(pkg);
   } catch (error) {
     console.error('Error updating package:', error);
     return errorResponse('Failed to update package');
@@ -341,7 +350,7 @@ async function handleDeletePackage(id: string): Promise<Response> {
     const existing = await db.package.findUnique({ where: { id } });
     if (!existing) return errorResponse('Package not found', 404);
     await db.package.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting package:', error);
     return errorResponse('Failed to delete package');
@@ -398,7 +407,7 @@ async function handleCreateHotel(body: Record<string, unknown>): Promise<Respons
       },
       include: { destination: { select: { id: true, name: true, country: true } } },
     });
-    return successResponse(hotel, 201);
+    return successResponseAndSync(hotel, 201);
   } catch (error) {
     console.error('Error creating hotel:', error);
     return errorResponse('Failed to create hotel');
@@ -409,7 +418,7 @@ async function handleGetHotel(id: string): Promise<Response> {
   try {
     const hotel = await db.hotel.findUnique({ where: { id }, include: { destination: true } });
     if (!hotel) return errorResponse('Hotel not found', 404);
-    return successResponse(hotel);
+    return successResponseAndSync(hotel);
   } catch (error) {
     console.error('Error fetching hotel:', error);
     return errorResponse('Failed to fetch hotel');
@@ -430,7 +439,7 @@ async function handleUpdateHotel(id: string, body: Record<string, unknown>): Pro
       where: { id }, data: body,
       include: { destination: { select: { id: true, name: true, country: true } } },
     });
-    return successResponse(hotel);
+    return successResponseAndSync(hotel);
   } catch (error) {
     console.error('Error updating hotel:', error);
     return errorResponse('Failed to update hotel');
@@ -442,7 +451,7 @@ async function handleDeleteHotel(id: string): Promise<Response> {
     const existing = await db.hotel.findUnique({ where: { id } });
     if (!existing) return errorResponse('Hotel not found', 404);
     await db.hotel.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting hotel:', error);
     return errorResponse('Failed to delete hotel');
@@ -483,7 +492,7 @@ async function handleCreateFlight(body: Record<string, unknown>): Promise<Respon
         description: description as string, featured: (featured as boolean) ?? false, status: (status as string) ?? 'active',
       },
     });
-    return successResponse(flight, 201);
+    return successResponseAndSync(flight, 201);
   } catch (error) {
     console.error('Error creating flight:', error);
     return errorResponse('Failed to create flight');
@@ -494,7 +503,7 @@ async function handleGetFlight(id: string): Promise<Response> {
   try {
     const flight = await db.flightDeal.findUnique({ where: { id } });
     if (!flight) return errorResponse('Flight not found', 404);
-    return successResponse(flight);
+    return successResponseAndSync(flight);
   } catch (error) {
     console.error('Error fetching flight:', error);
     return errorResponse('Failed to fetch flight');
@@ -506,7 +515,7 @@ async function handleUpdateFlight(id: string, body: Record<string, unknown>): Pr
     const existing = await db.flightDeal.findUnique({ where: { id } });
     if (!existing) return errorResponse('Flight not found', 404);
     const flight = await db.flightDeal.update({ where: { id }, data: body });
-    return successResponse(flight);
+    return successResponseAndSync(flight);
   } catch (error) {
     console.error('Error updating flight:', error);
     return errorResponse('Failed to update flight');
@@ -518,7 +527,7 @@ async function handleDeleteFlight(id: string): Promise<Response> {
     const existing = await db.flightDeal.findUnique({ where: { id } });
     if (!existing) return errorResponse('Flight not found', 404);
     await db.flightDeal.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting flight:', error);
     return errorResponse('Failed to delete flight');
@@ -577,7 +586,7 @@ async function handleCreateReview(body: Record<string, unknown>): Promise<Respon
         destination: { select: { id: true, name: true, country: true } },
       },
     });
-    return successResponse(review, 201);
+    return successResponseAndSync(review, 201);
   } catch (error) {
     console.error('Error creating review:', error);
     return errorResponse('Failed to create review');
@@ -595,7 +604,7 @@ async function handleGetReview(id: string): Promise<Response> {
       },
     });
     if (!review) return errorResponse('Review not found', 404);
-    return successResponse(review);
+    return successResponseAndSync(review);
   } catch (error) {
     console.error('Error fetching review:', error);
     return errorResponse('Failed to fetch review');
@@ -617,7 +626,7 @@ async function handleUpdateReview(id: string, body: Record<string, unknown>): Pr
         destination: { select: { id: true, name: true, country: true } },
       },
     });
-    return successResponse(review);
+    return successResponseAndSync(review);
   } catch (error) {
     console.error('Error updating review:', error);
     return errorResponse('Failed to update review');
@@ -629,7 +638,7 @@ async function handleDeleteReview(id: string): Promise<Response> {
     const existing = await db.review.findUnique({ where: { id } });
     if (!existing) return errorResponse('Review not found', 404);
     await db.review.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting review:', error);
     return errorResponse('Failed to delete review');
@@ -673,7 +682,7 @@ async function handleCreateTestimonial(body: Record<string, unknown>): Promise<R
         featured: (featured as boolean) ?? false, status: (status as string) ?? 'active',
       },
     });
-    return successResponse(testimonial, 201);
+    return successResponseAndSync(testimonial, 201);
   } catch (error) {
     console.error('Error creating testimonial:', error);
     return errorResponse('Failed to create testimonial');
@@ -684,7 +693,7 @@ async function handleGetTestimonial(id: string): Promise<Response> {
   try {
     const testimonial = await db.testimonial.findUnique({ where: { id } });
     if (!testimonial) return errorResponse('Testimonial not found', 404);
-    return successResponse(testimonial);
+    return successResponseAndSync(testimonial);
   } catch (error) {
     console.error('Error fetching testimonial:', error);
     return errorResponse('Failed to fetch testimonial');
@@ -699,7 +708,7 @@ async function handleUpdateTestimonial(id: string, body: Record<string, unknown>
       return errorResponse('Rating must be between 1 and 5', 400);
     }
     const testimonial = await db.testimonial.update({ where: { id }, data: body });
-    return successResponse(testimonial);
+    return successResponseAndSync(testimonial);
   } catch (error) {
     console.error('Error updating testimonial:', error);
     return errorResponse('Failed to update testimonial');
@@ -711,7 +720,7 @@ async function handleDeleteTestimonial(id: string): Promise<Response> {
     const existing = await db.testimonial.findUnique({ where: { id } });
     if (!existing) return errorResponse('Testimonial not found', 404);
     await db.testimonial.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting testimonial:', error);
     return errorResponse('Failed to delete testimonial');
@@ -752,7 +761,7 @@ async function handleCreateGallery(body: Record<string, unknown>): Promise<Respo
         status: (status as string) ?? 'active',
       },
     });
-    return successResponse(galleryImage, 201);
+    return successResponseAndSync(galleryImage, 201);
   } catch (error) {
     console.error('Error creating gallery image:', error);
     return errorResponse('Failed to create gallery image');
@@ -763,7 +772,7 @@ async function handleGetGalleryItem(id: string): Promise<Response> {
   try {
     const galleryImage = await db.galleryImage.findUnique({ where: { id } });
     if (!galleryImage) return errorResponse('Gallery image not found', 404);
-    return successResponse(galleryImage);
+    return successResponseAndSync(galleryImage);
   } catch (error) {
     console.error('Error fetching gallery image:', error);
     return errorResponse('Failed to fetch gallery image');
@@ -775,7 +784,7 @@ async function handleUpdateGalleryItem(id: string, body: Record<string, unknown>
     const existing = await db.galleryImage.findUnique({ where: { id } });
     if (!existing) return errorResponse('Gallery image not found', 404);
     const galleryImage = await db.galleryImage.update({ where: { id }, data: body });
-    return successResponse(galleryImage);
+    return successResponseAndSync(galleryImage);
   } catch (error) {
     console.error('Error updating gallery image:', error);
     return errorResponse('Failed to update gallery image');
@@ -787,7 +796,7 @@ async function handleDeleteGalleryItem(id: string): Promise<Response> {
     const existing = await db.galleryImage.findUnique({ where: { id } });
     if (!existing) return errorResponse('Gallery image not found', 404);
     await db.galleryImage.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting gallery image:', error);
     return errorResponse('Failed to delete gallery image');
@@ -836,7 +845,7 @@ async function handleCreateBlog(body: Record<string, unknown>): Promise<Response
         featured: (featured as boolean) ?? false, status: (status as string) ?? 'active',
       },
     });
-    return successResponse(blogPost, 201);
+    return successResponseAndSync(blogPost, 201);
   } catch (error) {
     console.error('Error creating blog post:', error);
     return errorResponse('Failed to create blog post');
@@ -847,7 +856,7 @@ async function handleGetBlog(id: string): Promise<Response> {
   try {
     const blogPost = await db.blogPost.findUnique({ where: { id } });
     if (!blogPost) return errorResponse('Blog post not found', 404);
-    return successResponse(blogPost);
+    return successResponseAndSync(blogPost);
   } catch (error) {
     console.error('Error fetching blog post:', error);
     return errorResponse('Failed to fetch blog post');
@@ -865,7 +874,7 @@ async function handleUpdateBlog(id: string, body: Record<string, unknown>): Prom
     }
 
     const blogPost = await db.blogPost.update({ where: { id }, data: body });
-    return successResponse(blogPost);
+    return successResponseAndSync(blogPost);
   } catch (error) {
     console.error('Error updating blog post:', error);
     return errorResponse('Failed to update blog post');
@@ -877,7 +886,7 @@ async function handleDeleteBlog(id: string): Promise<Response> {
     const existing = await db.blogPost.findUnique({ where: { id } });
     if (!existing) return errorResponse('Blog post not found', 404);
     await db.blogPost.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting blog post:', error);
     return errorResponse('Failed to delete blog post');
@@ -918,7 +927,7 @@ async function handleCreateVideo(body: Record<string, unknown>): Promise<Respons
         featured: (featured as boolean) ?? false, status: (status as string) ?? 'active',
       },
     });
-    return successResponse(video, 201);
+    return successResponseAndSync(video, 201);
   } catch (error) {
     console.error('Error creating video:', error);
     return errorResponse('Failed to create video');
@@ -929,7 +938,7 @@ async function handleGetVideo(id: string): Promise<Response> {
   try {
     const video = await db.video.findUnique({ where: { id } });
     if (!video) return errorResponse('Video not found', 404);
-    return successResponse(video);
+    return successResponseAndSync(video);
   } catch (error) {
     console.error('Error fetching video:', error);
     return errorResponse('Failed to fetch video');
@@ -941,7 +950,7 @@ async function handleUpdateVideo(id: string, body: Record<string, unknown>): Pro
     const existing = await db.video.findUnique({ where: { id } });
     if (!existing) return errorResponse('Video not found', 404);
     const video = await db.video.update({ where: { id }, data: body });
-    return successResponse(video);
+    return successResponseAndSync(video);
   } catch (error) {
     console.error('Error updating video:', error);
     return errorResponse('Failed to update video');
@@ -953,7 +962,7 @@ async function handleDeleteVideo(id: string): Promise<Response> {
     const existing = await db.video.findUnique({ where: { id } });
     if (!existing) return errorResponse('Video not found', 404);
     await db.video.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting video:', error);
     return errorResponse('Failed to delete video');
@@ -1004,7 +1013,7 @@ async function handleCreateBooking(body: Record<string, unknown>): Promise<Respo
       },
       include: { package: { select: { id: true, name: true, slug: true, duration: true, price: true } } },
     });
-    return successResponse(booking, 201);
+    return successResponseAndSync(booking, 201);
   } catch (error) {
     console.error('Error creating booking:', error);
     return errorResponse('Failed to create booking');
@@ -1018,7 +1027,7 @@ async function handleGetBooking(id: string): Promise<Response> {
       include: { package: { select: { id: true, name: true, slug: true, duration: true, price: true, image: true } } },
     });
     if (!booking) return errorResponse('Booking not found', 404);
-    return successResponse(booking);
+    return successResponseAndSync(booking);
   } catch (error) {
     console.error('Error fetching booking:', error);
     return errorResponse('Failed to fetch booking');
@@ -1033,7 +1042,7 @@ async function handleUpdateBooking(id: string, body: Record<string, unknown>): P
       where: { id }, data: body,
       include: { package: { select: { id: true, name: true, slug: true, duration: true, price: true } } },
     });
-    return successResponse(booking);
+    return successResponseAndSync(booking);
   } catch (error) {
     console.error('Error updating booking:', error);
     return errorResponse('Failed to update booking');
@@ -1045,7 +1054,7 @@ async function handleDeleteBooking(id: string): Promise<Response> {
     const existing = await db.booking.findUnique({ where: { id } });
     if (!existing) return errorResponse('Booking not found', 404);
     await db.booking.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting booking:', error);
     return errorResponse('Failed to delete booking');
@@ -1083,7 +1092,7 @@ async function handleCreateInquiry(body: Record<string, unknown>): Promise<Respo
         type: type as string, message: message as string, status: (status as string) ?? 'new',
       },
     });
-    return successResponse(inquiry, 201);
+    return successResponseAndSync(inquiry, 201);
   } catch (error) {
     console.error('Error creating inquiry:', error);
     return errorResponse('Failed to create inquiry');
@@ -1094,7 +1103,7 @@ async function handleGetInquiry(id: string): Promise<Response> {
   try {
     const inquiry = await db.inquiry.findUnique({ where: { id } });
     if (!inquiry) return errorResponse('Inquiry not found', 404);
-    return successResponse(inquiry);
+    return successResponseAndSync(inquiry);
   } catch (error) {
     console.error('Error fetching inquiry:', error);
     return errorResponse('Failed to fetch inquiry');
@@ -1106,7 +1115,7 @@ async function handleUpdateInquiry(id: string, body: Record<string, unknown>): P
     const existing = await db.inquiry.findUnique({ where: { id } });
     if (!existing) return errorResponse('Inquiry not found', 404);
     const inquiry = await db.inquiry.update({ where: { id }, data: body });
-    return successResponse(inquiry);
+    return successResponseAndSync(inquiry);
   } catch (error) {
     console.error('Error updating inquiry:', error);
     return errorResponse('Failed to update inquiry');
@@ -1118,7 +1127,7 @@ async function handleDeleteInquiry(id: string): Promise<Response> {
     const existing = await db.inquiry.findUnique({ where: { id } });
     if (!existing) return errorResponse('Inquiry not found', 404);
     await db.inquiry.delete({ where: { id } });
-    return successResponse({ id });
+    return successResponseAndSync({ id });
   } catch (error) {
     console.error('Error deleting inquiry:', error);
     return errorResponse('Failed to delete inquiry');
@@ -1135,7 +1144,7 @@ async function handleGetSettings(): Promise<Response> {
       acc[group].push(setting);
       return acc;
     }, {} as Record<string, typeof settings>);
-    return successResponse(grouped);
+    return successResponseAndSync(grouped);
   } catch (error) {
     console.error('Error fetching settings:', error);
     return errorResponse('Failed to fetch settings');
@@ -1157,7 +1166,7 @@ async function handleUpdateSettings(body: Record<string, unknown>): Promise<Resp
         })
       )
     );
-    return successResponse(results);
+    return successResponseAndSync(results);
   } catch (error) {
     console.error('Error updating settings:', error);
     return errorResponse('Failed to update settings');
@@ -1168,7 +1177,7 @@ async function handleUpdateSettings(body: Record<string, unknown>): Promise<Resp
 async function handleGetDeployLogs(): Promise<Response> {
   try {
     const logs = await db.deployLog.findMany({ orderBy: { createdAt: 'desc' }, take: 20 });
-    return successResponse(logs);
+    return successResponseAndSync(logs);
   } catch (error) {
     console.error('Error fetching deploy logs:', error);
     return errorResponse('Failed to fetch deploy logs');
@@ -1354,7 +1363,7 @@ async function handleDeploy(body: Record<string, unknown>): Promise<Response> {
         },
       });
 
-      return successResponse({
+      return successResponseAndSync({
         deployLogId: deployLog.id,
         stats: { packages: edgePackages.length, destinations: edgeDestinations.length, hotels: edgeHotels.length, flights: edgeFlights.length },
       });
@@ -1593,22 +1602,6 @@ const server = Bun.serve({
     }
   },
 });
-
-// Patch: wrap the fetch handler to auto-sync edge-data.json after mutations
-const originalFetch = server.fetch;
-(server as any).fetch = async function(request: Request): Promise<Response> {
-  const response = await originalFetch.call(server, request);
-  // Auto-sync after any successful mutation (POST, PUT, DELETE) on dashboard routes
-  const method = request.method;
-  const url = new URL(request.url);
-  if (['POST', 'PUT', 'DELETE'].includes(method) && 
-      url.pathname.startsWith('/api/dashboard/') && 
-      response.status >= 200 && response.status < 300) {
-    // Fire and forget - don't block the response
-    syncEdgeData().catch(err => console.error('Background sync failed:', err));
-  }
-  return response;
-};
 
 console.log(`🚀 Wayfare Dashboard API running on port ${PORT}`);
 
