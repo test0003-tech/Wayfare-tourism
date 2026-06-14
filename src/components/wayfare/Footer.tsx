@@ -48,7 +48,7 @@ const footerLinks = {
       { name: 'Travel Quiz', href: '/quiz' },
       { name: 'Contact Us', href: '/contact' },
       { name: 'Partner With Us', href: '/contact' },
-      { name: 'Admin Dashboard', href: '/dashboard' },
+      { name: 'Admin Dashboard', href: '/?view=dashboard' },
     ],
   },
   support: {

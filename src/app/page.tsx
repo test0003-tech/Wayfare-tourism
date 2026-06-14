@@ -1,5 +1,6 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import HeroEnhanced from '@/components/wayfare/HeroEnhanced';
 import FlashDeals from '@/components/wayfare/FlashDeals';
@@ -15,7 +16,17 @@ const TripCostCalculator = dynamic(() => import('@/components/wayfare/TripCostCa
 const SocialProof = dynamic(() => import('@/components/wayfare/SocialProof'), { ssr: false });
 const AITravelPlanner = dynamic(() => import('@/components/wayfare/AITravelPlanner'), { ssr: false });
 
+// Lazy load dashboard (huge component)
+const DashboardPage = dynamic(() => import('@/app/dashboard/page'), { ssr: false });
+
 export default function Home() {
+  const searchParams = useSearchParams();
+  const showDashboard = searchParams.get('view') === 'dashboard';
+
+  if (showDashboard) {
+    return <DashboardPage />;
+  }
+
   return (
     <>
       <HeroEnhanced />
