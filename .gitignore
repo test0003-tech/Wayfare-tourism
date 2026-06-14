@@ -56,3 +56,9 @@ server.log
 # Cloudflare build artifacts
 .open-next/
 wrangler.toml
+
+# Tool results
+tool-results/
+
+# Database files (generated from seed)
+db/
